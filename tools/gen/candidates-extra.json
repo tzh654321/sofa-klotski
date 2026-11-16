@@ -1,0 +1,53 @@
+[
+ {
+  "key": "yueYa",
+  "note": "把 1/4 圆送到右下角：它只能绕自己的圆心转，动之前得先把圆域腾空",
+  "level": {
+   "name": "月牙", "w": 4, "h": 4,
+   "goals": [{ "piece": "qa", "label": "右下角", "cells": [[3, 3]] }],
+   "pieces": [
+    { "id": "sem", "x": 0, "y": 0, "ori": 0, "shape": "semi", "color": "#a349a4", "name": "半圆" },
+    { "id": "qa", "x": 0, "y": 1, "ori": 0, "shape": "quarter", "color": "#ffaec9", "name": "一角", "hero": true },
+    { "id": "hero", "x": 2, "y": 0, "ori": 0, "shape": "2x2", "color": "#ff7f27", "name": "方块" },
+    { "id": "bar", "x": 1, "y": 2, "ori": 0, "shape": "2x1", "color": "#00a2e8", "name": "横梁" },
+    { "id": "p1", "x": 3, "y": 2, "ori": 0, "shape": "1x1", "color": "#3f48cc", "name": "石一" },
+    { "id": "p2", "x": 0, "y": 2, "ori": 0, "shape": "1x1", "color": "#22b14c", "name": "石二" }
+   ]
+  }
+ },
+ {
+  "key": "shuangYue",
+  "note": "5×4：两个半圆要各自归位到右下两块（同心时会一起转，得先把它们分开）",
+  "level": {
+   "name": "双月", "w": 5, "h": 4,
+   "goals": [
+    { "piece": "s1", "label": "右下两格", "cells": [[3, 3], [4, 3]] }
+   ],
+   "pieces": [
+    { "id": "s1", "x": 0, "y": 0, "ori": 0, "shape": "semi", "color": "#a349a4", "name": "上弦", "hero": true },
+    { "id": "s2", "x": 0, "y": 1, "ori": 2, "shape": "semi", "color": "#a349a4", "name": "下弦" },
+    { "id": "hero", "x": 2, "y": 0, "ori": 0, "shape": "2x2", "color": "#ff7f27", "name": "大柜" },
+    { "id": "bar", "x": 1, "y": 2, "ori": 0, "shape": "2x1", "color": "#00a2e8", "name": "横梁" },
+    { "id": "p1", "x": 3, "y": 2, "ori": 0, "shape": "1x1", "color": "#3f48cc", "name": "石一" },
+    { "id": "p2", "x": 0, "y": 3, "ori": 0, "shape": "1x1", "color": "#22b14c", "name": "石二" }
+   ]
+  }
+ },
+ {
+  "key": "tieZha",
+  "note": "5×4：锁定 2×1 当闸门，沙发 + 断块一起挤过缺口",
+  "level": {
+   "name": "铁闸", "w": 5, "h": 4,
+   "goals": [{ "piece": "hero", "label": "底行正中", "cells": [[1, 2], [2, 2], [1, 3], [2, 3]] }],
+   "pieces": [
+    { "id": "hero", "x": 3, "y": 0, "ori": 0, "shape": "2x2", "color": "#ff7f27", "name": "大柜", "hero": true },
+    { "id": "wall", "x": 3, "y": 2, "ori": 0, "shape": "1x2", "color": "#6b6480", "name": "焊墙", "lock": true },
+    { "id": "sofa", "x": 0, "y": 0, "ori": 1, "shape": "sofa", "color": "#22b14c", "name": "沙发" },
+    { "id": "rail", "x": 1, "y": 1, "ori": 0, "shape": "custom", "rot": false,
+      "cells": [{ "c": 0, "r": 0 }, { "c": 0, "r": 1 }], "color": "#8ab72a", "name": "双联石" },
+    { "id": "p1", "x": 4, "y": 3, "ori": 0, "shape": "1x1", "color": "#3f48cc", "name": "石一" },
+    { "id": "p2", "x": 2, "y": 1, "ori": 0, "shape": "1x1", "color": "#ffaec9", "name": "石二" }
+   ]
+  }
+ }
+]

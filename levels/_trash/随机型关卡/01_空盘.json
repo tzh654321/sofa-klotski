@@ -1,0 +1,19 @@
+{
+ "set": "特殊",
+ "id": "特殊-01",
+ "name": "空盘",
+ "origin": "",
+ "lvKey": "blank",
+ "note": "空盘：自己摆",
+ "source": "levels.js",
+ "tip": "空盘：自己摆",
+ "level": {
+  "name": "空盘",
+  "w": 4,
+  "h": 5,
+  "pieces": [],
+  "goals": []
+ },
+ "meta": null,
+ "solution": null
+}

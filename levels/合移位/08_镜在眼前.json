@@ -1,0 +1,176 @@
+{
+ "set": "合移位",
+ "id": "合移位-08",
+ "name": "镜在眼前",
+ "origin": "近在眼前",
+ "lvKey": null,
+ "note": "用户存档「近在眼前」",
+ "source": "inbox",
+ "level": {
+  "name": "镜在眼前",
+  "w": 4,
+  "h": 4,
+  "goals": [
+   {
+    "piece": "c18",
+    "cells": [
+     [
+      2,
+      1
+     ],
+     [
+      2,
+      3
+     ]
+    ]
+   },
+   {
+    "piece": "c16",
+    "cells": [
+     [
+      1,
+      2
+     ],
+     [
+      3,
+      2
+     ]
+    ]
+   }
+  ],
+  "pieces": [
+   {
+    "id": "c16",
+    "x": 0,
+    "y": 1,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#5d4724ff",
+    "name": "近视眼",
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 2,
+      "r": 0
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "u17",
+    "x": 1,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#FFFFFF",
+    "name": "瞳"
+   },
+   {
+    "id": "c18",
+    "x": 1,
+    "y": 0,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#181660ff",
+    "name": "远视眼",
+    "hero": true,
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 0,
+      "r": 2
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "u19",
+    "x": 3,
+    "y": 0,
+    "ori": 0,
+    "shape": "1x2",
+    "color": "#8ca4ebff",
+    "name": "凸透镜"
+   },
+   {
+    "id": "u20",
+    "x": 0,
+    "y": 3,
+    "ori": 0,
+    "shape": "2x1",
+    "color": "#80d8d0ff",
+    "name": "凹透镜"
+   }
+  ]
+ },
+ "meta": {
+  "score": 0,
+  "grade": "太简单",
+  "depth": 3,
+  "hands": 2,
+  "states": 2736,
+  "paths": 2,
+  "waste": 7.33,
+  "same": 1.33,
+  "estimated": false,
+  "scoringVersion": 3,
+  "estimate": null,
+  "parts": {
+   "depth": 0.3,
+   "planning": 0,
+   "endurance": 0,
+   "choice": 0,
+   "trap": 0,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": false,
+  "confidence": "结构估计",
+  "cognition": {
+   "active": 2,
+   "switches": 1,
+   "revisits": 0,
+   "retreats": 0,
+   "maxSetup": 0,
+   "temptation": 0
+  },
+  "ms": 60
+ },
+ "solution": {
+  "solver": "bfs-optimal",
+  "optimal": true,
+  "steps": 3,
+  "hands": 2,
+  "moves": [
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "p",
+    "dx": 1,
+    "dy": 0,
+    "chain": [
+     0,
+     2
+    ]
+   },
+   {
+    "i": 2,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   }
+  ]
+ }
+}

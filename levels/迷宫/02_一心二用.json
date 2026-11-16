@@ -1,0 +1,1110 @@
+{
+ "set": "待分类",
+ "id": "umwgwv3j7",
+ "name": "一心二用",
+ "origin": "",
+ "lvKey": null,
+ "note": "23×11 双端联动：一根扁担两头一起走货场迷宫（用户 2026-11-15 用 bash 写入的关）",
+ "source": "import",
+ "tip": "23×11 双端联动：一根扁担两头一起走货场迷宫（用户 2026-11-15 用 bash 写入的关）",
+ "level": {
+  "name": "一心二用",
+  "w": 23,
+  "h": 11,
+  "goals": [
+   {
+    "piece": "c56",
+    "cells": [
+     [
+      10,
+      10
+     ],
+     [
+      22,
+      10
+     ]
+    ]
+   }
+  ],
+  "pieces": [
+   {
+    "id": "u2",
+    "x": 1,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#00a2e8",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u3",
+    "x": 3,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ff7f27",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u5",
+    "x": 7,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#fff200",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u6",
+    "x": 9,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#fff200",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "c11",
+    "x": 11,
+    "y": 0,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#6b7280",
+    "name": "隔板",
+    "hero": false,
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 0,
+      "r": 1
+     },
+     {
+      "c": 0,
+      "r": 2
+     },
+     {
+      "c": 0,
+      "r": 3
+     },
+     {
+      "c": 0,
+      "r": 4
+     },
+     {
+      "c": 0,
+      "r": 5
+     },
+     {
+      "c": 0,
+      "r": 6
+     },
+     {
+      "c": 0,
+      "r": 7
+     },
+     {
+      "c": 0,
+      "r": 8
+     },
+     {
+      "c": 0,
+      "r": 9
+     },
+     {
+      "c": 0,
+      "r": 10
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "u12",
+    "x": 5,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#00a2e8",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u14",
+    "x": 9,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#22b14c",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u15",
+    "x": 9,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#b97a57",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u16",
+    "x": 7,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#3f48cc",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u17",
+    "x": 5,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#3f48cc",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u19",
+    "x": 1,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#a349a4",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u20",
+    "x": 1,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#a349a4",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u21",
+    "x": 3,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#22b14c",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u22",
+    "x": 5,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffaec9",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u25",
+    "x": 9,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#00a2e8",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u26",
+    "x": 7,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffaec9",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u27",
+    "x": 5,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#a349a4",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u30",
+    "x": 3,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ed1c24",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u33",
+    "x": 17,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#22b14c",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u35",
+    "x": 21,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#a349a4",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u36",
+    "x": 21,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#fff200",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u37",
+    "x": 19,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ed1c24",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u38",
+    "x": 17,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#fff200",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u39",
+    "x": 15,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#b97a57",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u40",
+    "x": 13,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#3f48cc",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u42",
+    "x": 15,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ff7f27",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u43",
+    "x": 17,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#22b14c",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u45",
+    "x": 21,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#b97a57",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u46",
+    "x": 21,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffaec9",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u47",
+    "x": 19,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#00a2e8",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u48",
+    "x": 17,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#fff200",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u50",
+    "x": 13,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#00a2e8",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u51",
+    "x": 13,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffaec9",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u54",
+    "x": 19,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ed1c24",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "c56",
+    "x": 0,
+    "y": 0,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#ffd166",
+    "name": "扁担",
+    "hero": true,
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 12,
+      "r": 0
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "u57",
+    "x": 12,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ff7f27",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u59",
+    "x": 15,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#00a2e8",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u60",
+    "x": 1,
+    "y": 6,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffaec9",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u61",
+    "x": 14,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#a349a4",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u62",
+    "x": 14,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#00a2e8",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u63",
+    "x": 4,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#00a2e8",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u64",
+    "x": 6,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#fff200",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u65",
+    "x": 4,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffaec9",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u66",
+    "x": 19,
+    "y": 8,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#00a2e8",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u67",
+    "x": 20,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#22b14c",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u68",
+    "x": 9,
+    "y": 8,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ff7f27",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u69",
+    "x": 9,
+    "y": 10,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#fff200",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u70",
+    "x": 8,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffaec9",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u71",
+    "x": 21,
+    "y": 6,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ed1c24",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u72",
+    "x": 18,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#22b14c",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u73",
+    "x": 8,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffaec9",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u74",
+    "x": 21,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#3f48cc",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u75",
+    "x": 9,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#22b14c",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u77",
+    "x": 2,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#fff200",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u78",
+    "x": 3,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#00a2e8",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u79",
+    "x": 17,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#b97a57",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u80",
+    "x": 5,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#b97a57",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u81",
+    "x": 4,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#3f48cc",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u82",
+    "x": 7,
+    "y": 8,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffaec9",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u83",
+    "x": 13,
+    "y": 6,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#b97a57",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u84",
+    "x": 15,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ed1c24",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u85",
+    "x": 17,
+    "y": 6,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ff7f27",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u86",
+    "x": 3,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#b97a57",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u87",
+    "x": 17,
+    "y": 0,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#a349a4",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u88",
+    "x": 15,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#a349a4",
+    "name": "货箱",
+    "hero": false,
+    "lock": true
+   }
+  ],
+  "note": "23×11 双端联动：一根扁担两头一起走货场迷宫"
+ },
+ "meta": {
+  "score": 0,
+  "grade": "太简单",
+  "depth": 44,
+  "hands": 1,
+  "states": 131,
+  "paths": 1,
+  "waste": 1,
+  "same": 1,
+  "estimated": false,
+  "scoringVersion": 3,
+  "estimate": null,
+  "parts": {
+   "depth": 0.1,
+   "planning": 0,
+   "endurance": 0,
+   "choice": 0.3,
+   "trap": 0.3,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": false,
+  "confidence": "结构估计",
+  "cognition": {
+   "active": 1,
+   "switches": 0,
+   "revisits": 0,
+   "retreats": 0,
+   "maxSetup": 0,
+   "temptation": 4
+  },
+  "ms": 14
+ },
+ "solution": {
+  "solver": "bfs-optimal",
+  "optimal": true,
+  "steps": 44,
+  "hands": 1,
+  "moves": [
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 34,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   }
+  ]
+ }
+}

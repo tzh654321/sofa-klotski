@@ -1,0 +1,206 @@
+[
+  {
+    "case": 0,
+    "kind": "随机游走",
+    "board": [
+      5,
+      1,
+      2,
+      3,
+      10,
+      7,
+      0,
+      4,
+      6,
+      9,
+      11,
+      8,
+      13,
+      14,
+      15,
+      12
+    ],
+    "before": {
+      "ok": true,
+      "steps": 8,
+      "expanded": 129,
+      "ms": 2
+    },
+    "after": {
+      "ok": true,
+      "steps": 8,
+      "expanded": 79,
+      "ms": 0
+    }
+  },
+  {
+    "case": 1,
+    "kind": "随机游走",
+    "board": [
+      1,
+      2,
+      3,
+      0,
+      6,
+      7,
+      8,
+      4,
+      5,
+      10,
+      11,
+      12,
+      9,
+      13,
+      14,
+      15
+    ],
+    "before": {
+      "ok": true,
+      "steps": 4,
+      "expanded": 5,
+      "ms": 0
+    },
+    "after": {
+      "ok": true,
+      "steps": 4,
+      "expanded": 5,
+      "ms": 0
+    }
+  },
+  {
+    "case": 2,
+    "kind": "随机游走",
+    "board": [
+      9,
+      5,
+      3,
+      8,
+      6,
+      2,
+      4,
+      0,
+      13,
+      11,
+      1,
+      7,
+      10,
+      12,
+      14,
+      15
+    ],
+    "before": {
+      "ok": true,
+      "steps": 18,
+      "expanded": 224903,
+      "ms": 889
+    },
+    "after": {
+      "ok": true,
+      "steps": 18,
+      "expanded": 108774,
+      "ms": 137
+    }
+  },
+  {
+    "case": 3,
+    "kind": "随机排列",
+    "board": [
+      3,
+      6,
+      2,
+      15,
+      4,
+      8,
+      11,
+      10,
+      9,
+      12,
+      13,
+      14,
+      1,
+      0,
+      7,
+      5
+    ],
+    "before": {
+      "ok": false,
+      "expanded": 764929,
+      "ms": 3000,
+      "lowerBound": 13
+    },
+    "after": {
+      "ok": false,
+      "expanded": 1872420,
+      "ms": 3001,
+      "lowerBound": 25
+    }
+  },
+  {
+    "case": 4,
+    "kind": "随机排列",
+    "board": [
+      5,
+      7,
+      15,
+      14,
+      13,
+      6,
+      3,
+      0,
+      4,
+      12,
+      9,
+      1,
+      2,
+      8,
+      11,
+      10
+    ],
+    "before": {
+      "ok": false,
+      "expanded": 781724,
+      "ms": 3001,
+      "lowerBound": 14
+    },
+    "after": {
+      "ok": false,
+      "expanded": 1718727,
+      "ms": 3049,
+      "lowerBound": 26
+    }
+  },
+  {
+    "case": 5,
+    "kind": "随机排列",
+    "board": [
+      7,
+      10,
+      1,
+      6,
+      4,
+      8,
+      2,
+      12,
+      5,
+      14,
+      13,
+      15,
+      0,
+      9,
+      11,
+      3
+    ],
+    "before": {
+      "ok": false,
+      "expanded": 661405,
+      "ms": 3000,
+      "lowerBound": 12
+    },
+    "after": {
+      "ok": false,
+      "expanded": 1807173,
+      "ms": 3120,
+      "lowerBound": 24
+    }
+  }
+]

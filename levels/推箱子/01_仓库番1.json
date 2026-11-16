@@ -1,0 +1,374 @@
+{
+ "set": "推箱子",
+ "id": "仓库番-01",
+ "name": "仓库番 1",
+ "origin": "STAGE 1 ROOM 1",
+ "lvKey": null,
+ "note": "改编自 STAGE 1 ROOM 1；墙=锁定块，箱=一次被动块，玩家=普通块。评分按「手」计：玩家全程一次连续拖动 = 1 手，所以难度分偏低是评分口径，不代表关卡简单。",
+ "tip": "推箱子改编 · 6×6",
+ "source": "sokoban-screenshot",
+ "level": {
+  "name": "仓库番 1",
+  "w": 6,
+  "h": 6,
+  "note": "改编自 STAGE 1 ROOM 1；墙=锁定块，箱=一次被动块，玩家=普通块。评分按「手」计：玩家全程一次连续拖动 = 1 手，所以难度分偏低是评分口径，不代表关卡简单。",
+  "pieces": [
+   {
+    "id": "w4",
+    "x": 0,
+    "y": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      2
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#9c3a2e",
+    "name": "砖墙"
+   },
+   {
+    "id": "w5",
+    "x": 3,
+    "y": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#9c3a2e",
+    "name": "砖墙"
+   },
+   {
+    "id": "w6",
+    "x": 4,
+    "y": 3,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      2
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#9c3a2e",
+    "name": "砖墙"
+   },
+   {
+    "id": "w7",
+    "x": 0,
+    "y": 4,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#9c3a2e",
+    "name": "砖墙"
+   },
+   {
+    "id": "box0",
+    "x": 2,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "onceOnly": true,
+    "color": "#d9a441",
+    "name": "木箱"
+   },
+   {
+    "id": "box1",
+    "x": 4,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "onceOnly": true,
+    "color": "#d9a441",
+    "name": "木箱"
+   },
+   {
+    "id": "box2",
+    "x": 2,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "onceOnly": true,
+    "color": "#d9a441",
+    "name": "木箱"
+   },
+   {
+    "id": "player",
+    "x": 3,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#3f7fd6",
+    "name": "推箱人"
+   },
+   {
+    "id": "box3",
+    "x": 3,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "onceOnly": true,
+    "color": "#d9a441",
+    "name": "木箱"
+   }
+  ],
+  "goals": [
+   {
+    "pieces": [
+     "box0",
+     "box1",
+     "box2",
+     "box3"
+    ],
+    "spots": [
+     [
+      [
+       2,
+       0
+      ]
+     ],
+     [
+      [
+       5,
+       2
+      ]
+     ],
+     [
+      [
+       0,
+       3
+      ]
+     ],
+     [
+      [
+       3,
+       5
+      ]
+     ]
+    ],
+    "need": "all"
+   }
+  ]
+ },
+ "meta": {
+  "score": 1,
+  "grade": "太简单",
+  "depth": 10,
+  "hands": 1,
+  "states": 144,
+  "paths": 1,
+  "waste": 1.6,
+  "same": 1,
+  "estimated": false,
+  "scoringVersion": 3,
+  "estimate": null,
+  "parts": {
+   "depth": 0.1,
+   "planning": 0,
+   "endurance": 0,
+   "choice": 0.5,
+   "trap": 0.5,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": false,
+  "confidence": "结构估计",
+  "cognition": {
+   "active": 1,
+   "switches": 0,
+   "revisits": 0,
+   "retreats": 0,
+   "maxSetup": 0,
+   "temptation": 8.75
+  },
+  "ms": 15
+ },
+ "solution": {
+  "solver": "bfs-optimal",
+  "optimal": true,
+  "steps": 10,
+  "hands": 1,
+  "moves": [
+   {
+    "i": 7,
+    "t": "p",
+    "dx": 0,
+    "dy": 1,
+    "chain": [
+     7,
+     8
+    ]
+   },
+   {
+    "i": 7,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 7,
+    "t": "p",
+    "dx": -1,
+    "dy": 0,
+    "chain": [
+     7,
+     6
+    ]
+   },
+   {
+    "i": 7,
+    "t": "p",
+    "dx": -1,
+    "dy": 0,
+    "chain": [
+     7,
+     6
+    ]
+   },
+   {
+    "i": 7,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 7,
+    "t": "p",
+    "dx": 0,
+    "dy": -1,
+    "chain": [
+     7,
+     4
+    ]
+   },
+   {
+    "i": 7,
+    "t": "p",
+    "dx": 0,
+    "dy": -1,
+    "chain": [
+     7,
+     4
+    ]
+   },
+   {
+    "i": 7,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 7,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 7,
+    "t": "p",
+    "dx": 1,
+    "dy": 0,
+    "chain": [
+     7,
+     5
+    ]
+   }
+  ]
+ }
+}

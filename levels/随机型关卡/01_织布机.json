@@ -1,0 +1,776 @@
+{
+ "set": "随机型关卡",
+ "id": "随机型关卡-01",
+ "name": "织布机",
+ "origin": "编辑器草稿",
+ "lvKey": null,
+ "note": "织布机 · 8×8 · 24 个线梭各归各位（每次复位随机打乱）",
+ "tip": "8×8 · 24 个线梭各归各位",
+ "source": "import",
+ "level": {
+  "name": "织布机",
+  "w": 8,
+  "h": 8,
+  "goals": [
+   {
+    "piece": "u15",
+    "cells": [
+     [
+      2,
+      2
+     ]
+    ]
+   },
+   {
+    "piece": "u17",
+    "cells": [
+     [
+      3,
+      2
+     ]
+    ]
+   },
+   {
+    "piece": "u25",
+    "cells": [
+     [
+      4,
+      2
+     ]
+    ]
+   },
+   {
+    "piece": "u19",
+    "cells": [
+     [
+      5,
+      2
+     ]
+    ]
+   },
+   {
+    "piece": "u26",
+    "cells": [
+     [
+      6,
+      2
+     ]
+    ]
+   },
+   {
+    "piece": "u23",
+    "cells": [
+     [
+      2,
+      3
+     ]
+    ]
+   },
+   {
+    "piece": "u16",
+    "cells": [
+     [
+      3,
+      3
+     ]
+    ]
+   },
+   {
+    "piece": "u28",
+    "cells": [
+     [
+      4,
+      3
+     ]
+    ]
+   },
+   {
+    "piece": "u18",
+    "cells": [
+     [
+      5,
+      3
+     ]
+    ]
+   },
+   {
+    "piece": "u20",
+    "cells": [
+     [
+      6,
+      3
+     ]
+    ]
+   },
+   {
+    "piece": "u33",
+    "cells": [
+     [
+      2,
+      4
+     ]
+    ]
+   },
+   {
+    "piece": "u24",
+    "cells": [
+     [
+      3,
+      4
+     ]
+    ]
+   },
+   {
+    "piece": "u29",
+    "cells": [
+     [
+      4,
+      4
+     ]
+    ]
+   },
+   {
+    "piece": "u30",
+    "cells": [
+     [
+      5,
+      4
+     ]
+    ]
+   },
+   {
+    "piece": "u21",
+    "cells": [
+     [
+      6,
+      4
+     ]
+    ]
+   },
+   {
+    "piece": "u27",
+    "cells": [
+     [
+      2,
+      5
+     ]
+    ]
+   },
+   {
+    "piece": "u35",
+    "cells": [
+     [
+      3,
+      5
+     ]
+    ]
+   },
+   {
+    "piece": "u36",
+    "cells": [
+     [
+      4,
+      5
+     ]
+    ]
+   },
+   {
+    "piece": "u38",
+    "cells": [
+     [
+      5,
+      5
+     ]
+    ]
+   },
+   {
+    "piece": "u22",
+    "cells": [
+     [
+      6,
+      5
+     ]
+    ]
+   },
+   {
+    "piece": "u31",
+    "cells": [
+     [
+      2,
+      6
+     ]
+    ]
+   },
+   {
+    "piece": "u32",
+    "cells": [
+     [
+      3,
+      6
+     ]
+    ]
+   },
+   {
+    "piece": "u34",
+    "cells": [
+     [
+      4,
+      6
+     ]
+    ]
+   },
+   {
+    "piece": "u37",
+    "cells": [
+     [
+      5,
+      6
+     ]
+    ]
+   }
+  ],
+  "pieces": [
+   {
+    "id": "c3",
+    "x": 1,
+    "y": 2,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#49a2a0",
+    "name": "纬一",
+    "hero": false,
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 6,
+      "r": 0
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "c4",
+    "x": 1,
+    "y": 3,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#49a24a",
+    "name": "纬二",
+    "hero": false,
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 6,
+      "r": 0
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "c5",
+    "x": 1,
+    "y": 4,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#a29649",
+    "name": "纬三",
+    "hero": false,
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 6,
+      "r": 0
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "c6",
+    "x": 1,
+    "y": 5,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#ed701d",
+    "name": "纬四",
+    "hero": false,
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 6,
+      "r": 0
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "c7",
+    "x": 4,
+    "y": 1,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#e647d1",
+    "name": "经三",
+    "hero": false,
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 0,
+      "r": 6
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "c8",
+    "x": 3,
+    "y": 1,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#5b49a2",
+    "name": "经二",
+    "hero": false,
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 0,
+      "r": 6
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "c9",
+    "x": 2,
+    "y": 1,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#496ba2",
+    "name": "经一",
+    "hero": false,
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 0,
+      "r": 6
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "c10",
+    "x": 5,
+    "y": 1,
+    "ori": 0,
+    "shape": "custom",
+    "color": "#e64747",
+    "name": "经四",
+    "hero": false,
+    "cells": [
+     {
+      "c": 0,
+      "r": 0
+     },
+     {
+      "c": 0,
+      "r": 6
+     }
+    ],
+    "rot": false
+   },
+   {
+    "id": "u11",
+    "x": 0,
+    "y": 0,
+    "ori": 0,
+    "shape": "2x2",
+    "color": "#131253",
+    "name": "机架一",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u12",
+    "x": 6,
+    "y": 0,
+    "ori": 0,
+    "shape": "2x2",
+    "color": "#131253",
+    "name": "机架二",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u13",
+    "x": 6,
+    "y": 6,
+    "ori": 0,
+    "shape": "2x2",
+    "color": "#131253",
+    "name": "机架四",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u14",
+    "x": 0,
+    "y": 6,
+    "ori": 0,
+    "shape": "2x2",
+    "color": "#131253",
+    "name": "机架三",
+    "hero": false,
+    "lock": true
+   },
+   {
+    "id": "u15",
+    "x": 2,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#db5243",
+    "name": "1",
+    "hero": false
+   },
+   {
+    "id": "u16",
+    "x": 3,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#89db43",
+    "name": "7",
+    "hero": false
+   },
+   {
+    "id": "u17",
+    "x": 3,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#db7643",
+    "name": "2",
+    "hero": false
+   },
+   {
+    "id": "u18",
+    "x": 5,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#43db44",
+    "name": "9",
+    "hero": false
+   },
+   {
+    "id": "u19",
+    "x": 5,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#dbbf43",
+    "name": "4",
+    "hero": false
+   },
+   {
+    "id": "u20",
+    "x": 6,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#43db69",
+    "name": "10",
+    "hero": false
+   },
+   {
+    "id": "u21",
+    "x": 6,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#4397db",
+    "name": "15",
+    "hero": false
+   },
+   {
+    "id": "u22",
+    "x": 6,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#a543db",
+    "name": "20",
+    "hero": false
+   },
+   {
+    "id": "u23",
+    "x": 2,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#aedb43",
+    "name": "6",
+    "hero": false
+   },
+   {
+    "id": "u24",
+    "x": 3,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#43dbb2",
+    "name": "12",
+    "hero": false
+   },
+   {
+    "id": "u25",
+    "x": 4,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#db9b43",
+    "name": "3",
+    "hero": false
+   },
+   {
+    "id": "u26",
+    "x": 6,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#d2db43",
+    "name": "5",
+    "hero": false
+   },
+   {
+    "id": "u27",
+    "x": 2,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#4372db",
+    "name": "16",
+    "hero": false
+   },
+   {
+    "id": "u28",
+    "x": 4,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#65db43",
+    "name": "8",
+    "hero": false
+   },
+   {
+    "id": "u29",
+    "x": 4,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#43dbd6",
+    "name": "13",
+    "hero": false
+   },
+   {
+    "id": "u30",
+    "x": 5,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#43bbdb",
+    "name": "14",
+    "hero": false
+   },
+   {
+    "id": "u31",
+    "x": 2,
+    "y": 6,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#c943db",
+    "name": "21",
+    "hero": false
+   },
+   {
+    "id": "u32",
+    "x": 3,
+    "y": 6,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#db43c9",
+    "name": "22",
+    "hero": false
+   },
+   {
+    "id": "u33",
+    "x": 2,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#43db8d",
+    "name": "11",
+    "hero": false
+   },
+   {
+    "id": "u34",
+    "x": 4,
+    "y": 6,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#db43a4",
+    "name": "23",
+    "hero": false
+   },
+   {
+    "id": "u35",
+    "x": 3,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#434edb",
+    "name": "17",
+    "hero": false
+   },
+   {
+    "id": "u36",
+    "x": 4,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#5c43db",
+    "name": "18",
+    "hero": false
+   },
+   {
+    "id": "u37",
+    "x": 5,
+    "y": 6,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#db4380",
+    "name": "24",
+    "hero": false
+   },
+   {
+    "id": "u38",
+    "x": 5,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#8043db",
+    "name": "19",
+    "hero": false
+   }
+  ],
+  "note": "织布机 · 8×8 · 24 个线梭各归各位（每次复位随机打乱）",
+  "shuffle": true,
+  "shuffleSteps": 3000,
+  "solver": "loom"
+ },
+ "meta": {
+  "score": 64,
+  "grade": "困难",
+  "scoringVersion": 3,
+  "version": 3,
+  "depth": null,
+  "hands": 226,
+  "states": null,
+  "paths": 0,
+  "waste": 0,
+  "same": 0,
+  "estimated": true,
+  "unsolved": false,
+  "confidence": "随机型关卡：3000 步打乱 × 6 轮抽样，去头尾平均（部分轮次用参考解，未证明最短）",
+  "shuffle": {
+   "steps": 3000,
+   "rounds": 6,
+   "seed": 7,
+   "trimmed": true
+  },
+  "sample": {
+   "rounds": 6,
+   "steps": 3000,
+   "scores": [
+    63,
+    63,
+    65,
+    65,
+    64,
+    67
+   ],
+   "avg": 64.3,
+   "min": 63,
+   "max": 67,
+   "trimmed": true,
+   "exact": 0,
+   "perRound": [
+    {
+     "score": 63,
+     "depth": 186,
+     "exact": false
+    },
+    {
+     "score": 63,
+     "depth": 174,
+     "exact": false
+    },
+    {
+     "score": 65,
+     "depth": 246,
+     "exact": false
+    },
+    {
+     "score": 65,
+     "depth": 226,
+     "exact": false
+    },
+    {
+     "score": 64,
+     "depth": 216,
+     "exact": false
+    },
+    {
+     "score": 67,
+     "depth": 310,
+     "exact": false
+    }
+   ]
+  },
+  "cognition": {
+   "retreats": 94.5,
+   "revisits": 218.3,
+   "temptation": 0
+  },
+  "parts": {
+   "depth": 31.8,
+   "planning": 25.6,
+   "endurance": 7.1,
+   "choice": 0,
+   "trap": 0,
+   "unique": 0,
+   "space": 0
+  }
+ },
+ "solution": null
+}

@@ -1,0 +1,186 @@
+{
+ "set": "华容之书",
+ "id": "华容之书-05",
+ "name": "六柱连城",
+ "origin": "原版6竖 7",
+ "lvKey": null,
+ "note": "原版6竖",
+ "source": "华容之书.txt",
+ "tip": "",
+ "level": {
+  "name": "六柱连城",
+  "w": 4,
+  "h": 5,
+  "pieces": [
+   {
+    "id": "vert1",
+    "x": 1,
+    "y": 0,
+    "ori": 0,
+    "shape": "1x2",
+    "color": "#3f48cc",
+    "name": "垛口"
+   },
+   {
+    "id": "vert2",
+    "x": 2,
+    "y": 0,
+    "ori": 0,
+    "shape": "1x2",
+    "color": "#3f48cc",
+    "name": "箭垛"
+   },
+   {
+    "id": "vert3",
+    "x": 0,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x2",
+    "color": "#3f48cc",
+    "name": "女墙"
+   },
+   {
+    "id": "vert4",
+    "x": 3,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x2",
+    "color": "#3f48cc",
+    "name": "望孔"
+   },
+   {
+    "id": "hero",
+    "x": 1,
+    "y": 2,
+    "ori": 0,
+    "shape": "2x2",
+    "color": "#ff7f27",
+    "name": "城门",
+    "hero": true
+   },
+   {
+    "id": "vert5",
+    "x": 0,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x2",
+    "color": "#3f48cc",
+    "name": "马面"
+   },
+   {
+    "id": "vert6",
+    "x": 3,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x2",
+    "color": "#3f48cc",
+    "name": "角楼"
+   },
+   {
+    "id": "pawn1",
+    "x": 1,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffaec9",
+    "name": "哨兵"
+   },
+   {
+    "id": "pawn2",
+    "x": 2,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffaec9",
+    "name": "弓手"
+   }
+  ],
+  "goals": [
+   {
+    "piece": "hero",
+    "label": "底行正中",
+    "cells": [
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      4
+     ]
+    ]
+   }
+  ]
+ },
+ "meta": {
+  "score": 3,
+  "grade": "太简单",
+  "scoringVersion": 3,
+  "depth": 5,
+  "hands": 4,
+  "states": 26,
+  "paths": 18,
+  "estimated": false,
+  "truncated": false,
+  "stopped": false,
+  "estimate": null
+ },
+ "solution": {
+  "solver": "bfs-optimal",
+  "optimal": true,
+  "steps": 5,
+  "hands": 4,
+  "moves": [
+   {
+    "i": 5,
+    "t": "p",
+    "dx": 0,
+    "dy": -1,
+    "chain": [
+     5,
+     2
+    ]
+   },
+   {
+    "i": 6,
+    "t": "p",
+    "dx": 0,
+    "dy": -1,
+    "chain": [
+     6,
+     3
+    ]
+   },
+   {
+    "i": 7,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 8,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "p",
+    "dx": 0,
+    "dy": 1,
+    "chain": [
+     0,
+     4
+    ]
+   }
+  ]
+ }
+}

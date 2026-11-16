@@ -1,0 +1,4290 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>沙发华容道 · 求解 / 试玩 / 关卡编辑器</title>
+<style>
+  :root{--bg:#0b0910;--panel:#151122;--panel2:#1c1730;--line:#2b2444;
+        --txt:#e9e4f7;--dim:#938bb0;--acc:#a855f7;--ok:#22b14c;--warn:#fbbf24;}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:radial-gradient(1200px 800px at 20% -10%,#1b1330 0%,var(--bg) 60%);
+       color:var(--txt);font:14px/1.55 "Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+       display:flex;flex-direction:column;overflow:hidden}
+  header{display:flex;align-items:center;gap:16px;padding:11px 18px;border-bottom:1px solid var(--line);
+         background:rgba(21,17,34,.92);flex:0 0 auto}
+  .brand{font-size:15px;font-weight:600;letter-spacing:.3px}
+  .brand span{color:var(--dim);font-weight:400;font-size:12px;margin-left:6px}
+  .tabs{display:flex;gap:4px;background:var(--panel2);padding:3px;border-radius:9px}
+  .tabs button{border:0;background:transparent;color:var(--dim);font:inherit;font-size:13px;
+               padding:5px 15px;border-radius:7px;cursor:pointer;transition:.15s}
+  .tabs button.on{background:var(--acc);color:#fff;box-shadow:0 2px 12px rgba(168,85,247,.4)}
+  .stat{margin-left:auto;color:var(--dim);font-size:13px;display:flex;gap:14px;align-items:center}
+  .stat b{color:var(--txt);font-variant-numeric:tabular-nums}
+  main{flex:1;display:flex;min-height:0}
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-width:0;position:relative}
+  #board{height:min(78vh,780px);max-width:100%;touch-action:none;user-select:none;
+         filter:drop-shadow(0 18px 40px rgba(0,0,0,.55));cursor:default}
+  aside{width:340px;flex:0 0 340px;border-left:1px solid var(--line);
+        background:rgba(21,17,34,.72);padding:13px;overflow-y:auto}
+  aside h3{margin:0 0 6px;font-size:11px;letter-spacing:.14em;color:var(--dim);font-weight:600}
+  .card{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:10px;margin-bottom:10px}
+  .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  button.b{flex:1 1 auto;min-width:58px;border:1px solid var(--line);background:#241c3c;color:var(--txt);
+           font:inherit;font-size:12.5px;padding:6px 9px;border-radius:8px;cursor:pointer;transition:.15s}
+  button.b:hover{background:#2f2450;border-color:#463a6b}
+  button.b:active{transform:translateY(1px)}
+  /* 「一起设为」那排四个按钮要挤在一行里，缩一缩内边距（默认 min-width:58px 会把它挤到第二行） */
+  .kindrow button.b{min-width:0;padding:6px 4px;font-size:12px}
+  button.b.acc{background:var(--acc);border-color:var(--acc)}
+  button.b:disabled{opacity:.4;cursor:not-allowed}
+  .kv{display:flex;justify-content:space-between;font-size:12.5px;padding:1px 0}
+  .kv span:last-child{font-variant-numeric:tabular-nums}
+  .k{color:var(--dim);font-size:12px}
+  .badge{font-size:11px;padding:1px 7px;border-radius:20px;background:#2a2244;color:var(--dim)}
+  .badge.ok{background:rgba(34,177,76,.18);color:#6ee29a}
+  .badge.no{background:rgba(237,28,36,.18);color:#ff8d92}
+  .badge.warn{background:rgba(251,191,36,.16);color:#fcd34d}
+  .hint{color:var(--dim);font-size:12px;line-height:1.6}
+  details.hint>summary{cursor:pointer;user-select:none}
+  details.hint[open]>summary{margin-bottom:2px}
+  .hint kbd{background:#2a2244;border:1px solid #3b3160;border-bottom-width:2px;border-radius:4px;
+            padding:0 5px;font:11px/1.6 ui-monospace,Consolas,monospace;color:#d6cff0}
+  .pal{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+  .pal button{border:1px solid var(--line);background:#241c3c;border-radius:8px;padding:5px 0;
+              cursor:pointer;display:flex;align-items:center;justify-content:center;height:40px}
+  .pal button.on{border-color:var(--acc);background:#33235a;box-shadow:0 0 0 2px rgba(168,85,247,.3)}
+  .pal svg{display:block;margin:1px auto}
+  textarea{width:100%;height:80px;resize:vertical;background:#100c1c;color:#cfc7e8;border:1px solid var(--line);
+           border-radius:8px;padding:7px;font:11px/1.45 ui-monospace,Consolas,monospace}
+  input[type=text],input[type=number]{background:#100c1c;color:var(--txt);border:1px solid var(--line);
+           border-radius:6px;padding:4px 7px;font:inherit;font-size:12px;width:100%}
+  input[type=color]{width:30px;height:24px;padding:0;border:1px solid var(--line);border-radius:5px;background:#100c1c}
+  .pillist{max-height:220px;overflow-y:auto;margin-top:4px}
+  .prow{display:flex;gap:6px;align-items:center;padding:3px 4px;border-radius:6px;cursor:pointer;font-size:12px}
+  .prow:hover{background:#2a2244}
+  .prow.on{background:rgba(168,85,247,.25)}
+  .prow .sw{width:12px;height:12px;border-radius:3px;flex:0 0 12px;border:1px solid #0006}
+  .prow .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .prow .lk{color:#fcd34d;font-size:11px;width:16px;text-align:center}
+  .prow .x{color:#ff8d92;cursor:pointer;padding:0 4px}
+  #steps{max-height:190px;overflow-y:auto;font:12px/1.7 ui-monospace,Consolas,monospace;color:#cfc7e8}
+  #steps div{padding:1px 4px;border-radius:4px;cursor:pointer;display:flex;gap:7px}
+  #steps div:hover{background:#2a2244}
+  #steps div.cur{background:rgba(168,85,247,.3)}
+  #steps i{color:#6b6388;font-style:normal;width:26px;text-align:right;flex:0 0 26px}
+  .toast{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+         background:rgba(35,26,58,.96);border:1px solid var(--line);border-radius:9px;
+         padding:8px 14px;font-size:12.5px;opacity:0;transition:.25s;pointer-events:none;max-width:80%}
+  .toast.show{opacity:1}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  /* 自绘 */
+  .paint{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-top:6px}
+  .paint button{min-height:34px;aspect-ratio:1;border:1px solid var(--line);background:#100c1c;border-radius:6px;
+                padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:none}
+  .paint button:hover{border-color:#5a4b86}
+  /* 展开：整块浮到棋盘上，宽高按棋盘格算，gap 归零才能和棋盘逐格对齐 */
+  #paint.float{position:fixed;z-index:40;background:rgba(16,12,28,.72);gap:0;margin:0;
+               outline:2px solid var(--acc);border-radius:2px;box-shadow:0 12px 34px rgba(0,0,0,.55)}
+  #paint.float button{min-height:0;width:100%;height:100%;aspect-ratio:auto;
+                      border-color:transparent;border-radius:0;background:transparent;padding:0}
+  #paint.float button:hover{border-color:#a855f7;background:rgba(168,85,247,.12)}
+  .brush{display:grid;grid-template-columns:repeat(6,1fr);gap:3px}
+  .brush button{height:30px;border:1px solid var(--line);background:#241c3c;border-radius:6px;
+                cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+  .brush button.on{border-color:var(--acc);box-shadow:0 0 0 2px rgba(168,85,247,.3)}
+  .diffbar{height:6px;border-radius:4px;background:#241c3c;overflow:hidden;margin-top:5px}
+  .diffbar i{display:block;height:100%;background:linear-gradient(90deg,#38bdf8,#a855f7,#fbbf24)}
+  .spin{width:12px;height:12px;border-radius:50%;border:2px solid #463a6b;border-top-color:#a855f7;
+        display:inline-block;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .lvbtn{display:flex;justify-content:space-between;align-items:center;gap:6px;width:100%;
+         border:1px solid var(--line);background:#241c3c;color:var(--txt);font:inherit;font-size:12.5px;
+         padding:5px 9px;border-radius:8px;cursor:pointer;margin-bottom:5px}
+  .lvbtn:hover{background:#2f2450}
+  .lvbtn.on{border-color:var(--acc);background:#33235a}
+  .lvbtn .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+  .lvbtn .sc{font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
+  .lvbtn .ed,.lvbtn .del{color:var(--dim);font-size:12px;padding:0 3px;border-radius:4px}
+  .lvbtn .ed:hover{color:#fcd34d;background:#3a2f5e}
+  .lvbtn .del:hover{color:#ff8d92;background:#3a2f5e}
+  /* 关卡集（= levels/ 下的一个文件夹） */
+  .sets{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
+  .sets button{border:1px solid var(--line);background:#241c3c;color:var(--dim);font:inherit;
+         font-size:11.5px;padding:3px 8px;border-radius:20px;cursor:pointer}
+  .sets button:hover{background:#2f2450;color:var(--txt)}
+  .sets button.on{border-color:var(--acc);background:rgba(168,85,247,.25);color:var(--txt)}
+  .sets button i{font-style:normal;opacity:.6;margin-left:3px}
+  .lvbtn .ori{display:block;font-size:10.5px;color:#6b6388;margin-top:1px}
+  /* 文件夹条目：比普通条目淡一点、左边带展开符；子条目整体缩进 */
+  .lvbtn.dir{background:#1d1734;border-color:#3a3060;color:#cfc6f5;font-weight:600}
+  .lvbtn.dir:hover{background:#2a2148}
+  .lvbtn.dir .nm{color:#cfc6f5}
+  .lvbtn.sub{padding-left:18px}
+  .lvbtn.sub .nm::before{content:'· ';color:#6b6388}
+  #lvSort{background:#1b1530;border:1px solid var(--line);color:var(--txt);border-radius:8px;
+          padding:4px 6px;font-size:12px;flex:1}
+  .stat .chk{display:inline-flex;align-items:center;gap:4px;cursor:pointer;user-select:none;
+             color:var(--dim);font-size:12px;border:1px solid var(--line);border-radius:20px;padding:2px 9px}
+  .stat .chk:hover{color:var(--txt);background:#2f2450}
+  .stat .chk input{accent-color:#a855f7;cursor:pointer;margin:0}
+  /* 编辑面板里的复选框（随机打乱） */
+  label.chkbox{display:inline-flex;align-items:center;gap:5px;color:var(--dim);font-size:12px;
+               border:1px solid var(--line);border-radius:8px;padding:4px 9px;cursor:pointer;user-select:none}
+  label.chkbox:hover{color:var(--txt);background:#2f2450}
+  label.chkbox input{accent-color:#a855f7;cursor:pointer;margin:0}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">沙发华容道<span id="lvName">—</span></div>
+  <div class="tabs" id="tabs">
+    <button data-mode="play" class="on">试玩</button>
+    <button data-mode="solve">求解</button>
+    <button data-mode="edit">编辑</button>
+  </div>
+  <div class="stat">
+    <label class="chk" title="显示/隐藏棋盘上的目标框"><input type="checkbox" id="cbGoalBox" checked>目标框</label>
+    <span>手数 <b id="stMoves">0</b></span>
+    <span>目标 <b id="stGoals">—</b></span>
+    <span id="stVerdict">—</span>
+  </div>
+</header>
+
+<main>
+  <div class="stage">
+    <svg id="board" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <aside>
+    <!-- 试玩 -->
+    <div id="playPane">
+      <h3>操作</h3>
+      <div class="card">
+        <div class="hint">
+          <b style="color:#cfc7e8">抓中间拖</b> = 平移（拖多远、拐几个弯都算 <b>1 手</b>）。<br>
+          <b style="color:#cfc7e8">抓偏一点、横向/绕圈拖</b> = 转 90°（沙发绕自身铰链、半圆/斜半圆绕圆心）。<br>
+          双击 / <kbd>R</kbd> 也能转 · <kbd>Ctrl</kbd>+<kbd>Z</kbd> 撤销 · <kbd>Y</kbd> 重置<br>
+          滚轮 / 双指 = 缩放 · 右键或拖动空白处 = 平移 · 拖到画布边缘会自己跟着走
+        </div>
+        <div class="row" style="margin-top:9px">
+          <button class="b" id="btnRotate">旋转 90°</button>
+          <button class="b" id="btnUndo">撤销</button>
+          <button class="b" id="btnReset">重置</button>
+        </div>
+      </div>
+      <h3>本关</h3>
+      <div class="card">
+        <div class="kv"><span class="k">难度分</span><span id="lvScore">—</span></div>
+        <div class="diffbar"><i id="lvBar" style="width:0%"></i></div>
+        <div class="hint" id="lvMeta" style="margin-top:6px">—</div>
+      </div>
+    </div>
+
+    <!-- 求解 -->
+    <div id="solvePane" style="display:none">
+      <h3>求解器</h3>
+      <div class="card">
+        <div class="kv"><span class="k">目标</span><span id="goalText">—</span></div>
+        <div class="kv"><span class="k">搜索状态</span><span id="svStates">—</span></div>
+        <div class="kv"><span class="k">解法手数</span><span id="svSteps">—</span></div>
+        <div class="row" style="margin-top:8px">
+          <button class="b acc" id="btnSolve">求解</button>
+          <button class="b" id="btnPlay" title="开局时是「播放 / 参考解法 N 步」，动过之后就是「复位」">播放</button>
+        </div>
+        <div class="hint" id="svMsg" style="margin-top:7px">先跑一次加权 A* 拿快速解当上界，再用 BFS 只展开比它短的分支 —— 既证明最短，又省掉大半状态。</div>
+      </div>
+
+      <!-- 后台任务：进度条 + 终止（分析/求解都走这里，页面不会卡死） -->
+      <div class="card" id="jobCard" style="display:none">
+        <div class="row" style="align-items:center">
+          <span class="spin" id="jobSpin"></span>
+          <span id="jobText" style="flex:1">计算中…</span>
+          <button class="b" id="jobStop" style="flex:0 0 auto">终止</button>
+        </div>
+        <div class="diffbar" style="margin-top:7px"><i id="jobBar" style="width:0%"></i></div>
+        <div class="hint" id="jobDetail" style="margin-top:5px">—</div>
+      </div>
+
+      <h3>难度分析</h3>
+      <div class="card">
+        <div class="row">
+          <button class="b acc" id="btnDiff">分析难度</button>
+        </div>
+        <div class="kv" style="margin-top:7px"><span class="k">解法长度</span><span id="dfDepth">—</span></div>
+        <div class="kv"><span class="k">可达状态</span><span id="dfStates">—</span></div>
+        <div class="kv"><span class="k">最短路径条数</span><span id="dfPaths">—</span></div>
+        <div class="kv"><span class="k">岔路 / 每步</span><span id="dfBranch">—</span></div>
+        <div class="kv"><span class="k">岔路代价 / 每步</span><span id="dfWaste">—</span></div>
+        <div class="kv"><span class="k">同样能走对 / 每步</span><span id="dfSame">—</span></div>
+        <div class="kv"><span class="k">难度分</span><span id="dfScore">—</span></div>
+        <div class="diffbar"><i id="dfBar" style="width:0%"></i></div>
+        <div class="hint" id="dfMsg" style="margin-top:6px">
+          难度（模型 v3）= 操作长度 32 + 调度结构 32（每次重建 / 撤退 / 最长铺垫的来回次数） + 选择干扰 16，
+          再乘一个长度门槛，并计入长程调度 20 分。状态空间与路径总数<b>不计分</b>（局面大只是「看不过来」，不等于「想不明白」）。
+        </div>
+      </div>
+
+      <div class="card" id="p15Card" style="display:none">
+        <div class="kv"><span class="k">专用求解</span><span id="p15Mode">4阶数字华容道</span></div>
+        <div class="row" style="margin-top:7px">
+          <button class="b acc" id="btnFast">快速解</button>
+          <button class="b" id="btnOpt">最短解</button>
+          <button class="b" id="btnLayer">分层解</button>
+        </div>
+        <div class="hint" id="p15Msg" style="margin-top:6px">
+          快速解 = 加权 A*；最短解 = IDA*+PDB；分层解 = 分三层逐层摆好。<br>
+          这一关带「随机打乱」属性：每次载入 / 复位都会重新乱一次，难度分是抽样平均（见关卡文件）。
+        </div>
+      </div>
+
+      <div class="card" id="loomCard" style="display:none">
+        <div class="kv"><span class="k">专用求解</span><span id="loomMode">织布机</span></div>
+        <div class="row" style="margin-top:7px">
+          <button class="b acc" id="btnLoomFast">快速解</button>
+        </div>
+        <div class="hint" id="loomMsg" style="margin-top:6px">
+          24 个梭子各回各位。这关的局面实在太多，通用枚举跑不完，
+          这里用加权 A* 逐个权重试出一条**能走通的解**（十几秒到一分钟），<b>不证明最短</b>。
+        </div>
+      </div>
+
+      <h3>解法步骤 <span class="badge" id="stepCount">0</span></h3>
+      <div class="card" style="padding:5px"><div id="steps"></div></div>
+    </div>
+
+    <!-- 编辑 -->
+    <div id="editPane" style="display:none">
+      <h3>棋盘</h3>
+      <div class="card">
+        <label class="k" style="display:block;margin-bottom:6px">关卡名
+          <input type="text" id="inLvName" placeholder="如 横刀立马" style="width:100%">
+        </label>
+        <label class="k" style="display:block;margin-bottom:7px">备注
+          <input type="text" id="inLvNote" placeholder="一句话介绍，关卡列表悬停能看到" style="width:100%">
+        </label>
+        <div class="row">
+          <span class="k">宽</span><input type="number" id="inW" min="2" max="1000" style="width:70px">
+          <span class="k">高</span><input type="number" id="inH" min="2" max="1000" style="width:70px">
+          <button class="b" id="btnResize" style="flex:0 0 70px">应用</button>
+        </div>
+        <div class="row" style="margin-top:7px">
+          <label class="chkbox" title="打开后，这关每次载入/复位都会从底面随机打乱"><input type="checkbox" id="cbShuffle">随机打乱</label>
+          <span class="k">步数</span><input type="number" id="inShuffleSteps" min="1" max="200000" step="50" style="width:84px">
+        </div>
+        <div class="hint" style="margin-top:6px">改尺寸后超出的块会被裁掉；随机打乱的关按现在的摆法当底面，难度分取多轮抽样。</div>
+      </div>
+
+      <h3>选中块</h3>
+      <div class="card">
+        <div class="grid2">
+          <label class="k">名称<input type="text" id="inName" placeholder="如 曹操"></label>
+          <label class="k">颜色<input type="color" id="inColor" style="width:100%"></label>
+        </div>
+        <div class="row" style="margin-top:7px">
+          <button class="b" id="btnKind" title="点一下切换：普通 → 被动 → 一次被动 → 锁定。切换后的属性也会成为之后放的新块的属性">普通</button>
+          <button class="b" id="btnSetGoalOne">设为目标</button>
+          <button class="b" id="btnDel">删除</button>
+        </div>
+        <div class="hint" id="selInfo" style="margin-top:6px">未选中</div>
+        <div class="hint" style="margin-top:4px">
+          <kbd>Q</kbd>/<kbd>E</kbd> 旋转 · <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · 也可以直接拖
+        </div>
+      </div>
+
+      <h3>框选 <span class="badge" id="selCount">0</span></h3>
+      <div class="card" id="selBoxCard">
+        <div class="hint" id="selBoxInfo" style="margin-top:0">
+          在空白处按住拖动 → 框住要一起处理的块（按住 <kbd>Shift</kbd> 追加）
+        </div>
+        <div class="row" style="margin-top:7px">
+          <button class="b" id="btnBoxCopy" title="复制一份（Ctrl+D）；Ctrl+C 复制到剪贴板、Ctrl+V 粘到最后点过的那格">复制</button>
+          <button class="b" id="btnBoxDel">删除</button>
+          <button class="b" id="btnBoxAll" title="全选（Ctrl+A）">全选</button>
+          <button class="b" id="btnBoxClear">取消框选</button>
+        </div>
+        <div class="row kindrow" style="margin-top:6px">
+          <span class="k">一起设为</span>
+          <button class="b" id="btnBoxNormal" title="快捷键 N">普通</button>
+          <button class="b" id="btnBoxPassive" title="快捷键 P">🔗 被动</button>
+          <button class="b" id="btnBoxOnce" title="快捷键 O">▣ 一次</button>
+          <button class="b" id="btnBoxLock" title="快捷键 L">🔒 锁定</button>
+        </div>
+        <div class="hint" style="margin-top:7px">
+          拖住框住的任意一块 = <b style="color:#cfc7e8">整组一起挪</b>（拖回原处可复原）<br>
+          <kbd>Q</kbd>/<kbd>E</kbd> 整组旋转 · <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 或方向键 整组移动<br>
+          <kbd>Delete</kbd> 删除 · <kbd>Ctrl</kbd>+<kbd>A</kbd> 全选 · <kbd>Ctrl</kbd>+<kbd>C</kbd>/<kbd>V</kbd> 复制粘贴 ·
+          <kbd>L</kbd>/<kbd>P</kbd>/<kbd>O</kbd>/<kbd>N</kbd> 改档位 · <kbd>Esc</kbd> 取消 · <kbd>Ctrl</kbd>+<kbd>Z</kbd> 撤销
+        </div>
+      </div>
+        <div class="hint" style="margin-top:2px">
+          <kbd>1</kbd>1×1 · <kbd>2</kbd>横1×2 · <kbd>3</kbd>竖1×2 · <kbd>4</kbd>2×2（再按一次取消）· <kbd>Esc</kbd> 取消
+        </div>
+      </div>
+
+      <h3>从形状库添加</h3>
+      <div class="card">
+        <div class="pal" id="pal"></div>
+      </div>
+
+      <h3>自绘滑块</h3>
+      <div class="card">
+        <div class="brush" id="brush"></div>
+        <div class="paint" id="paint"></div>
+        <div class="row" style="margin-top:7px">
+          <button class="b acc" id="btnNewCustom">创建滑块</button>
+          <button class="b" id="btnClearPaint">清空画布</button>
+          <button class="b" id="btnPaintBig" title="展开成和棋盘一样大的画布，一格对一格">⤢ 展开</button>
+        </div>
+        <div class="hint" id="paintInfo" style="margin-top:6px">画布为空</div>
+        <div class="hint" style="margin-top:4px">
+          组件：实心方 / 1/4 圆 / 弓形 / 内切圆。选中后<strong>再点自己 = 转 90°</strong>；
+          弓形贴在方块的相邻两边就拼出斜半圆。
+        </div>
+      </div>
+
+      <h3>目标 <span class="badge" id="goalCount">0</span></h3>
+      <div class="card">
+        <div class="pillist" id="goalList"></div>
+        <div id="goalInsp" style="display:none">
+          <div class="row" id="giNeed" style="margin-top:6px">
+            <button class="b" id="btnGoalAll" title="每块各占一个落点，位置可以互换">全部就位</button>
+            <button class="b" id="btnGoalAny" title="这些块里只要有一块到位就算达成">任一就位</button>
+          </div>
+          <div class="row" id="giPlace" style="margin-top:5px">
+            <button class="b" id="btnGoalSpot" title="同一个目标允许多个落点：到任一个都算">＋落点</button>
+            <button class="b" id="btnGoalPiece" title="把棋盘上当前选中的块拉进这一组">＋块</button>
+          </div>
+          <div class="hint" id="giEmptyHint" style="display:none;margin-top:5px">点棋盘上的空格子加入 / 再点一下移出。</div>
+          <div class="hint" id="goalInspMsg" style="margin-top:5px">—</div>
+        </div>
+        <div class="row" style="margin-top:6px">
+          <button class="b" id="btnGoalMove" title="打开后可以直接拖着目标框换位置">设置目标</button>
+          <button class="b" id="btnGoalEmpty" title="要求某几格空着">＋空格</button>
+          <button class="b" id="btnClearGoals">清空</button>
+        </div>
+        <!-- 规则说明默认收起：目标卡平时只留「一行一条目标 + 一排按钮」，不铺长段文字 -->
+        <details class="hint" id="goalHelp" style="margin-top:6px">
+          <summary>目标怎么设？</summary>
+          <div style="padding-top:5px">
+            一条目标 = 一组落点 + 归位的块。点列表里的目标可以继续加料：<b>＋落点</b>（到任一个都算）、
+            <b>＋块</b> 配 <b>全部就位</b>（每块各占一个落点，位置可换）或 <b>任一就位</b>（有一块到位就达成）。
+            <b>＋空格</b> 建一条"这几格必须空着"的目标，再点棋盘空格子加入 / 移出。
+          </div>
+        </details>
+      </div>
+
+      <h3>块列表</h3>
+      <div class="card">
+        <div class="pillist" id="pillist"></div>
+      </div>
+    </div>
+
+    <h3>关卡列表 <span class="badge" id="libCount">0</span></h3>
+    <div class="card">
+      <div class="sets" id="setBar"></div>
+      <div class="row" style="margin:6px 0 2px">
+        <span class="k">排序</span>
+        <select id="lvSort" title="默认=按文件编号；难度按分数排；关卡大小按棋盘格数排">
+          <option value="default">默认（编号）</option>
+          <option value="scoreAsc">难度（易 → 难）</option>
+          <option value="scoreDesc">难度倒序（难 → 易）</option>
+          <option value="size">关卡大小（大 → 小）</option>
+        </select>
+      </div>
+      <div id="lvList"></div>
+      <div class="row" id="libOps" style="margin-top:6px;display:none">
+        <button class="b" id="btnLibSave">存为当前关</button>
+        <button class="b" id="btnLibAdd">另存新关</button>
+        <button class="b" id="btnLibBlank" title="清空棋盘：块与目标全删，改个名另存就是一关新的">清空棋盘</button>
+        <button class="b" id="btnLibReset" title="丢掉浏览器里的本地改动，回到内置关卡">恢复内置</button>
+      </div>
+      <div class="hint" style="margin-top:6px" id="libHint">
+        内置关在 <code>levels/&lt;关卡集&gt;/&lt;编号&gt;_&lt;名字&gt;.json</code>（一关一文件，含难度与解法）；
+        没归类的关直接放 <code>levels/</code> 根目录
+      </div>
+    </div>
+
+    <h3>JSON</h3>
+    <div class="card">
+      <div class="row">
+        <button class="b" id="btnDump">导出</button>
+        <button class="b" id="btnLoad">载入</button>
+      </div>
+      <textarea id="jsonBox" spellcheck="false" placeholder="导出后出现在这里；粘贴后点载入。"></textarea>
+    </div>
+  </aside>
+</main>
+
+<script src="sofa-klotski.js"></script>
+<script src="shapes.js"></script>
+<script src="levels.js"></script>
+<script src="levelpacks.js"></script>
+<script src="levelstore.js"></script>
+<script src="puzzle15.js"></script>
+<script src="pdb15.js"></script>
+<script>
+'use strict';
+const K = window.Klotski;
+const SH = window.SHAPES;
+const LV = window.LEVELS;
+const NS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('board');
+const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+
+/* 沙发的美术轮廓（C 形，上半/下半各一个 r=1 四分之一圆，中间 1×1 扣掉 r=0.5 半圆） */
+const SOFA_PATH = 'M1 0 A1 1 0 0 0 0 1 L0 2 A1 1 0 0 0 1 3 L1 2 A0.5 0.5 0 0 1 1 1 Z';
+const PALETTE = ['#ed1c24', '#ff7f27', '#fff200', '#00a2e8', '#3f48cc', '#ffaec9', '#b97a57', '#a349a4', '#22b14c', '#7ddc9a'];
+
+/* 自绘的笔刷（格内容物）：
+ *   0     = 实心方
+ *   1..4  = 1/4 圆盘，圆心在该格第几个角（见 ARC_CORNER）—— 只有一种图形，点自己转 90°
+ *   5..8  = 弓形（边长 1 的弦 + R=√2/2 的弧，矢高 0.2071），5+凸出方向
+ *   9     = 内切整圆（圆心=格中心、r=1/2）
+ *   -1    = 擦除
+ * 后三种是「组件」：1/4 圆拼扇形，弓形贴在方块相邻两边就拼出斜半圆。 */
+const ARC_CORNER = { 1: [1, 1], 2: [0, 1], 3: [1, 0], 4: [0, 0] };
+const ARC_NEXT = { 1: 2, 2: 4, 3: 1, 4: 3 };          // 顺时针 90°：(1,1)→(0,1)→(0,0)→(1,0)
+const SEG_R = 0.7071067811865476;                     // √2/2
+/* 弓形路径（格内坐标 0..1）：d = 凸出方向 0 右 / 1 下 / 2 左 / 3 上 */
+const SEG_PATH = [
+  'M0 0A' + SEG_R + ' ' + SEG_R + ' 0 0 1 0 1Z',
+  'M0 0A' + SEG_R + ' ' + SEG_R + ' 0 0 0 1 0Z',
+  'M1 0A' + SEG_R + ' ' + SEG_R + ' 0 0 0 1 1Z',
+  'M0 1A' + SEG_R + ' ' + SEG_R + ' 0 0 1 1 1Z'
+];
+const DISC_PATH = 'M0.5 0A0.5 0.5 0 1 1 0.5 1A0.5 0.5 0 1 1 0.5 0Z';
+const BRUSHES = [
+  { slot: 'solid', label: '实心方' },
+  { slot: 'quarter', label: '1/4 圆（再点一下转 90°）', turn: 'quarter' },
+  { slot: 'seg', label: '弓形 / 斜半圆的凸边（再点一下转 90°）', turn: 'seg' },
+  { slot: 'disc', label: '内切圆 r=1/2（占一格）' },
+  { slot: 'erase', label: '擦除' }
+];
+const PAINT_N = 5;          // 收起时的默认画布 5×5
+const PAINT_MAX = 24;       // 展开时单边最多 24 格（再大一格就几像素，画不了）
+
+/* ══════════ 状态 ══════════ */
+let raw = null, L = null, st = null;
+let sel = null, mode = 'play';
+/* 随机型关卡（level.shuffle）：文件里存的是「基准态」，本轮题目 = 从基准态随机走 shuffleSteps 步。
+ * roundStart 记这一轮的开局，用来判断「播放 / 复位」该出哪个。 */
+let roundStart = null;
+/* 编辑时最后一次在棋盘上按下的格子：自绘块"画完就落在你刚点的那儿"要用它 */
+let lastBoardCell = null;
+/* 框选：selSet 是当前框住的块下标；boxSel 是正在拖的矩形（格子坐标） */
+let selSet = new Set();
+let boxSel = null;
+let hands = 0, history = [];
+let solution = null, playTimer = null, anim = null;
+let fileSolution = null;          // 关卡文件里存的参考解法（= 磁盘上那份 json 的 solution）
+let palShape = null, uid = 1;
+// 新块属性：普通 / 被动 / 一次被动 / 锁定。放了哪一档，接下来放的块就继承哪一档。
+const KIND_LIST = ['normal', 'passive', 'once', 'lock'];
+const KIND_LABEL = { normal: '普通', passive: '🔗 被动', once: '▣ 一次被动', lock: '🔒 锁定' };
+const KIND_TIP = {
+  normal: '普通：能自己拖动、也能旋转',
+  passive: '被动：自己动不了，只能被别的块推着让位（还会把推力继续传下去）',
+  once: '一次被动：只被直接推到时才走一格，不会把力传给下一块（推箱子的箱子）',
+  lock: '锁定：试玩和求解时都纹丝不动'
+};
+let newKind = 'normal';
+let paintW = PAINT_N, paintH = PAINT_N;          // 画布当前是几×几（展开时 = 棋盘）
+let paintBig = false;                            // 是不是展开在棋盘上
+let paintCells = new Array(paintW * paintH).fill(-1), painting = false;
+let brush = 0, brushSlot = 'solid', brushQ = 1, brushSeg = 3;   // brushQ: 1..4；brushSeg: 0..3
+/** 笔刷槽位 → 真正写进格子的值 */
+function brushValue(slot) {
+  if (slot === 'quarter') return brushQ;
+  if (slot === 'seg') return 5 + brushSeg;
+  if (slot === 'disc') return 9;
+  if (slot === 'erase') return -1;
+  return 0;
+}
+let lastDiff = null;
+
+function parseRaw(r) { return K.parse(window.resolveShapes(r)); }
+
+/* ── 块 id 发号 ──────────────────────────────────────────────
+ * 以前 uid = 块数 + 1，于是「删掉几个小序号块 → 再添加」会发出**已经存在**的 id：
+ * 36 块时 uid=37，删 3 块后仍然从 37 往后发，新块就叫 u37 / u38，跟活着的块撞车。
+ * 撞了 id 的关导出后：引擎按第一个解析（目标恰好还对），但写盘服务会以「块 id 重复」拒收。 */
+function maxIdNum(pieces) {
+  let max = 0;
+  for (const p of (pieces || [])) {
+    const m = /^[uc](\d+)$/.exec(String(p.id || ''));
+    if (m) max = Math.max(max, +m[1]);
+  }
+  return max;
+}
+/** 发一个保证不撞的 id（u = 形状块，c = 自绘块） */
+function uniqueId(prefix) {
+  const used = new Set((raw.pieces || []).map(p => p.id));
+  uid = Math.max(uid || 1, maxIdNum(raw.pieces) + 1);
+  let id = prefix + uid++;
+  while (used.has(id)) id = prefix + uid++;
+  return id;
+}
+/** 载入时把重复 id 修一遍：后面的重复项改名，目标仍指向第一个（引擎本来就按第一个解析） */
+function repairDupIds() {
+  const seen = new Set();
+  let fixed = 0;
+  for (const p of (raw.pieces || [])) {
+    if (!p.id) { p.id = uniqueId('u'); fixed++; seen.add(p.id); continue; }
+    if (seen.has(p.id)) { p.id = uniqueId('u'); fixed++; }
+    seen.add(p.id);
+  }
+  return fixed;
+}
+
+function loadLevel(r) {
+  raw = JSON.parse(JSON.stringify(r));
+  if (raw.goal && !raw.goals) { raw.goals = [raw.goal]; delete raw.goal; }
+  if (!raw.goals) raw.goals = [];
+  // 先把 id 修干净再解析：后面所有按 id 找块的地方（目标、组目标）都依赖它唯一
+  uid = maxIdNum(raw.pieces) + 1;
+  const dupFixed = repairDupIds();
+  L = parseRaw(raw);
+  st = K.initialState(raw);
+  roundStart = st.map(s => ({ ...s }));
+  // 随机型关卡：编辑的是基准态，试玩/求解一进来就出题（否则看到的是"已经还原"的盘面）
+  if (raw.shuffle && mode !== 'edit') st = newRound();
+  stopJob(true);                       // 切换关卡时把还在跑的分析/求解停掉
+  sel = null; hands = 0; history = []; solution = null; anim = null;
+  selSet.clear(); boxSel = null; lastBoardCell = null;    // 换关后旧下标全废
+  palShape = null; lastDiff = raw.meta || null; goalSel = -1;
+  fileSolution = null; updateRunBtn();
+  [...document.querySelectorAll('#pal button')].forEach(x => x.classList.remove('on'));
+  stopPlay();
+  view = { z: 1, x: 0, y: 0 };
+  applyView();
+  document.getElementById('inW').value = L.w;
+  document.getElementById('inH').value = L.h;
+  buildScene(); render(); updateUI();
+  document.getElementById('svSteps').textContent = '—';
+  document.getElementById('svStates').textContent = '—';
+  document.getElementById('steps').innerHTML = '';
+  document.getElementById('stepCount').textContent = '0';
+  document.getElementById('svMsg').textContent = '先跑一次加权 A* 拿快速解当上界，再用 BFS 只展开比它短的分支。';
+  ['dfStates', 'dfDepth', 'dfPaths', 'dfBranch', 'dfWaste', 'dfSame', 'dfScore'].forEach(id => { document.getElementById(id).textContent = '—'; });
+  document.getElementById('dfBar').style.width = '0%';
+  document.getElementById('lvName').textContent = raw.name || '未命名';
+  markLevel();
+  document.title = (raw.name || '沙发华容道') + ' · 沙发华容道';
+  applyCached();                       // 以前算过的难度/解法直接摆出来，不再重跑
+  if (dupFixed) setTimeout(() => toast('这一关有 ' + dupFixed + ' 个重复的块 id，已自动改名（目标仍指向原来的块）'), 340);
+}
+
+/* ══════════ 渲染 ══════════ */
+let gGhost, gPieces, gSel, gGoalTop;
+
+function pieceCells(stt, i) { return K.pieceCells(L, stt, i); }
+function pieceBox(stt, i) {
+  const p = L.pieces[i];
+  const ori = p.oris[stt[i].ori % p.oris.length];
+  return { x: stt[i].x, y: stt[i].y, w: ori.w, h: ori.h };
+}
+const degOf = (stt, i) => (L.pieces[i].oris.length < 2 ? 0 : stt[i].ori * 90);
+
+function buildScene() {
+  svg.innerHTML = '';
+  const defs = el('defs', {});
+  const pat = el('pattern', {
+    id: 'lockHatch', width: 0.16, height: 0.16, patternUnits: 'userSpaceOnUse',
+    patternTransform: 'rotate(45)'
+  });
+  pat.appendChild(el('rect', { x: 0, y: 0, width: 0.16, height: 0.16, fill: 'rgba(10,8,18,.28)' }));
+  pat.appendChild(el('line', { x1: 0, y1: 0, x2: 0, y2: 0.16, stroke: 'rgba(255,255,255,.30)', 'stroke-width': 0.028 }));
+  defs.appendChild(pat);
+  // 被动块（只能被推着走）的链纹：小圆环密排，一眼和普通块区分开
+  const chp = el('pattern', { id: 'chainHatch', width: 0.3, height: 0.3, patternUnits: 'userSpaceOnUse' });
+  chp.appendChild(el('circle', { cx: 0.075, cy: 0.075, r: 0.055, fill: 'none', stroke: 'rgba(150,225,255,.55)', 'stroke-width': 0.022 }));
+  chp.appendChild(el('circle', { cx: 0.225, cy: 0.225, r: 0.055, fill: 'none', stroke: 'rgba(150,225,255,.55)', 'stroke-width': 0.022 }));
+  defs.appendChild(chp);
+  // 一次被动块（只受直接推力、不再传力）的木箱 X 撑：暖金色，和青色链纹、灰色锁纹都不撞
+  const oop = el('pattern', { id: 'onceHatch', width: 0.5, height: 0.5, patternUnits: 'userSpaceOnUse' });
+  oop.appendChild(el('rect', { x: 0.006, y: 0.006, width: 0.488, height: 0.488,
+    fill: 'none', stroke: 'rgba(255,196,96,.38)', 'stroke-width': 0.022 }));
+  oop.appendChild(el('path', { d: 'M0.006 0.006L0.494 0.494M0.494 0.006L0.006 0.494',
+    fill: 'none', stroke: 'rgba(255,196,96,.55)', 'stroke-width': 0.032 }));
+  defs.appendChild(oop);
+  // 空格目标的斜纹：读作「这块地必须让出来」
+  const ehp = el('pattern', { id: 'emptyHatch', width: 0.2, height: 0.2, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' });
+  ehp.appendChild(el('rect', { x: 0, y: 0, width: 0.2, height: 0.2, fill: 'rgba(139,208,255,.09)' }));
+  ehp.appendChild(el('line', { x1: 0, y1: 0, x2: 0, y2: 0.2, stroke: 'rgba(139,208,255,.45)', 'stroke-width': 0.03 }));
+  defs.appendChild(ehp);
+  // 选中块的柔光：一层模糊描边垫底，再压一圈实线
+  const glow = el('filter', { id: 'selGlow', x: '-25%', y: '-25%', width: '150%', height: '150%' });
+  glow.appendChild(el('feGaussianBlur', { stdDeviation: 0.07 }));
+  defs.appendChild(glow);
+  svg.appendChild(defs);
+
+  svg.appendChild(el('rect', { x: 0, y: 0, width: L.w, height: L.h, rx: 0.08, fill: '#201a2e' }));
+  const grid = el('g', { stroke: 'rgba(255,255,255,.05)', 'stroke-width': 0.012 });
+  if (L.w + L.h <= 120) {          // 大棋盘（如 1000×1000）不画网格：几千条线既慢又糊成一片
+    for (let i = 1; i < L.w; i++) grid.appendChild(el('line', { x1: i, y1: 0, x2: i, y2: L.h }));
+    for (let j = 1; j < L.h; j++) grid.appendChild(el('line', { x1: 0, y1: j, x2: L.w, y2: j }));
+  }
+  svg.appendChild(grid);
+  gGhost = el('g', { id: 'gGhost' }); svg.appendChild(gGhost);
+  gPieces = el('g', { id: 'gPieces' }); svg.appendChild(gPieces);
+  gGoalTop = el('g', { id: 'gGoalTop' }); svg.appendChild(gGoalTop);
+  gSel = el('g', { id: 'gSel' }); svg.appendChild(gSel);
+  svg.appendChild(el('rect', {
+    x: 0, y: 0, width: L.w, height: L.h, rx: 0.08, fill: 'none',
+    stroke: 'rgba(168,85,247,.35)', 'stroke-width': 0.028
+  }));
+}
+
+const easeOut = t => 1 - (1 - t) * (1 - t);
+const lerp = (a, b, t) => a + (b - a) * t;
+
+/** 块名压在上面的字色：深色块用浅字、浅色块用深字（#rgb / #rrggbb / #rrggbbaa 都认） */
+function inkFor(color, strong) {
+  let hex = String(color == null ? '' : color).trim().replace(/^#/, '');
+  if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+  if (hex.length === 8) hex = hex.slice(0, 6);
+  if (!/^[0-9a-f]{6}$/i.test(hex)) return strong ? 'rgba(0,0,0,.55)' : 'rgba(0,0,0,.42)';
+  const ch = k => {
+    const v = parseInt(hex.slice(k, k + 2), 16) / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  };
+  const L = 0.2126 * ch(0) + 0.7152 * ch(2) + 0.0722 * ch(4);
+  if (L < 0.32) return strong ? 'rgba(255,255,255,.88)' : 'rgba(255,255,255,.74)';
+  return strong ? 'rgba(0,0,0,.55)' : 'rgba(0,0,0,.42)';
+}
+
+/** 一块的美术：填充路径 / 描边路径 / 变换
+ *  pvW：斜半圆这类「绕自身格心转」的块，用它给出**世界坐标**的转轴（动画中也不跳）。 */
+function artFor(p, o, box, deg, artDeg, pvW) {
+  // 斜半圆 + 1×1 方：以「本格中心」为原点画模板（弧朝右上），再按 ori 转。
+  // 模板 = 半圆盘（弦跨本格对角线，R=√2/2）+ 弦外的三角，合起来正好是「方块 ∪ 半圆」。
+  if (p.art === 'diagSemi') {
+    const w = pvW || { x: box.x + 0.5, y: box.y + box.h / 2 };
+    return {
+      fill: 'M-0.5 -0.5A0.7071 0.7071 0 0 1 0.5 0.5L-0.5 0.5Z',
+      stroke: null,
+      tf: 'translate(' + w.x + ' ' + w.y + ') rotate(' + deg + ')'
+    };
+  }
+  if (p.art === 'sofa') {
+    return {
+      fill: SOFA_PATH, stroke: null,
+      tf: `translate(${box.x + box.w / 2} ${box.y + box.h / 2}) rotate(${deg}) translate(-0.5 -1.5)`
+    };
+  }
+  const a = o.art;
+  let tf;
+  if (artDeg) {
+    // 动画中的「残余转角」：绕块自己的转轴转（自绘斜半圆 = 方块中心），
+    // 否则弧会绕包围盒中心扫过邻块，看着像整体甩了一下
+    if (pvW && o.pivot) {
+      tf = 'translate(' + pvW.x + ' ' + pvW.y + ') rotate(' + artDeg + ') translate(' + (-o.pivot[0]) + ' ' + (-o.pivot[1]) + ')';
+    } else {
+      tf = `translate(${box.x + box.w / 2} ${box.y + box.h / 2}) rotate(${artDeg}) translate(${-box.w / 2} ${-box.h / 2})`;
+    }
+  } else tf = `translate(${box.x} ${box.y})`;
+  return { fill: a.fill, stroke: a.stroke, tf };
+}
+
+function lockIcon(cx, cy) {
+  const g = el('g', { 'pointer-events': 'none' });
+  g.appendChild(el('path', {
+    d: `M${cx - 0.1} ${cy - 0.04}a0.1 0.1 0 0 1 0.2 0`,
+    fill: 'none', stroke: '#fde68a', 'stroke-width': 0.045, 'stroke-linecap': 'round'
+  }));
+  g.appendChild(el('rect', {
+    x: cx - 0.13, y: cy - 0.04, width: 0.26, height: 0.19, rx: 0.04,
+    fill: '#fde68a', stroke: 'rgba(0,0,0,.5)', 'stroke-width': 0.02
+  }));
+  return g;
+}
+
+/** 文字/图标的落点：放在块「最深处」，保证整段文字都落在实体内。
+ *  - 扇形（1/4、1/2、3/4 圆）：用圆盘质心（弧内侧），不用格中心
+ *  - 多分量：只标注最大的那一段（文字写在最大实体上最自然）
+ *  - 其余：对占用格做 8-邻接距离场，取离块外最远的那格
+ *  返回 {x, y, half}：half = 该点四周到实体外的保守距离（格），用来算字号上限。 */
+function labelSpot(cs, ori, p) {
+  const ARC_C = 0.4244;                      // 1/4 圆盘质心到圆心的距离
+  const comps = K.components(cs);
+  const use = comps.length > 1
+    ? comps.reduce((a, b) => (b.length > a.length ? b : a), comps[0])
+    : cs;
+
+  // 扇形：以圆心为轴，实体是若干 1/4 圆盘；文字放它们的**面积质心**。
+  // cs 是世界坐标、ori.desc 是局部坐标（两者同序），所以用 cs 取格子、用 desc 取弧的角。
+  if (ori && ori.pivot && ori.desc && ori.desc.length && ori.desc.every(q => q.arc)) {
+    let sx = 0, sy = 0;
+    for (let k = 0; k < ori.desc.length; k++) {
+      const q = ori.desc[k], [wc, wr] = cs[k];
+      const ax = q.arc[0], ay = q.arc[1];
+      sx += wc + ax + (ax ? -ARC_C : ARC_C);
+      sy += wr + ay + (ay ? -ARC_C : ARC_C);
+    }
+    const n = ori.desc.length;
+    return { x: sx / n, y: sy / n, half: 0.4, sector: true };
+  }
+
+  const set = new Set(use.map(([c, r]) => c + ',' + r));
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const [c, r] of use) {
+    if (c < x0) x0 = c;
+    if (c > x1) x1 = c;
+    if (r < y0) y0 = r;
+    if (r > y1) y1 = r;
+  }
+  const bw = x1 - x0 + 1, bh = y1 - y0 + 1;
+  const fullRect = use.length === bw * bh;
+
+  // C 形（沙发）：格模型是满矩形、视觉上有凹槽，所以要沿「缺口反方向」偏到块身上。
+  // 缺口方向 = 缺口中心(ori.pivot) − 块心；两者都用局部坐标，只取方向。
+  if (p && p.open != null && ori && ori.pivot) {
+    const vx = ori.pivot[0] - ori.w / 2, vy = ori.pivot[1] - ori.h / 2;
+    const vlen = Math.hypot(vx, vy) || 1;
+    const off = Math.min(0.24, Math.min(bw, bh) * 0.24);
+    return {
+      x: (x0 + x1 + 1) / 2 - (vx / vlen) * off,
+      y: (y0 + y1 + 1) / 2 - (vy / vlen) * off,
+      half: 0.3
+    };
+  }
+  // 满矩形（1×1、1×2、2×2…）：直接居中，比「最深的格」自然得多
+  if (fullRect) {
+    return { x: (x0 + x1 + 1) / 2, y: (y0 + y1 + 1) / 2, half: Math.min(bw, bh) / 2 };
+  }
+  // 外扩一圈当作「块外」，做多源 8-邻接 BFS：dist = 该格到块外的切比雪夫距离
+  const W = x1 - x0 + 3, H = y1 - y0 + 3;
+  const idx = (c, r) => (r - y0 + 1) * W + (c - x0 + 1);
+  const dist = new Int32Array(W * H).fill(-1);
+  const q = [];
+  for (let r = y0 - 1; r <= y1 + 1; r++) {
+    for (let c = x0 - 1; c <= x1 + 1; c++) {
+      if (set.has(c + ',' + r)) continue;
+      const k = idx(c, r);
+      dist[k] = 0;
+      q.push(k);
+    }
+  }
+  for (let head = 0; head < q.length; head++) {
+    const k = q[head], r = Math.floor(k / W), c = k % W;
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (!dr && !dc) continue;
+        const nr = r + dr, nc = c + dc;
+        if (nr < 0 || nc < 0 || nr >= H || nc >= W) continue;
+        const nk = nr * W + nc;
+        if (dist[nk] !== -1) continue;
+        dist[nk] = dist[k] + 1;
+        q.push(nk);
+      }
+    }
+  }
+
+  let mx = 0, my = 0;
+  for (const [c, r] of use) { mx += c + 0.5; my += r + 0.5; }
+  mx /= use.length; my /= use.length;
+
+  let best = null;
+  for (const [c, r] of use) {
+    const d = dist[idx(c, r)];
+    const bias = -(Math.abs(c + 0.5 - mx) + Math.abs(r + 0.5 - my));   // 同深度时靠重心
+    if (!best || d > best.d || (d === best.d && bias > best.bias)) {
+      best = { c, r, d, bias };
+    }
+  }
+  return { x: best.c + 0.5, y: best.r + 0.5, half: Math.max(0.16, best.d - 0.5) };
+}
+
+// 固定目标轮廓的尺寸，仅做刚体旋转和平移，避免扇形圆心随包围盒插值漂移。
+function animationPose(e, t) {
+  const deg = lerp(e.degFrom, e.degTo, t);
+  let cx = lerp(e.from.x + e.from.w / 2, e.to.x + e.to.w / 2, t);
+  let cy = lerp(e.from.y + e.from.h / 2, e.to.y + e.to.h / 2, t);
+  if (e.pivot) {
+    const ox = e.from.x + e.from.w / 2 - e.pivot.x;
+    const oy = e.from.y + e.from.h / 2 - e.pivot.y;
+    const a = (deg - e.degFrom) * Math.PI / 180;
+    cx = e.pivot.x + ox * Math.cos(a) - oy * Math.sin(a) + e.drift[0] * t;
+    cy = e.pivot.y + ox * Math.sin(a) + oy * Math.cos(a) + e.drift[1] * t;
+  }
+  return { box: {x: cx-e.to.w/2, y: cy-e.to.h/2, w:e.to.w, h:e.to.h},
+    deg, artDeg: deg-e.degTo };
+}
+
+/** 一组格子的并集轮廓：只留「外面没有邻居」的边，再首尾相接串成闭合环。
+ *  终点框用它画成一整块，而不是每格一个小方块。 */
+function unionOutline(cells) {
+  const set = new Set(cells.map(c => c[0] + ',' + c[1]));
+  const edges = [];
+  for (const [c, r] of cells) {
+    if (!set.has(c + ',' + (r - 1))) edges.push([[c, r], [c + 1, r]]);
+    if (!set.has((c + 1) + ',' + r)) edges.push([[c + 1, r], [c + 1, r + 1]]);
+    if (!set.has(c + ',' + (r + 1))) edges.push([[c + 1, r + 1], [c, r + 1]]);
+    if (!set.has((c - 1) + ',' + r)) edges.push([[c, r + 1], [c, r]]);
+  }
+  const from = new Map();
+  for (const e of edges) {
+    const k = e[0][0] + ',' + e[0][1];
+    if (!from.has(k)) from.set(k, []);
+    from.get(k).push(e);
+  }
+  const used = new Set();
+  let d = '';
+  for (const e0 of edges) {
+    if (used.has(e0)) continue;
+    let cur = e0, guard = 0;
+    d += 'M' + cur[0][0] + ' ' + cur[0][1];
+    while (cur && guard++ < edges.length + 4) {
+      used.add(cur);
+      d += 'L' + cur[1][0] + ' ' + cur[1][1];
+      if (cur[1][0] === e0[0][0] && cur[1][1] === e0[0][1]) break;
+      const next = (from.get(cur[1][0] + ',' + cur[1][1]) || []).find(x => !used.has(x));
+      cur = next || null;
+    }
+    d += 'Z';
+  }
+  return d;
+}
+
+/** 块的世界坐标转轴（格心/圆心）。
+ *  旋转动画里必须用**这一个点**当旋转中心：四个朝向的局部 pivot 各不相同，
+ *  如果跟着目标朝向的局部 pivot 走，斜半圆会在动画开头整体跳一格，然后绕错的点转。 */
+function pvWorldOf(i, o, box, e, t) {
+  const pv = o.pivot || [0.5, 0.5];
+  if (e && e.pivot) return { x: e.pivot.x + e.drift[0] * t, y: e.pivot.y + e.drift[1] * t };
+  const cs = o.cells || [];
+  const minC = cs.length ? Math.min.apply(null, cs.map(c => c[0])) : 0;
+  const minR = cs.length ? Math.min.apply(null, cs.map(c => c[1])) : 0;
+  return { x: box.x - minC + pv[0], y: box.y - minR + pv[1] };
+}
+
+function render() {
+  let amap = null, t = 0;
+  if (anim) {
+    t = easeOut(Math.min(1, (performance.now() - anim.t0) / anim.dur));
+    amap = {};
+    for (const e of anim.list) amap[e.i] = e;
+  }
+  gPieces.innerHTML = '';
+  for (let i = 0; i < L.pieces.length; i++) {
+    const p = L.pieces[i];
+    const o = p.oris[st[i].ori % p.oris.length];
+    let box = pieceBox(st, i), deg = degOf(st, i), artDeg = 0;
+    const e = amap && amap[i];
+    if (e) {
+      const pose = animationPose(e, t);
+      box = pose.box;
+      deg = pose.deg;
+      artDeg = pose.artDeg;
+    }
+    const cs = pieceCells(st, i);
+    const dx = box.x - st[i].x, dy = box.y - st[i].y;
+    const point = (x, y) => {
+      const a = artDeg * Math.PI / 180;
+      const lx = x - st[i].x - box.w / 2, ly = y - st[i].y - box.h / 2;
+      return [box.x + box.w / 2 + lx * Math.cos(a) - ly * Math.sin(a),
+        box.y + box.h / 2 + lx * Math.sin(a) + ly * Math.cos(a)];
+    };
+    const art = artFor(p, o, box, deg, artDeg, pvWorldOf(i, o, box, e, t));
+
+    gPieces.appendChild(el('path', {
+      d: art.fill, fill: p.color, 'data-i': i, 'data-part': 'fill', transform: art.tf,
+      'stroke-linejoin': 'round'
+    }));
+    if (art.stroke) {
+      gPieces.appendChild(el('path', {
+        d: art.stroke, fill: 'none', stroke: '#08060f', 'stroke-width': 0.024,
+        'stroke-linecap': 'round', 'data-i': i, 'data-part': 'line', transform: art.tf
+      }));
+    } else if (art.stroke === null) {
+      gPieces.appendChild(el('path', {
+        d: art.fill, fill: 'none', stroke: '#08060f', 'stroke-width': 0.024,
+        'stroke-linejoin': 'round', 'data-i': i, 'data-part': 'line', transform: art.tf
+      }));
+    }
+
+    // 多分量：各段重心连线，表达"这是同一块"
+    const comps = K.components(cs);
+    if (comps.length > 1) {
+      const cents = comps.map(comp => {
+        let sx = 0, sy = 0;
+        for (const [c, r] of comp) { sx += c + 0.5; sy += r + 0.5; }
+        return point(sx / comp.length, sy / comp.length);
+      });
+      let d = '';
+      for (let k = 1; k < cents.length; k++) {
+        d += `M${cents[k - 1][0]} ${cents[k - 1][1]}L${cents[k][0]} ${cents[k][1]}`;
+      }
+      gPieces.appendChild(el('path', {
+        d, stroke: p.color, 'stroke-width': 0.075, 'stroke-linecap': 'round',
+        opacity: 0.85, 'data-i': i, 'data-part': 'link'
+      }));
+      for (const c of cents) {
+        gPieces.appendChild(el('circle', {
+          cx: c[0], cy: c[1], r: 0.055, fill: p.color, stroke: '#08060f',
+          'stroke-width': 0.016, 'data-i': i, 'data-part': 'link'
+        }));
+      }
+    }
+
+    // 一次被动块：木箱 X 撑 + 暖金双实线边框（实线＝只受一次直接推力，虚线链纹＝会继续传力）
+    if (p.onceOnly && !p.lock) {
+      gPieces.appendChild(el('path', {
+        d: art.fill, fill: 'url(#onceHatch)', transform: art.tf, 'pointer-events': 'none',
+        'data-i': i, 'data-part': 'once'
+      }));
+      gPieces.appendChild(el('path', {
+        d: art.fill, fill: 'none', stroke: 'rgba(255,196,96,.95)', 'stroke-width': 0.055,
+        'stroke-linejoin': 'round', transform: art.tf,
+        'pointer-events': 'none', 'data-i': i, 'data-part': 'onceEdge'
+      }));
+      gPieces.appendChild(el('path', {
+        d: art.fill, fill: 'none', stroke: 'rgba(60,36,10,.55)', 'stroke-width': 0.02,
+        'stroke-linejoin': 'round', transform: art.tf,
+        'pointer-events': 'none', 'data-i': i, 'data-part': 'onceInner'
+      }));
+    }
+
+    // 被动块：铺一层链纹 + 一圈虚线内描边
+    if (p.chainOnly && !p.lock) {
+      gPieces.appendChild(el('path', {
+        d: art.fill, fill: 'url(#chainHatch)', transform: art.tf, 'pointer-events': 'none',
+        'data-i': i, 'data-part': 'chain'
+      }));
+      gPieces.appendChild(el('path', {
+        d: art.fill, fill: 'none', stroke: 'rgba(150,225,255,.85)', 'stroke-width': 0.03,
+        'stroke-dasharray': '0.1 0.08', 'stroke-linejoin': 'round', transform: art.tf,
+        'pointer-events': 'none', 'data-i': i, 'data-part': 'chainline'
+      }));
+    }
+
+    // 文字与小锁共用同一个「块内落点」：任意形状都不会写到块外
+    const spot = labelSpot(cs, o, p);
+    const [labelX, labelY] = point(spot.x, spot.y);
+
+    // 锁定：斜线覆盖 + 小锁
+    if (p.lock) {
+      gPieces.appendChild(el('path', {
+        d: art.fill, fill: 'url(#lockHatch)', transform: art.tf, 'pointer-events': 'none',
+        'data-i': i, 'data-part': 'lock'
+      }));
+      gPieces.appendChild(lockIcon(labelX, labelY + (p.name ? 0.17 : 0.05)));
+    }
+
+    if (p.name) {
+      const len = Math.max(1, p.name.length);
+      // 基础字号（原视觉）→ 再被实体可用空间压住：高度 ≤ 1.75·half，宽度 ≤ 1.9·half
+      // 扇形实体只有 1/4 格，字号再压一档才不显得顶满
+      const base = p.hero ? 0.3 : (spot.sector ? 0.2 : 0.24);
+      let fs = Math.min(base, 0.46 / Math.max(1, len / 2));
+      fs = Math.min(fs, spot.half * 1.75, spot.half * 1.9 / (0.62 * len));
+      fs = Math.max(0.085, fs);
+      const tx = el('text', {
+        x: labelX, y: labelY + (p.lock ? -0.15 : 0),
+        'text-anchor': 'middle', 'dominant-baseline': 'central',
+        fill: inkFor(p.color, !!p.hero),
+        'font-size': fs, 'font-weight': p.hero ? 700 : 600, 'pointer-events': 'none',
+        'data-i': i, 'data-part': 'label'
+      });
+      tx.textContent = p.name;
+      gPieces.appendChild(tx);
+    }
+  }
+
+  gSel.innerHTML = '';
+  if (sel != null && L.pieces[sel]) {
+    // 顺着块的**真实轮廓**高亮（沙发走 C 形、扇形走圆弧），而不是给每格描虚线框
+    const p = L.pieces[sel];
+    const o = p.oris[st[sel].ori % p.oris.length];
+    const box = pieceBox(st, sel);
+    const art = artFor(p, o, box, degOf(st, sel), 0, pvWorldOf(sel, o, box, null, 0));
+    const shape = art.stroke || art.fill;
+    gSel.appendChild(el('path', {
+      d: shape, transform: art.tf, fill: 'none', stroke: 'rgba(255,255,255,.55)',
+      'stroke-width': 0.13, 'stroke-linejoin': 'round', 'stroke-linecap': 'round',
+      filter: 'url(#selGlow)', 'pointer-events': 'none'
+    }));
+    gSel.appendChild(el('path', {
+      d: shape, transform: art.tf, fill: 'none', stroke: '#fff',
+      'stroke-width': 0.042, 'stroke-linejoin': 'round', 'stroke-linecap': 'round',
+      'pointer-events': 'none'
+    }));
+  }
+  // 框选的块：细虚线轮廓（单选那块已经有一条白描边了，不重复画）
+  selSet.forEach(i => {
+    if (i === sel || !L.pieces[i]) return;
+    gSel.appendChild(el('path', {
+      d: unionOutline(K.pieceCells(L, st, i)), fill: 'none', stroke: '#a855f7',
+      'stroke-width': 0.06, 'stroke-dasharray': '0.16 0.1', 'pointer-events': 'none'
+    }));
+  });
+  if (boxSel) {
+    const x = Math.min(boxSel.x0, boxSel.x1), y = Math.min(boxSel.y0, boxSel.y1);
+    const w = Math.abs(boxSel.x1 - boxSel.x0), h = Math.abs(boxSel.y1 - boxSel.y0);
+    gSel.appendChild(el('rect', {
+      x, y, width: Math.max(w, 0.02), height: Math.max(h, 0.02),
+      fill: 'rgba(168,85,247,.16)', stroke: '#c084fc', 'stroke-width': 0.045,
+      'stroke-dasharray': '0.18 0.12', 'pointer-events': 'none'
+    }));
+  }
+  gGhost.innerHTML = '';
+  gGoalTop.innerHTML = '';
+  if (!showGoalBox) return;
+  raw.goals.forEach((g, gk) => drawGoal(g, gk));
+}
+
+/* ── 目标：四种写法共用一套读写小工具 ──────────────────────────────
+ *   {piece,cells}                              某块 → 一个格位（老写法）
+ *   {piece,spots:[[…],[…]]}                    某块 → 多个落点之一
+ *   {pieces:[…],spots:[…],need:'any'|'all'}    几块共用一张座位表（任一 / 全部可换位）
+ *   {empty:[[c,r],…]}                          这几格必须空着
+ * 界面只跟「落点」和「成员」打交道，判定全部交给引擎的 K.goalNorm。 */
+function goalSpots(g) {
+  if (!g) return [];
+  if (Array.isArray(g.spots)) return g.spots;
+  if (Array.isArray(g.cells)) return [g.cells];
+  return [];
+}
+function goalPieces(g) {
+  if (!g) return [];
+  if (Array.isArray(g.pieces)) return g.pieces.slice();
+  return g.piece != null ? [g.piece] : [];
+}
+/** 单落点的老写法升成 spots 数组（多落点必须要这个数组） */
+function ensureSpots(g) {
+  if (Array.isArray(g.spots)) return g.spots;
+  g.spots = Array.isArray(g.cells) ? [g.cells] : [];
+  delete g.cells;
+  return g.spots;
+}
+function setGoalSpot(g, si, cells) {
+  if (Array.isArray(g.spots)) g.spots[si] = cells;
+  else g.cells = cells;
+  g.label = null;                    // 位置变了，「底行正中」这种旧标签就不作数了
+}
+function goalSetPieces(g, ids) {
+  if (ids.length === 1) { g.piece = ids[0]; delete g.pieces; }
+  else { g.pieces = ids.slice(); delete g.piece; }
+}
+/** 这一格是哪个目标的第几个落点（空格目标不参与拖动） */
+function goalHit(cx, cy) {
+  const c = Math.floor(cx), r = Math.floor(cy);
+  for (let k = 0; k < raw.goals.length; k++) {
+    const g = raw.goals[k];
+    if (g.empty) continue;
+    const ss = goalSpots(g);
+    for (let s = 0; s < ss.length; s++)
+      if ((ss[s] || []).some(q => (q[0] | 0) === c && (q[1] | 0) === r)) return { gi: k, si: s };
+  }
+  return null;
+}
+function goalColor(g) {
+  if (!g || g.empty) return '#8bd0ff';
+  const ids = goalPieces(g);
+  if (ids.length === 1) {
+    const i = L.pieces.findIndex(p => p.id === ids[0]);
+    if (i >= 0) return L.pieces[i].color;
+  }
+  return '#fbbf24';                 // 成组目标用金色：成员颜色不一样时不该偏袒谁
+}
+/** 在这组落点旁边找一个空位置放新框（玩家再自己拖到位） */
+function freeSpot(cells) {
+  const used = new Set();
+  for (const g of raw.goals) for (const s of goalSpots(g)) for (const q of (s || [])) used.add((q[0] | 0) + ',' + (q[1] | 0));
+  const box = (cells && cells.length ? cells : [[0, 0]]).map(c => [c[0] | 0, c[1] | 0]);
+  for (let d = 1; d <= 8; d++) {
+    for (const [dx, dy] of [[d, 0], [0, d], [-d, 0], [0, -d]]) {
+      const cs = box.map(c => [c[0] + dx, c[1] + dy]);
+      if (cs.every(([c, r]) => c >= 0 && r >= 0 && c < L.w && r < L.h && !used.has(c + ',' + r))) return cs;
+    }
+  }
+  return box;
+}
+/** 一条目标画在棋盘上：归位类画落点，空格类铺斜纹；选中的那条加粗、其余压暗 */
+function drawGoal(g, gk) {
+  const on = gk === goalSel;
+  const dim = goalSel >= 0 && !on ? 0.4 : 1;
+  const op = (mode === 'play' ? 0.7 : 1) * dim;
+  const done = K.goalOne(L, st, g);
+
+  if (g.empty) {
+    const cells = (g.empty || []).map(c => [c[0] | 0, c[1] | 0]);
+    if (!cells.length) return;
+    for (const [c, r] of cells)
+      gGhost.appendChild(el('rect', {
+        x: c, y: r, width: 1, height: 1, fill: 'url(#emptyHatch)',
+        opacity: 0.95 * dim, 'pointer-events': 'none'
+      }));
+    gGoalTop.appendChild(el('path', {
+      d: unionOutline(cells), fill: 'none',
+      stroke: done ? '#6ee29a' : '#8bd0ff', 'stroke-width': on ? 0.055 : 0.032,
+      'stroke-dasharray': done ? 'none' : '0.09 0.07', 'stroke-linejoin': 'round',
+      opacity: op, 'data-goal': gk, 'data-kind': 'empty',
+      'pointer-events': (goalEdit && mode === 'edit') ? 'all' : 'none',
+      style: (goalEdit && mode === 'edit') ? 'cursor:cell' : 'none'
+    }));
+    if (cells.length <= 2) {
+      // 文字一律写在框的左上角（与普通目标一致），别压在块正中间
+      let minC = Infinity, minR = Infinity;
+      for (const [c, r] of cells) { if (c < minC) minC = c; if (r < minR) minR = r; }
+      const tx = el('text', {
+        x: minC + 0.12, y: minR + 0.3, 'text-anchor': 'start',
+        'dominant-baseline': 'central', fill: done ? '#6ee29a' : '#bfe6ff',
+        'font-size': 0.24, 'font-weight': 700,
+        stroke: 'rgba(8,6,15,.65)', 'stroke-width': 0.026, 'paint-order': 'stroke',
+        opacity: op, 'pointer-events': 'none'
+      });
+      tx.textContent = '空';
+      gGoalTop.appendChild(tx);
+    }
+    return;
+  }
+
+  const ss = goalSpots(g);
+  const ids = goalPieces(g);
+  const col = goalColor(g);
+  const idx0 = ids.length ? L.pieces.findIndex(p => p.id === ids[0]) : -1;
+  ss.forEach((cells0, si) => {
+    const cells = (cells0 || []).map(c => [c[0] | 0, c[1] | 0]);
+    if (!cells.length) return;
+    const d = unionOutline(cells);
+    // 底下铺一层淡色，让"目标区域"一眼可见
+    gGhost.appendChild(el('path', {
+      d, fill: done ? '#22b14c' : col, 'fill-opacity': done ? 0.16 : (mode === 'play' ? 0.10 : 0.13),
+      stroke: 'none', opacity: op, 'pointer-events': 'none'
+    }));
+    // 轮廓与名字浮在块上面：块正好压在终点上时也能看清目标
+    gGoalTop.appendChild(el('path', {
+      d, fill: 'none', stroke: done ? '#6ee29a' : col, 'stroke-width': on ? 0.055 : 0.032,
+      'stroke-linejoin': 'round', 'stroke-dasharray': done ? 'none' : '0.09 0.07',
+      opacity: op, 'data-goal': gk, 'data-spot': si,
+      'pointer-events': (goalEdit && mode === 'edit') ? 'all' : 'none',
+      style: (goalEdit && mode === 'edit') ? 'cursor:move' : 'none'
+    }));
+    // 文字写在框的**左上角**（不压块正中间，也不跟块自己的名字打架）
+    let minC = Infinity, minR = Infinity;
+    for (const [c, r] of cells) { if (c < minC) minC = c; if (r < minR) minR = r; }
+    // 多个落点时用序号代替块名：四五个重名标签比数字乱得多。
+    // 目标再多也照写（15 子 15 条、织布机 24 条都一样）：位置让到框的左上角，就不会压住块本身。
+    const txt = ss.length > 1 ? String(si + 1)
+      : (ids.length === 1 && idx0 >= 0 ? (L.pieces[idx0].name || L.pieces[idx0].id) : ids.length + ' 块');
+    if (txt && (done ? ss.length > 1 : true)) {
+      const tx = el('text', {
+        x: minC + 0.12, y: minR + 0.31, 'text-anchor': 'start', 'dominant-baseline': 'central',
+        fill: ss.length > 1 ? col : (done ? '#6ee29a' : col),
+        'font-size': ss.length > 1 ? 0.24 : 0.2, 'font-weight': 600,
+        stroke: 'rgba(8,6,15,.55)', 'stroke-width': 0.022, 'paint-order': 'stroke',
+        opacity: op, 'pointer-events': 'none'
+      });
+      tx.textContent = txt;
+      gGoalTop.appendChild(tx);
+    }
+  });
+}
+
+function tick() {
+  if (!anim) return;
+  render();
+  if ((performance.now() - anim.t0) / anim.dur >= 1) { anim = null; return; }
+  requestAnimationFrame(tick);
+}
+/** 对比前后状态，把变动过的块全部纳入补间（也覆盖推块、多块同时移动） */
+function playMoveAll(prev, dur, move) {
+  const pivot = move && move.pivot;
+  const list = [];
+  for (let i = 0; i < L.pieces.length; i++) {
+    const a = pieceBox(prev, i), b = pieceBox(st, i);
+    const d0 = degOf(prev, i), d1 = degOf(st, i);
+    if (a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h && d0 === d1) continue;
+    let dd = d1 - d0;
+    if (dd > 180) dd -= 360;
+    if (dd < -180) dd += 360;
+    if (move && (move.t === 'r' || move.t === 'cr')) dd = move.d * 90;
+    let drift = [0, 0];
+    if (pivot) {
+      const ox = a.x + a.w / 2 - pivot.x, oy = a.y + a.h / 2 - pivot.y;
+      const ang = dd * Math.PI / 180, ca = Math.cos(ang), sa = Math.sin(ang);
+      drift = [b.x + b.w / 2 - (pivot.x + ox * ca - oy * sa),
+        b.y + b.h / 2 - (pivot.y + ox * sa + oy * ca)];
+    }
+    list.push({ i, from: a, to: b, degFrom: d0, degTo: d0 + dd, pivot: pivot || null, drift });
+  }
+  if (!list.length) { render(); return; }
+  anim = { list, t0: performance.now(), dur: dur || 130 };
+  requestAnimationFrame(tick);
+}
+
+/* ══════════ 交互 ══════════ */
+/* ── 视口：滚轮/双指缩放、右键或拖动背景平移 ──
+ * 只改 viewBox（x,y,w,h），块的坐标仍是棋盘格，所有渲染/命中都自动跟着走。 */
+let view = { z: 1, x: 0, y: 0 };
+const VIEW_Z_MAX = 24;
+const viewW = () => L.w / view.z;
+const viewH = () => L.h / view.z;
+function clampView() {
+  view.x = Math.max(0, Math.min(L.w - viewW(), view.x));
+  view.y = Math.max(0, Math.min(L.h - viewH(), view.y));
+}
+function applyView() {
+  if (!L) return;
+  clampView();
+  svg.setAttribute('viewBox', `${view.x} ${view.y} ${viewW()} ${viewH()}`);
+  svg.style.aspectRatio = `${L.w}/${L.h}`;
+}
+function resetView() { view = { z: 1, x: 0, y: 0 }; applyView(); }
+function cellAt(clientX, clientY) {
+  const r = svg.getBoundingClientRect();
+  const vw = viewW(), vh = viewH();
+  const s = Math.min(r.width / vw, r.height / vh);
+  return {
+    x: view.x + (clientX - (r.left + (r.width - s * vw) / 2)) / s,
+    y: view.y + (clientY - (r.top + (r.height - s * vh) / 2)) / s
+  };
+}
+function zoomAt(clientX, clientY, factor) {
+  const p0 = cellAt(clientX, clientY);
+  view.z = Math.max(1, Math.min(VIEW_Z_MAX, view.z * factor));
+  const p1 = cellAt(clientX, clientY);
+  view.x += p0.x - p1.x;
+  view.y += p0.y - p1.y;
+  applyView();
+}
+function toCell(e) { return cellAt(e.clientX, e.clientY); }
+let pickCache = { key: '', g: null };
+/** 当前局面的占格表（鼠标移动会高频调用，别每次都重建 100 万格） */
+function gridNow() {
+  const key = L.pieces.length + '|' + st.map(s2 => s2.x + ',' + s2.y + ',' + s2.ori).join(';');
+  if (pickCache.key !== key) pickCache = { key, g: K.grid(L, st) };
+  return pickCache.g;
+}
+function pickAt(cx, cy) {
+  const c = Math.floor(cx), r = Math.floor(cy);
+  if (c < 0 || r < 0 || c >= L.w || r >= L.h) return null;
+  const i = gridNow()[r * L.w + c];
+  return i < 0 ? null : i;
+}
+const membersOf = m => m.ids || [m.i, m.j];
+/** 同心的扇形伙伴：两块半圆叠在同一组格子上就是一个整圆。
+ *  这种"叠"是合法的，不算叠放错误；走的时候必须一起动，否则下一步就真重叠了。 */
+function twinMates(i) {
+  const out = [];
+  let a = null;
+  try { a = K.sectorOf(L, st, i); } catch (e) { a = null; }
+  if (!a) return out;
+  const mine = K.pieceCells(L, st, i).map(c => c.join(',')).sort().join(';');
+  for (let j = 0; j < L.pieces.length; j++) {
+    if (j === i) continue;
+    let b = null;
+    try { b = K.sectorOf(L, st, j); } catch (e) { b = null; }
+    if (!b) continue;
+    if (b.center[0] !== a.center[0] || b.center[1] !== a.center[1]) continue;
+    if (K.pieceCells(L, st, j).map(c => c.join(',')).sort().join(';') !== mine) continue;
+    out.push(j);
+  }
+  return out;
+}
+function isTwinPair(i, j) {
+  if (i === j) return false;
+  let a = null, b = null;
+  try { a = K.sectorOf(L, st, i); b = K.sectorOf(L, st, j); } catch (e) { return false; }
+  if (!a || !b) return false;
+  if (a.center[0] !== b.center[0] || a.center[1] !== b.center[1]) return false;
+  return K.pieceCells(L, st, i).map(c => c.join(',')).sort().join(';') ===
+    K.pieceCells(L, st, j).map(c => c.join(',')).sort().join(';');
+}
+function tryStep(i, dx, dy) {
+  const ms = K.moves(L, st);
+  /* 优先级：自己走 > 推着别人走 > 整组一起滑。
+   *  以前先找 'ps'，于是"两个半圆拼成的正圆"一拖就是**整圆一起平移**，
+   *  永远拆不开（用户的原话：在空地上分不开）。单块能走就该让单块走。 */
+  const pick = k => ms.find(m => m.t === 'm' && m.i === k && m.dx === dx && m.dy === dy)
+    || ms.find(m => m.t === 'p' && m.i === k && m.dx === dx && m.dy === dy)
+    || ms.find(m => m.t === 'ps' && membersOf(m).includes(k) && m.dx === dx && m.dy === dy);
+  const mv = pick(i);
+  if (!mv) return false;
+  const mates = twinMates(i);          // 必须在移动前算：动完位置就变了
+  st = K.apply(st, mv);
+  for (const j of mates) {
+    const mj = pick(j);
+    if (mj) st = K.apply(st, mj);
+  }
+  return true;
+}
+function tryTurn(i, d) {
+  const pc = L.pieces[i];
+  if (!pc || !pc.rotPlay) return false;      // 规则上就不能转，别当成"这里转不动"
+  const ms = K.moves(L, st);
+  const cand = ms.filter(m => (m.t === 'cr' ? membersOf(m).includes(i) : m.i === i)
+    && (m.t === 'r' || m.t === 'cr') && (d ? m.d === d : true));
+  const mv = cand.find(m => m.t === 'cr') || cand[0];
+  if (!mv) return false;
+  const before = st;
+  st = K.apply(st, mv);
+  // 单块旋转也带真实转轴：按圆弧走，不直线滑过邻块
+  playMoveAll(before, mv.t === 'cr' ? 320 : 210, mv);
+  hands++;
+  return true;
+}
+
+/** 叠放/越界只许在编辑器里存在；试玩、求解、评分前必须拦住，
+ *  否则占格表本身是无效的，走法判定会给出假结果。 */
+function playable() {
+  const ov = overlapInfo();
+  if (ov.total) {
+    toast('还有 ' + ov.total + ' 处叠放/越界：先回编辑模式把它们分开');
+    return false;
+  }
+  return true;
+}
+
+// 在按下时固定分区与朝向，避免拖动中重新分类导致旋转/平移跳变。
+function sofaDragIntent(p, pose, x, y, dx, dy) {
+  const o = p.oris[pose.ori % p.oris.length];
+  const angle = ((p.open || 0) + pose.ori * 90) * Math.PI / 180;
+  const ux = Math.round(Math.cos(angle)), uy = Math.round(Math.sin(angle));
+  const along = (x - pose.x - o.w/2) * -uy + (y - pose.y - o.h/2) * ux;
+  const outward = dx * ux + dy * uy;
+  const sideways = dx * -uy + dy * ux;
+  if (outward >= 0.24 && outward >= Math.abs(sideways) && Math.abs(along) > 0.5)
+    return along < 0 ? 1 : -1;
+  return 0;
+}
+let drag = null;
+let showGoalBox = true;          // 标题栏「目标框」开关
+try { if (localStorage.getItem('sofa-klotski.goalbox') === '0') showGoalBox = false; } catch (err) { }
+/* 勾选框必须跟着存下来的状态走：HTML 里写死 checked，于是「取消勾选 → 刷新」会变成
+ * "框没画出来、勾选框却还勾着"。 */
+{
+  const cb0 = document.getElementById('cbGoalBox');
+  if (cb0) cb0.checked = showGoalBox;
+}
+let goalEdit = false;            // 「设置目标」模式下可以拖着目标框走
+let goalSel = -1;                // 目标列表里选中的那一条（-1 = 没选，检查器收起）
+
+/* 悬停光标：按下去拖动「实际会怎样」，就用系统光标说出来
+ *   平移 → move（Windows 四向箭头）
+ *   旋转 → grab（Windows 没有专用旋转光标；抓手表示「按下去是拧这块」）
+ *   编辑态选中了形状 → copy；锁定/被动/一次被动块 → not-allowed；空白 → default
+ * 能不能转不是看"这块支不支持转"，而是看**这个位置**按下去真能不能转：
+ *   1) 引擎在处理当前局面时确实给出了这块的旋转走法（转不动时不该骗人说能转）
+ *   2) 手抓在离转轴较远的地方（贴着转轴按下去，拖出来只会是平移）
+ */
+let mvCache = { key: '', set: new Set() };
+function rotatableHere(i) {
+  const key = L.pieces.length + '|' + st.map(s => s.x + ',' + s.y + ',' + s.ori).join(';');
+  if (mvCache.key !== key) {
+    const set = new Set();
+    try {
+      K.moves(L, st).forEach(m => {
+        if (m.t === 'r' || m.t === 'cr') (m.ids || [m.i]).forEach(k => set.add(k));
+      });
+    } catch (e) { /* 局面非法（叠放）时就没有旋转 */ }
+    mvCache = { key, set };
+  }
+  return mvCache.set.has(i);
+}
+/** 这一点按下去，拖动会旋转还是平移 */
+function hoverIntent(i, p) {
+  if (mode === 'edit') return 'slide';                 // 编辑态拖动永远是平移
+  const pc = L.pieces[i];
+  if (!pc.rotPlay) return 'slide';
+  if (!rotatableHere(i)) return 'slide';
+  const o = pc.oris[st[i].ori % pc.oris.length];
+  const pv = o.pivot || [o.w / 2, o.h / 2];
+  const cx = st[i].x + pv[0], cy = st[i].y + pv[1];
+  return Math.hypot(p.x - cx, p.y - cy) >= 0.45 ? 'rotate' : 'slide';
+}
+let curNow = '';
+function setCursor(cur) {
+  if (cur === curNow) return;
+  curNow = cur;
+  svg.style.cursor = cur;
+}
+function hoverCursor(e) {
+  if (drag) return;
+  const p = toCell(e);
+  const i = pickAt(p.x, p.y);
+  let cur = 'default';
+  if (mode === 'edit' && palShape) cur = 'copy';
+  else if (i != null && i < L.pieces.length) {
+    if (mode !== 'edit' && (L.pieces[i].lock || L.pieces[i].chainOnly || L.pieces[i].onceOnly)) cur = 'not-allowed';
+    else cur = hoverIntent(i, p) === 'rotate' ? 'grab' : 'move';
+  }
+  setCursor(cur);
+}
+svg.addEventListener('pointermove', hoverCursor);
+svg.addEventListener('pointerleave', () => { if (!drag) setCursor('default'); });
+
+
+svg.addEventListener('pointerdown', e => {
+  if (e.button === 2) return;
+  const p = toCell(e);
+  const i = pickAt(p.x, p.y);
+  if (mode === 'edit') lastBoardCell = [Math.floor(p.x), Math.floor(p.y)];
+
+  // 「设置目标」模式：抓目标框直接拖（优先于选块/放块）
+  if (mode === 'edit' && goalEdit) {
+    const hit = goalHit(p.x, p.y);
+    if (hit) {
+      svg.setPointerCapture(e.pointerId);
+      const cs = goalSpots(raw.goals[hit.gi])[hit.si] || [];
+      goalSel = hit.gi;                       // 抓到哪个目标，检查器就跟到哪个
+      drag = {
+        kind: 'goal', gi: hit.gi, si: hit.si, sx: p.x, sy: p.y, moved: false,
+        base: cs.map(c => [c[0] | 0, c[1] | 0]),
+        snap: snapshot()
+      };
+      render(); updateUI();
+      return;
+    }
+    // 空格目标：点空格子 = 加进来 / 再点一下移出。
+    // 移出时必须允许"这格后来被块占了"的情况，否则选错的格子撤不掉。
+    const gsel = raw.goals[goalSel];
+    const cc = Math.floor(p.x), rr = Math.floor(p.y);
+    if (gsel && gsel.empty && cc >= 0 && rr >= 0 && cc < L.w && rr < L.h) {
+      const list = gsel.empty || (gsel.empty = []);
+      const k = list.findIndex(q => (q[0] | 0) === cc && (q[1] | 0) === rr);
+      if (k >= 0 || i == null) {
+        pushHist();
+        if (k >= 0) list.splice(k, 1); else list.push([cc, rr]);
+        render(); updateUI();
+        return;
+      }
+    }
+  }
+
+  if (mode === 'edit') {
+    // 形状已选中时，点在已有块上也照样放新块 —— 编辑期允许暂时叠放。
+    // 要选块就把调色板取消（再点一下同一个形状），或从右侧块列表点。
+    if (palShape) { addPiece(Math.floor(p.x), Math.floor(p.y), palShape); return; }
+    if (i == null) {
+      // 空白处按下 = 框选（Shift 追加）；不拖动就是普通的"取消选择"
+      sel = null;
+      if (!e.shiftKey) selSet.clear();
+      svg.setPointerCapture(e.pointerId);
+      drag = { kind: 'box', sx: p.x, sy: p.y, add: !!e.shiftKey };
+      boxSel = { x0: p.x, y0: p.y, x1: p.x, y1: p.y };
+      render(); updateUI();
+      return;
+    }
+    // Shift 点块 = 加进框选；点一块**没被框住**的 = 只留它（旧框选作废）
+    if (e.shiftKey) selSet.add(i);
+    else if (!selSet.has(i)) selSet.clear();
+    sel = i;
+    svg.setPointerCapture(e.pointerId);
+    // 拖住框选里的任意一块 = 整组一起挪（位置都记在按下时的快照上，拖回去能原样复原）
+    const multi = selSet.size > 1 && selSet.has(i);
+    drag = {
+      kind: 'edit', i, sx: p.x, sy: p.y, ox: st[i].x, oy: st[i].y,
+      snap: snapshot(), moved: false, multi,
+      base: multi ? boxSelList().map(k => {
+        const b = pieceBox(st, k);
+        return { i: k, x: st[k].x, y: st[k].y, w: b.w, h: b.h };
+      }) : null
+    };
+    render(); updateUI();
+    return;
+  }
+
+  if (mode !== 'edit' && !playable()) return;
+  if (i == null) {
+    sel = null;
+    if (view.z > 1.001) {
+      svg.setPointerCapture(e.pointerId);
+      drag = { kind: 'pan', sx: e.clientX, sy: e.clientY, vx: view.x, vy: view.y };
+      setCursor('grabbing');
+    }
+    render(); updateUI(); return;
+  }
+  if (L.pieces[i].lock) { sel = i; toast('这块已锁定，试玩/求解时都不会动'); render(); updateUI(); return; }
+  if (L.pieces[i].onceOnly) { sel = i; toast('这块是一次被动：只能被直接推动，拖不动'); render(); updateUI(); return; }
+  sel = i;
+  svg.setPointerCapture(e.pointerId);
+  setCursor('grabbing');                    // 按住时换成“抓着”的手
+  drag = {
+    kind: 'play', i, sx: p.x, sy: p.y, ox: st[i].x, oy: st[i].y, moved: false,
+    // 能不能转只看引擎的 rotPlay（扇形/沙发为 true）；L 形、自绘异形虽然编辑器里能摆朝向，
+    // 试玩时必须当平移处理，不然会弹一句莫名其妙的"转不动"
+    snap: snapshot(), startPose: { ...st[i] }, rotatable: !!L.pieces[i].rotPlay,
+    last: { x: p.x, y: p.y }, ang: 0, turnsDone: 0, warned: false, mode: null
+  };
+  render(); updateUI();
+});
+
+svg.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const p = toCell(e);
+
+  if (drag.kind === 'play' || drag.kind === 'edit' || drag.kind === 'goal') edgePan(e);
+
+  /* ── 右键/中键/双指/背景拖动：平移视口 ── */
+  if (drag.kind === 'pan') {
+    const r = svg.getBoundingClientRect();
+    const s = Math.min(r.width / viewW(), r.height / viewH());
+    view.x = drag.vx - (e.clientX - drag.sx) / s;
+    view.y = drag.vy - (e.clientY - drag.sy) / s;
+    if (Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 3) drag.moved = true;
+    applyView();
+    return;
+  }
+
+  /* ── 框选：拖一个矩形 ── */
+  if (drag.kind === 'box') {
+    boxSel = { x0: drag.sx, y0: drag.sy, x1: p.x, y1: p.y };
+    render(); updateUI();
+    return;
+  }
+
+  /* ── 目标框：整块平移，夹在棋盘内 ── */
+  if (drag.kind === 'goal') {
+    const dx = Math.round(p.x - drag.sx), dy = Math.round(p.y - drag.sy);
+    if (!dx && !dy && !drag.moved) return;
+    const cs = drag.base;
+    if (!cs.length) return;
+    const minC = Math.min.apply(null, cs.map(c => c[0])), maxC = Math.max.apply(null, cs.map(c => c[0]));
+    const minR = Math.min.apply(null, cs.map(c => c[1])), maxR = Math.max.apply(null, cs.map(c => c[1]));
+    const ox = Math.max(-minC, Math.min(L.w - 1 - maxC, dx));
+    const oy = Math.max(-minR, Math.min(L.h - 1 - maxR, dy));
+    setGoalSpot(raw.goals[drag.gi], drag.si, cs.map(c => [c[0] + ox, c[1] + oy]));
+    drag.moved = true;
+    render(); updateUI();
+    return;
+  }
+
+  /* ── 编辑：自由拖动（允许重叠），只夹在棋盘内 ── */
+  if (drag.kind === 'edit') {
+    const dx = Math.round(p.x - drag.sx), dy = Math.round(p.y - drag.sy);
+    if (!dx && !dy && !drag.moved) return;
+    if (drag.multi) {
+      // 整组：同一个位移，夹在棋盘内（取各块允许范围的交集，谁都不会出界）
+      let loX = -Infinity, hiX = Infinity, loY = -Infinity, hiY = Infinity;
+      for (const b of drag.base) {
+        loX = Math.max(loX, -b.x); hiX = Math.min(hiX, L.w - b.w - b.x);
+        loY = Math.max(loY, -b.y); hiY = Math.min(hiY, L.h - b.h - b.y);
+      }
+      const mx = Math.max(loX, Math.min(hiX, dx));
+      const my = Math.max(loY, Math.min(hiY, dy));
+      if (!mx && !my) return;
+      for (const b of drag.base) { st[b.i].x = b.x + mx; st[b.i].y = b.y + my; }
+      drag.moved = true;
+      render(); updateUI();
+      return;
+    }
+    const box = pieceBox(st, drag.i);
+    const nx = Math.max(0, Math.min(L.w - box.w, drag.ox + dx));
+    const ny = Math.max(0, Math.min(L.h - box.h, drag.oy + dy));
+    if (nx === st[drag.i].x && ny === st[drag.i].y) return;
+    st[drag.i].x = nx; st[drag.i].y = ny;
+    drag.moved = true;
+    render(); updateUI();
+    return;
+  }
+
+  const piece = L.pieces[drag.i];
+  if (piece.rotMode === 'sofa') {
+    const dx = p.x - drag.sx, dy = p.y - drag.sy;
+    if (Math.hypot(dx, dy) < 0.24) return;
+    if (!drag.mode) {
+      drag.turnDir = sofaDragIntent(piece, drag.startPose, drag.sx, drag.sy, dx, dy);
+      drag.mode = drag.turnDir ? 'sofa-turn' : 'slide';
+    }
+    if (drag.mode === 'sofa-turn') {
+      if (!drag.turnsDone) {
+        drag.turnsDone = 1; // 每次手势最多固定转90°，松手后才能再转。
+        if (tryTurn(drag.i, drag.turnDir)) drag.moved = true;
+        else toast('这里转不动：落点或沙发方向不合法');
+      }
+      updateUI(); return;
+    }
+  }
+
+  const last = drag.last || { x: drag.sx, y: drag.sy };
+  const ddx = p.x - last.x, ddy = p.y - last.y;
+  drag.last = { x: p.x, y: p.y };
+  const stepLen = Math.hypot(ddx, ddy);
+  if (stepLen < 1e-9) return;
+
+  const boxNow = pieceBox(st, drag.i);
+  const ccx = boxNow.x + boxNow.w / 2, ccy = boxNow.y + boxNow.h / 2;
+  const rx = p.x - ccx, ry = p.y - ccy;
+  const r0 = Math.hypot(rx, ry);
+  const cross = rx * ddy - ry * ddx;
+
+  // 累计「绕块心扫过的角度」：dθ = cross / r²（直拖积出来正好是 atan，绕圈拖就是划过的弧度）
+  const rr = Math.max(r0, 0.35);
+  drag.ang = (drag.ang || 0) + cross / (rr * rr);
+
+  if (!drag.mode) {
+    if (Math.hypot(p.x - drag.sx, p.y - drag.sy) < 0.24) { updateUI(); return; }
+    const ratio = Math.abs(cross) / Math.max(r0 * stepLen, 1e-9);
+    drag.mode = (drag.rotatable && r0 > 0.2 && ratio > 0.7) ? 'rotate' : 'slide';
+  }
+
+  if (drag.mode === 'rotate') {
+    const ang = Math.abs(drag.ang);
+    const target = ang >= 2.36 ? 2 : (ang >= 0.79 ? 1 : 0);
+    if (target > drag.turnsDone) {
+      const dir = drag.ang > 0 ? 1 : -1;
+      if (tryTurn(drag.i, dir)) { drag.turnsDone = target; drag.moved = true; }
+      else if (!drag.warned) { drag.warned = true; toast('这里转不动：旁边没有旋转需要的空间'); }
+    }
+    updateUI();
+    return;
+  }
+
+  // 拖动 → 目标格：两个轴都朝目标推（旧代码只用差值大的那根轴，
+  // 于是"先横着走 3 格、再竖着走 4 格"的折线路线，拐弯后永远回不到竖直目标，
+  // 密林穿行这类要一次拖到底的关就卡住）。
+  const dx = p.x - drag.sx, dy = p.y - drag.sy;
+  const tx = drag.ox + Math.round(dx), ty = drag.oy + Math.round(dy);
+  let guard = 0;
+  while (guard++ < 96) {
+    const cx = st[drag.i].x, cy = st[drag.i].y;
+    if (cx === tx && cy === ty) break;
+    // 差距大的轴先走；走不动就换另一个轴（拐角、绕障碍都靠这个）
+    const opts = [];
+    if (Math.abs(tx - cx) >= Math.abs(ty - cy)) {
+      if (cx !== tx) opts.push([Math.sign(tx - cx), 0]);
+      if (cy !== ty) opts.push([0, Math.sign(ty - cy)]);
+    } else {
+      if (cy !== ty) opts.push([0, Math.sign(ty - cy)]);
+      if (cx !== tx) opts.push([Math.sign(tx - cx), 0]);
+    }
+    let done = false;
+    for (const [sx2, sy2] of opts) {
+      const before = st;
+      if (tryStep(drag.i, sx2, sy2)) { drag.moved = true; playMoveAll(before, 85); done = true; break; }
+    }
+    if (!done) break;                  // 两个轴都走不动 = 到墙了
+  }
+  updateUI();
+});
+
+function endDrag() {
+  if (!drag) return;
+  const d = drag;
+  drag = null;
+  curNow = '';                 // 松手后让下一次悬停重新决定光标
+  if (d.kind === 'goal') {
+    if (d.moved) { history.push(d.snap); if (history.length > 200) history.shift(); }
+    render(); updateUI(); return;
+  }
+  if (d.kind === 'pan') {
+    // 没拖动就是"点了一下"：点在游玩区边缘 → 朝那个方向平移小半屏（放大以后翻看用）
+    if (!d.moved && view.z > 1.001) {
+      const r = svg.getBoundingClientRect();
+      const px = (d.sx - r.left) / r.width, py = (d.sy - r.top) / r.height;
+      const stepX = viewW() * 0.3, stepY = viewH() * 0.3;
+      if (px < 0.12) view.x -= stepX;
+      else if (px > 0.88) view.x += stepX;
+      if (py < 0.12) view.y -= stepY;
+      else if (py > 0.88) view.y += stepY;
+      applyView();
+    }
+    render(); updateUI(); return;
+  }
+  if (d.kind === 'box') {
+    const r = boxSel;
+    boxSel = null;
+    if (r) {
+      const x0 = Math.min(r.x0, r.x1), x1 = Math.max(r.x0, r.x1);
+      const y0 = Math.min(r.y0, r.y1), y1 = Math.max(r.y0, r.y1);
+      const hit = [];
+      for (let i = 0; i < L.pieces.length; i++) {
+        const cs = K.pieceCells(L, st, i);
+        // 格子中心落在框里就算选中：比"包围盒相交"好挑，不会因为大块扫到边就全带上
+        if (cs.some(([c, rr]) => c + 0.5 >= x0 && c + 0.5 <= x1 && rr + 0.5 >= y0 && rr + 0.5 <= y1)) hit.push(i);
+      }
+      if (d.add) hit.forEach(i => selSet.add(i));
+      else selSet = new Set(hit);
+      if (selSet.size) sel = Math.max.apply(null, [...selSet]);
+    }
+    render(); updateUI(); return;
+  }
+  if (d.kind === 'edit') {
+    if (d.moved) { syncRaw(); history.push(d.snap); if (history.length > 200) history.shift(); }
+    render(); updateUI(); return;
+  }
+  if (d.moved) {
+    history.push(d.snap);
+    if (history.length > 300) history.shift();
+    if (!d.turnsDone) hands++;
+    solution = null;
+  }
+  render(); updateUI();
+}
+/* ── 视口交互：滚轮缩放 / 右键·中键拖动平移 / 双指缩放平移 / 拖到边缘自动平移 ── */
+svg.addEventListener('wheel', e => {
+  if (!L) return;
+  e.preventDefault();
+  zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.12 : 1 / 1.12);
+}, { passive: false });
+
+// 右键/中键：先于"选块"拦截，一律当平移
+svg.addEventListener('pointerdown', e => {
+  if (e.button !== 2 && e.button !== 1) return;
+  e.preventDefault(); e.stopPropagation();
+  svg.setPointerCapture(e.pointerId);
+  drag = { kind: 'pan', sx: e.clientX, sy: e.clientY, vx: view.x, vy: view.y };
+  setCursor('grabbing');
+  curNow = 'grabbing';
+}, true);
+
+// 双指：两指中点是平移，两指距离是缩放
+const touchPts = new Map();
+let pinch = null;
+const dist2 = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+const mid2 = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+svg.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'touch') return;
+  touchPts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (touchPts.size === 2) {
+    const ps = [...touchPts.values()];
+    const m = mid2(ps[0], ps[1]);
+    const anchor = cellAt(m.x, m.y);
+    pinch = { d0: Math.max(1, dist2(ps[0], ps[1])), z0: view.z, anchor, mx: m.x, my: m.y };
+    drag = null;                       // 取消可能已经开始的拖块
+    boxSel = null;
+    updateUI();
+  }
+}, true);
+svg.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'touch' || !touchPts.has(e.pointerId)) return;
+  touchPts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (!pinch || touchPts.size < 2) return;
+  e.stopPropagation();
+  const ps = [...touchPts.values()];
+  view.z = Math.max(1, Math.min(VIEW_Z_MAX, pinch.z0 * dist2(ps[0], ps[1]) / pinch.d0));
+  const m = mid2(ps[0], ps[1]);
+  // 让按下时手指中点下的那一格，始终跟着手指中点走
+  const now = cellAt(m.x, m.y);
+  view.x += pinch.anchor.x - now.x;
+  view.y += pinch.anchor.y - now.y;
+  applyView();
+}, true);
+['pointerup', 'pointercancel'].forEach(ev => svg.addEventListener(ev, e => {
+  if (e.pointerType !== 'touch') return;
+  touchPts.delete(e.pointerId);
+  if (touchPts.size < 2) pinch = null;
+}, true));
+
+/** 拖着块走到画布边缘时自动平移：大棋盘放大以后不用先松手再拖背景 */
+function edgePan(e) {
+  if (!drag || view.z <= 1.001) return;
+  if (drag.kind !== 'play' && drag.kind !== 'edit' && drag.kind !== 'goal') return;
+  const r = svg.getBoundingClientRect();
+  const margin = Math.max(18, Math.min(r.width, r.height) * 0.06);
+  const step = 0.35;                      // 每次事件最多挪 0.35 格
+  let dx = 0, dy = 0;
+  if (e.clientX < r.left + margin) dx = -step;
+  else if (e.clientX > r.right - margin) dx = step;
+  if (e.clientY < r.top + margin) dy = -step;
+  else if (e.clientY > r.bottom - margin) dy = step;
+  if (!dx && !dy) return;
+  view.x += dx; view.y += dy;
+  applyView();
+}
+
+svg.addEventListener('pointerup', endDrag);
+svg.addEventListener('pointercancel', endDrag);
+svg.addEventListener('contextmenu', e => e.preventDefault());
+svg.addEventListener('dblclick', e => {
+  const p = toCell(e);
+  const i = pickAt(p.x, p.y);
+  if (i == null) return;
+  if (L.pieces[i].lock) { toast('这块已锁定'); return; }
+  if (mode === 'edit') { editTurn(i, 1); return; }
+  if (!L.pieces[i].rotPlay) { toast('这块不能旋转（只有扇形和沙发可以）'); return; }
+  pushHist();
+  if (tryTurn(i, 1)) toast('顺时针 90°'); else toast('这里转不动');
+  updateUI();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+  const k = e.key.toLowerCase();
+  if ((e.ctrlKey || e.metaKey) && k === 'z') { e.preventDefault(); undo(); return; }
+  if (k === 'y') { reset(); return; }
+
+  if (mode === 'edit') {
+    if (k === 'escape') {
+      e.preventDefault();
+      palShape = null; paintPalOn(); sel = null; selSet.clear(); boxSel = null;
+      render(); updateUI();
+      toast('已取消选择');
+      return;
+    }
+    /* Ctrl/Cmd 组合：全选 / 复制 / 粘贴 / 再复制一份（都在是编辑态才有意义） */
+    if (e.ctrlKey || e.metaKey) {
+      if (k === 'a') { e.preventDefault(); boxSelectAll(); return; }
+      if (k === 'c') { e.preventDefault(); boxCopyClip(); return; }
+      if (k === 'v') { e.preventDefault(); boxPaste(); return; }
+      if (k === 'd') {
+        e.preventDefault();
+        if (selSet.size) boxCopy(); else toast('先框选几块');
+        return;
+      }
+      return;
+    }
+    // 1/2/3/4 直接取块（1=1×1 / 2=横1×2 / 3=竖1×2 / 4=2×2）。
+    // 数字键和旋转(Q/E)、移动(WASD)不冲突，所以随时都生效（选中着块也能换要放的形状）。
+    if (k === '1' || k === '2' || k === '3' || k === '4') {
+      e.preventDefault();
+      choosePalette({ '1': '1x1', '2': '2x1', '3': '1x2', '4': '2x2' }[k]);
+      return;
+    }
+    const batch = boxBatch();
+    if (k === 'q' || k === 'e') {
+      e.preventDefault();
+      if (batch) { boxTurn(k === 'e' ? 1 : -1); return; }
+      if (sel == null) { toast('先选中一块'); return; }
+      editTurn(sel, k === 'e' ? 1 : -1);
+      return;
+    }
+    const mv = {
+      w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0],
+      arrowup: [0, -1], arrowdown: [0, 1], arrowleft: [-1, 0], arrowright: [1, 0]
+    }[k];
+    if (mv) {
+      e.preventDefault();
+      if (batch) { boxMove(mv[0], mv[1]); return; }
+      if (sel == null) { toast('先选中一块'); return; }
+      editMove(sel, mv[0], mv[1]);
+      return;
+    }
+    if (k === 'delete' || k === 'backspace') {
+      e.preventDefault();
+      if (batch) { boxDelete(); return; }
+      if (sel != null) { pushHist(); delPiece(sel); }
+      return;
+    }
+    /* 属性键：L 锁定 / P 被动 / O 一次被动 / N 普通 —— 框选时作用于整组，再按一次可撤销 */
+    const kindKey = { l: 'lock', p: 'passive', o: 'once', n: 'normal' }[k];
+    if (kindKey) {
+      e.preventDefault();
+      if (batch) { boxToggleKind(kindKey); return; }
+      if (sel == null) { toast('先选中一块'); return; }
+      setPieceKind(sel, pieceKind(raw.pieces[sel]) === kindKey ? 'normal' : kindKey);
+      return;
+    }
+    return;
+  }
+
+  if (k === 'r' && sel != null && L.pieces[sel].rotPlay) {
+    pushHist();
+    if (tryTurn(sel, 1)) toast('顺时针 90°'); else toast('这里转不动');
+    updateUI(); return;
+  }
+  const dirs = { arrowleft: [-1, 0], arrowright: [1, 0], arrowup: [0, -1], arrowdown: [0, 1] };
+  if (dirs[k] && sel != null) {
+    e.preventDefault();
+    const before = st;
+    if (tryStep(sel, dirs[k][0], dirs[k][1])) {
+      pushHist(); hands++; solution = null;
+      playMoveAll(before, 150); updateUI();
+    }
+  }
+});
+
+/* ══════════ 编辑操作 ══════════ */
+function snapshot() {
+  return { st: st.map(s => ({ ...s })), hands, raw: JSON.parse(JSON.stringify(raw)) };
+}
+function pushHist() { history.push(snapshot()); if (history.length > 200) history.shift(); solution = null; }
+function undo() {
+  const s = history.pop();
+  if (!s) return;
+  const n0 = raw.pieces.length;
+  raw = s.raw; L = parseRaw(raw);
+  st = s.st.map(x => ({ ...x })); hands = s.hands; sel = null; anim = null;
+  // 块数没变（多半是整组挪动/旋转）就保住框选，接着还能继续调；增删过就作废
+  selSet = raw.pieces.length === n0 ? new Set([...selSet].filter(i => i < raw.pieces.length)) : new Set();
+  boxSel = null;
+  syncViewBox(); buildScene(); render(); updateUI();
+}
+/** 随机型关卡：文件里存的是基准态，每次开局/复位都从它随机走 shuffleSteps 步 */
+function shuffleSteps() { return Math.max(1, Math.round(raw.shuffleSteps | 0) || 200); }
+function baseState() { return K.initialState(raw); }
+function newRound() {
+  roundStart = K.scramble(L, baseState(), shuffleSteps());
+  return roundStart.map(s => ({ ...s }));
+}
+function reset() {
+  st = raw.shuffle ? newRound() : K.initialState(raw);
+  if (!raw.shuffle) roundStart = st.map(s => ({ ...s }));
+  hands = 0; sel = null; history = []; solution = null;
+  selSet.clear(); boxSel = null;
+  stopPlay(); render(); updateUI();
+}
+function syncRaw() {
+  raw.pieces.forEach((p, i) => { p.x = st[i].x; p.y = st[i].y; p.ori = st[i].ori; });
+}
+function syncViewBox() {
+  applyView();
+  document.getElementById('inW').value = L.w;
+  document.getElementById('inH').value = L.h;
+}
+
+/** 编辑态移动：不考虑碰撞，只夹在棋盘内 */
+function editMove(i, dx, dy) {
+  const box = pieceBox(st, i);
+  const nx = Math.max(0, Math.min(L.w - box.w, st[i].x + dx));
+  const ny = Math.max(0, Math.min(L.h - box.h, st[i].y + dy));
+  if (nx === st[i].x && ny === st[i].y) return;
+  pushHist();
+  st[i].x = nx; st[i].y = ny;
+  syncRaw(); render(); updateUI();
+}
+/** 只改 st 的旋转内核（不记历史、不渲染）：单个转和批量转共用。
+ *  返回 true 表示转了；越界会按新朝向的包围盒夹回棋盘内（编辑态不讲碰撞）。 */
+function applyEditTurn(i, d) {
+  const p = L.pieces[i];
+  if (!p || p.oris.length < 2) return false;
+  const n = p.oris.length;
+  const no = (st[i].ori + d + n * 4) % n;
+  let nx = st[i].x, ny = st[i].y;
+  if (p.rotMode === 'pivot' || p.rotMode === 'sofa') {
+    const a = p.oris[st[i].ori % n];
+    const sp = p.rotMode === 'sofa' ? K.spinOptions(a.desc, a.pivot, d)[0]
+      : K.spinDesc(a.desc, a.pivot, d);
+    nx = st[i].x + sp.off[0]; ny = st[i].y + sp.off[1];
+  } else {
+    const b = p.oris[no];
+    nx = Math.round(st[i].x + (p.oris[st[i].ori % n].w - b.w) / 2);
+    ny = Math.round(st[i].y + (p.oris[st[i].ori % n].h - b.h) / 2);
+  }
+  const b = p.oris[no];
+  nx = Math.max(0, Math.min(L.w - b.w, nx));
+  ny = Math.max(0, Math.min(L.h - b.h, ny));
+  st = K.apply(st, { t: 'r', i, d, x: nx, y: ny, ori: no });
+  return true;
+}
+/** 编辑态旋转：按该块自己的转轴转，越界就整体挪回来（编辑时不讲碰撞） */
+function editTurn(i, d) {
+  if (!L.pieces[i] || L.pieces[i].oris.length < 2) { toast('这块不可旋转'); return; }
+  pushHist();
+  const before = st;
+  applyEditTurn(i, d);
+  syncRaw(); playMoveAll(before, 180); updateUI();
+}
+
+function addPiece(cx, cy, shapeKey) {
+  const sh = SH[shapeKey] || {};
+  const desc = sh.cells || [];
+  // 数组本身也是 object：必须排除 Array.isArray，否则 2×2 这类普通格表会被当成
+  // 自绘描述（q.c/q.r 全 undefined）→ 包围盒算成 0 → 放块时整体偏移一格
+  const isCustomDesc = desc.length && !Array.isArray(desc[0]) && typeof desc[0] === 'object';
+  const cells = isCustomDesc ? desc : (desc.length ? desc : [[0, 0]]);
+  const seq = isCustomDesc ? cells.map(q => [q.c, q.r]) : cells;
+  const bb = K.bbox(seq);
+  let gx = cx - Math.floor((bb[0] - 1) / 2), gy = cy - Math.floor((bb[1] - 1) / 2);
+  gx = Math.max(0, Math.min(L.w - bb[0], gx));
+  gy = Math.max(0, Math.min(L.h - bb[1], gy));
+  const cand = {
+    id: uniqueId('u'), x: gx, y: gy, shape: shapeKey,
+    color: PALETTE[Math.floor(Math.random() * 9)],
+    name: sh.label || shapeKey
+  };
+  // 继承面板上选好的档位（普通 / 被动 / 锁定）
+  if (newKind === 'lock') cand.lock = true;
+  else if (newKind === 'passive') cand.chainOnly = true;
+  else if (newKind === 'once') cand.onceOnly = true;
+  pushHist();
+  raw.pieces.push(cand);
+  const before = st;
+  L = parseRaw(raw);
+  st = before.concat([{ x: gx, y: gy, ori: 0 }]);
+  sel = raw.pieces.length - 1;
+  // 放置是一次性动作：放完取消调色板选中，接下来点已有块就是「选中 / 拖动」；
+  // 想继续放（包括压在别的块上）再点一下调色板即可。
+  palShape = null;
+  paintPalOn();
+  render(); updateUI();
+  const bad = overlapInfo().total;
+  const kindTxt = newKind === 'normal' ? '' : '，' + KIND_LABEL[newKind];
+  if (bad) toast('已放下' + kindTxt + '（当前有 ' + bad + ' 处重叠，编辑时允许）');
+  else if (kindTxt) toast('已放下' + kindTxt);
+}
+function addCustomPiece() {
+  const list = paintedDesc();
+  if (!list.length) { toast('画布是空的：至少画一格'); return; }
+  const norm = K.normDesc(list);
+  const bb = K.bbox(norm.map(q => [q.c, q.r]));
+  // 只写真正用到的字段，导出/存档里的 cells 保持干净
+  const cells = norm.map(q => {
+    const o = { c: q.c, r: q.r };
+    if (q.arc) o.arc = q.arc;
+    if (q.seg != null) o.seg = q.seg;
+    if (q.disc) o.disc = true;
+    return o;
+  });
+  // 能转的两类：纯扇形（绕圆心）、含弓形且弓形共用同一圆心的「斜半圆」（绕方块中心）
+  const sec = K.sectorDesc(norm);
+  const segC = K.segCenterOf(norm);
+  const cand = {
+    id: uniqueId('c'), x: 0, y: 0, shape: 'custom',
+    cells: cells, rot: (sec || segC) ? 'pivot' : false,
+    color: PALETTE[Math.floor(Math.random() * 9)],
+    name: '自绘' + (raw.pieces.filter(p => p.shape === 'custom').length + 1)
+  };
+  if (sec) cand.pivot = [sec.center[0], sec.center[1]];
+  else if (segC) { cand.pivot = [segC[0], segC[1]]; cand.spin = true; }   // spin: 非扇形但可绕自身格心转
+  /* 放哪儿：跟着"画的地方"走
+   *   - 画布展开成棋盘大小（一格对一格）→ 直接落在画布在棋盘上的那个原点
+   *   - 否则落在棋盘上最后点过的那一格（居中），实在放不下再从左上找空地 */
+  const used = new Set();                       // 只在外面建一次：棋盘放到 1000×1000 时内层重建会卡死
+  for (let i = 0; i < L.pieces.length; i++) for (const q of K.pieceCells(L, st, i)) used.add(q[0] + ',' + q[1]);
+  const fitsAt = (c, r) => c >= 0 && r >= 0 && c + bb[0] <= L.w && r + bb[1] <= L.h &&
+    norm.every(q => !used.has((c + q.c) + ',' + (r + q.r)));
+  let want = null;
+  if (paintBig) {
+    want = [Math.floor((L.w - paintW) / 2), Math.floor((L.h - paintH) / 2)];
+  } else if (lastBoardCell) {
+    want = [lastBoardCell[0] - Math.floor((bb[0] - 1) / 2), lastBoardCell[1] - Math.floor((bb[1] - 1) / 2)];
+  }
+  let placed = null;
+  if (want) {
+    const c0 = Math.max(0, Math.min(L.w - bb[0], want[0]));
+    const r0 = Math.max(0, Math.min(L.h - bb[1], want[1]));
+    if (fitsAt(c0, r0)) placed = [c0, r0];
+    else {
+      // 附近最近的空位（按曼哈顿距离一圈圈找）
+      for (let rad = 1; rad <= Math.max(L.w, L.h) && !placed; rad++) {
+        for (let dr = -rad; dr <= rad && !placed; dr++) {
+          for (let dc = -rad; dc <= rad && !placed; dc++) {
+            if (Math.abs(dr) + Math.abs(dc) !== rad) continue;
+            if (fitsAt(c0 + dc, r0 + dr)) placed = [c0 + dc, r0 + dr];
+          }
+        }
+      }
+    }
+  }
+  if (!placed) {
+    for (let r = 0; r <= L.h - bb[1] && !placed; r++) {
+      for (let c = 0; c <= L.w - bb[0] && !placed; c++) {
+        if (fitsAt(c, r)) placed = [c, r];
+      }
+    }
+  }
+  if (!placed) placed = [0, 0];
+  cand.x = placed[0]; cand.y = placed[1];
+  pushHist();
+  raw.pieces.push(cand);
+  const before = st;
+  L = parseRaw(raw);
+  st = before.concat([{ x: cand.x, y: cand.y, ori: 0 }]);
+  sel = raw.pieces.length - 1;
+  render(); updateUI();
+  const kind = sec ? ({ 1: '1/4 圆', 2: '半圆', 3: '3/4 圆', 4: '整圆' })[sec.quads.length]
+    : segC ? '斜半圆' : null;
+  toast('已创建' + (kind ? kind + '（可绕圆心旋转）' : '自绘块（不可旋转）') + '：' + norm.length + ' 格'
+    + (K.components(norm.map(q => [q.c, q.r])).length > 1 ? '（多段）' : ''));
+}
+
+/** 块被删掉/裁掉之后，把它从各条目标里摘出去（摘空了整条删掉） */
+function pruneGoals() {
+  const alive = new Set(raw.pieces.map(p => p.id));
+  raw.goals = raw.goals.filter(g => {
+    if (g.empty) return true;
+    const was = goalPieces(g);
+    const keep = was.filter(id => alive.has(id));
+    if (!keep.length) return false;
+    if (keep.length !== was.length) goalSetPieces(g, keep);
+    return true;
+  });
+  if (goalSel >= raw.goals.length) goalSel = -1;
+}
+function delPiece(i) {
+  const id = L.pieces[i].id;
+  raw.pieces.splice(i, 1);
+  pruneGoals();
+  const cur = st.slice(); cur.splice(i, 1);
+  L = parseRaw(raw); st = cur; sel = null;
+  render(); updateUI();
+}
+function resizeBoard(w, h) {
+  raw.w = w; raw.h = h;
+  const keep = [], keepSt = [];
+  raw.pieces.forEach((p, i) => {
+    const cells = K.pieceCells(L, st, i);
+    if (cells.every(([c, r]) => c >= 0 && r >= 0 && c < w && r < h)) { keep.push(p); keepSt.push(st[i]); }
+  });
+  raw.pieces = keep;
+  pruneGoals();
+  L = parseRaw(raw); st = keepSt; sel = null;
+  syncViewBox(); buildScene(); render(); updateUI();
+}
+
+/** 编辑时的重叠 / 越界统计 */
+function overlapInfo() {
+  const used = new Map();
+  let over = 0, out = 0;
+  for (let i = 0; i < L.pieces.length; i++) {
+    for (const [c, r] of K.pieceCells(L, st, i)) {
+      if (c < 0 || r < 0 || c >= L.w || r >= L.h) { out++; continue; }
+      const k = c + ',' + r;
+      if (used.has(k)) { if (!isTwinPair(i, used.get(k))) over++; }
+      else used.set(k, i);
+    }
+  }
+  return { over, out, total: over + out };
+}
+
+/* ══════════ 求解 ══════════ */
+function stopPlay() { if (playTimer) { clearInterval(playTimer); playTimer = null; } }
+const mergeHands = mv => K.mergeMoves(mv);
+
+function p15info() {
+  if (!window.Puzzle15) return null;
+  try { return Puzzle15.detect(L, st, raw.goals); } catch (e) { return null; }
+}
+function slidesToEngine(slides) {
+  let cur = st.map(x => ({ ...x }));
+  const moves = [], states = [];
+  for (const sm of slides) {
+    const dx = sm.step === 1 ? -1 : sm.step === -1 ? 1 : 0;
+    const dy = sm.step === 4 ? -1 : sm.step === -4 ? 1 : 0;
+    const g = K.grid(L, cur);
+    const c = sm.to & 3, r = sm.to >> 2;
+    const i = g[r * L.w + c];
+    if (i < 0) return null;
+    const mv = K.moves(L, cur).find(m => m.i === i && (m.t === 'm' || m.t === 'p') && m.dx === dx && m.dy === dy);
+    if (!mv) return null;
+    cur = K.apply(cur, mv);
+    moves.push(mv); states.push(cur);
+  }
+  return { moves, states };
+}
+function applyP15Result(res, mode2) {
+  const t = slidesToEngine(res.moves);
+  if (!t) { document.getElementById('p15Msg').innerHTML = '<span style="color:#ff8d92">动作翻译失败</span>'; return; }
+  const handsMv = mergeHands(t.moves);
+  solution = { moves: t.moves, hands: handsMv, states: [st.map(x => ({ ...x }))].concat(t.states) };
+  const km = res.optimal ? '（已证明最短）' : '';
+  const tag = mode2 === 'opt' ? '最短解' : (mode2 === 'layer' ? '分层解' : '快速解');
+  document.getElementById('p15Mode').textContent = tag + (res.fallback ? '（回退）' : '');
+  document.getElementById('svSteps').textContent = handsMv.length + ' 手';
+  document.getElementById('svStates').textContent = (res.expanded || 0).toLocaleString();
+  document.getElementById('svMsg').textContent =
+    tag + '：' + handsMv.length + ' 手（' + t.moves.length + ' 单位步），展开 ' +
+    (res.expanded || 0).toLocaleString() + ' 节点，' + Math.round(res.ms) + 'ms' + km + '。';
+  document.getElementById('p15Msg').textContent = tag + ' 完成：' + handsMv.length + ' 手 / ' + Math.round(res.ms) + 'ms' + km;
+  renderSteps(); updateUI();
+}
+const P15_GROUPS = [[1, 2, 3, 4], [5, 9, 13], [6, 7, 8, 10, 14], [11, 12, 15]];
+let p15Pdbs = null, p15PoolState = 'unknown';
+function p15WorkerOK() {
+  if (p15PoolState !== 'unknown') return p15PoolState === 'ok';
+  try { const w = new Worker('p15-worker.js'); w.terminate(); p15PoolState = 'ok'; }
+  catch (e) { p15PoolState = 'no'; }
+  return p15PoolState === 'ok';
+}
+function p15BuildPDBs(msgEl, done) {
+  if (p15Pdbs) { done(p15Pdbs); return; }
+  const total = P15_GROUPS.length;
+  if (!p15WorkerOK()) {
+    const out = [];
+    let i = 0;
+    const step = () => {
+      if (i >= total) { p15Pdbs = out; done(out); return; }
+      msgEl.textContent = '构建模式库 ' + (i + 1) + '/' + total + '（无 worker，主线程）…';
+      setTimeout(() => { out.push(Puzzle15PDB.build(P15_GROUPS[i])); i++; step(); }, 30);
+    };
+    step();
+    return;
+  }
+  const out = new Array(total);
+  let finished = 0;
+  msgEl.textContent = '构建模式库 0/' + total + '（后台线程并行）…';
+  for (let k = 0; k < total; k++) {
+    const w = new Worker('p15-worker.js');
+    w.onmessage = ev2 => {
+      const d = ev2.data;
+      if (d.cmd === 'pdb') {
+        out[k] = { dist: d.dist, tiles: d.tiles, k: d.k, size: d.size, maxD: d.maxD };
+        finished++;
+        msgEl.textContent = '构建模式库 ' + finished + '/' + total + '（后台线程并行）…';
+        w.terminate();
+        if (finished === total) { p15Pdbs = out; done(out); }
+      }
+    };
+    w.onerror = () => { p15PoolState = 'no'; w.terminate(); if (!p15Pdbs) p15BuildPDBs(msgEl, done); };
+    w.postMessage({ cmd: 'pdb', tiles: P15_GROUPS[k] });
+  }
+}
+function runP15Opt(info) {
+  const msg = document.getElementById('p15Msg');
+  document.getElementById('svSteps').textContent = '—';
+  msg.textContent = '准备模式数据库…';
+  const go = pdbs => {
+    if (!p15WorkerOK()) {
+      msg.textContent = '搜索中（无 worker，界面会卡住）…';
+      setTimeout(() => {
+        const res = Puzzle15.solve15(info.start, info.goal, { weight: 1, timeLimitMs: 60000, pdbs: pdbs });
+        finishP15(res, 'opt');
+      }, 30);
+      return;
+    }
+    const w = new Worker('p15-worker.js');
+    w.onmessage = ev2 => {
+      const d = ev2.data;
+      if (d.cmd === 'iter') {
+        msg.textContent = '搜索中…当前阈值 ' + d.bound + ' 手，已展开 ' + d.expanded.toLocaleString() + ' 节点';
+      } else if (d.cmd === 'done') { w.terminate(); finishP15(d.r, 'opt'); }
+    };
+    w.onerror = () => {
+      w.terminate();
+      msg.innerHTML = '<span style="color:#ff8d92">后台线程出错，已退回主线程</span>';
+      finishP15(Puzzle15.solve15(info.start, info.goal, { weight: 1, timeLimitMs: 60000, pdbs: pdbs }), 'opt');
+    };
+    msg.textContent = '搜索中…（模式库就绪，已证明下界 ' + Puzzle15.rootHeuristic(info.start, info.goal, pdbs) + ' 手）';
+    w.postMessage({ cmd: 'solve', mode: 'opt', start: info.start, goal: info.goal, weight: 1, timeLimitMs: 60000, pdbs: pdbs, progress: true });
+  };
+  p15BuildPDBs(msg, go);
+}
+function finishP15(res, mode2) {
+  const msg = document.getElementById('p15Msg');
+  if (!res.ok) {
+    const why = res.reason === 'timeout' ? '超出时间预算'
+      : res.reason === 'unsolvable' ? '奇偶性判定无解（不可能是合法打乱）' : res.reason;
+    document.getElementById('svSteps').textContent = res.reason === 'unsolvable' ? '无解' : '超限';
+    document.getElementById('svMsg').textContent = '';
+    msg.innerHTML = '<span style="color:#ff8d92">' + (mode2 === 'opt' ? '最短解失败' : '求解失败') + '：' + why +
+      '</span>（展开 ' + (res.expanded || 0).toLocaleString() + ' 节点' +
+      (res.lowerBound ? '，已证明下界 ≥ ' + res.lowerBound + ' 手' : '') + '）' +
+      (mode2 === 'opt' ? '　这一局太深，换<a href="#" onclick="runP15(\'layer\');return false" style="color:#7ddc9a">分层解</a>' +
+        '或<a href="#" onclick="runP15(\'fast\');return false" style="color:#7ddc9a">快速解</a>。' : '');
+    solution = null; renderSteps(); updateUI(); return;
+  }
+  applyP15Result(res, mode2);
+}
+function runP15(mode2) {
+  const info = p15info();
+  if (!info) { toast('当前不是 4×4 数字华容道局面（4×4 / 15 块 / 单目标格）'); return; }
+  if (mode2 === 'opt') { runP15Opt(info); return; }
+  const msg = document.getElementById('p15Msg');
+  msg.textContent = '计算中…';
+  document.getElementById('svSteps').textContent = '—';
+  setTimeout(() => {
+    const res = mode2 === 'fast'
+      ? Puzzle15.solve15astar(info.start, info.goal, { weight: 4, timeLimitMs: 8000 })
+      : Puzzle15.solve15layered(info.start, info.goal, { weight: 3, timeLimitMs: 8000 });
+    finishP15(res, mode2);
+  }, 30);
+}
+function scramble15(steps) {
+  // 老的「打乱 60 / 300 步」按钮已经撤掉：随机打乱是关卡属性，复位就出题
+  reset();
+  document.getElementById('p15Msg').textContent = '已重新随机打乱';
+}
+
+function showSolveResult(d, ms) {
+  document.getElementById('svStates').textContent = (d.visited || 0).toLocaleString();
+  if (!d.ok) {
+    document.getElementById('svSteps').textContent = d.reason === 'limit' ? '封顶' : '无解';
+    document.getElementById('svMsg').innerHTML = d.reason === 'limit'
+      ? '枚举到内存上限（' + JOB_MEM_CAP.toLocaleString() + ' 态）仍没找到解'
+      : '<span style="color:#ff8d92">此局面无解</span>：穷尽 ' + (d.visited || 0).toLocaleString() + ' 个可达状态。';
+    solution = null; renderSteps(); updateUI(); return;
+  }
+  const handsMv = K.handsOf(L, d.states, d.moves);
+  solution = { moves: d.moves, hands: handsMv, states: d.states };
+  document.getElementById('svSteps').textContent = handsMv.length + ' 手';
+  const tail = d.viaQuick
+    ? (d.optimal ? '（先跑快速解再剪枝：已证明没有更短的）' : '（状态数太多，这是快速解，未证明最短）')
+    : '';
+  document.getElementById('svMsg').textContent =
+    (d.optimal ? '最短解 ' : '解 ') + handsMv.length + ' 手（' + d.moves.length + ' 单位步，探索 ' +
+    (d.visited || 0).toLocaleString() + ' 状态，' + ms + 'ms）' + tail + '　·　结果已存（下次打开不用重算）';
+  document.getElementById('btnSolve').textContent = '重新求解';
+  renderSteps(); updateUI();
+  cacheSet({
+    solved: {
+      moves: d.moves, states: d.states, visited: d.visited || 0, steps: d.moves.length,
+      hands: handsMv.length, optimal: !!d.optimal, viaQuick: !!d.viaQuick
+    }
+  });
+}
+
+function doSolve() {
+  if (!raw.goals.length) { toast('先设置至少一个目标'); return; }
+  if (!playable()) return;
+  startJob('solve');
+}
+
+/* ══════════ 织布机专用求解 ══════════
+ * 8×8 / 36 块，通用 BFS 连第一层都铺不完，所以单独一条路：
+ * 用引擎的加权 A*（quickSolveGen）切片跑，权重从 5 一路试到 14 ——
+ * 同一局面 w=10 可能十几万节点都出不来、w=5 十几秒就通，换权重比加预算管用。
+ * 拿到的是**一条真解**（能回放），不保证最短，界面必须这么写。 */
+const LOOM_WEIGHTS = [5, 8, 11, 14];
+const LOOM_CAP = 60000;                    // 每个权重的展开上限（约 400MB 峰值）
+function isLoomLevel() { return !!(raw && raw.solver === 'loom'); }
+function runLoomSolve() {
+  if (!raw.goals.length) { toast('这关还没有目标'); return; }
+  if (!playable()) return;
+  stopJob(true);
+  const msg = document.getElementById('loomMsg');
+  const t0 = Date.now();
+  jobState = { cmd: 'loom', cancelled: false, t0, timer: null };
+  jobUI(true);
+  document.getElementById('svSteps').textContent = '—';
+  let wi = 0;
+  const tryNext = () => {
+    if (!jobState || jobState.cancelled) return;
+    if (wi >= LOOM_WEIGHTS.length) {
+      jobState = null; jobUI(false);
+      document.getElementById('svSteps').textContent = '封顶';
+      msg.innerHTML = '<span style="color:#ff8d92">四个权重都没在预算内解出来</span>：' +
+        '可以点「复位」换一道打乱再试，或者先把几条线拨顺再解。';
+      return;
+    }
+    const w = LOOM_WEIGHTS[wi++];
+    const label = '织布机求解中…（权重 ' + w + '，第 ' + wi + '/' + LOOM_WEIGHTS.length + ' 次）';
+    jobSet(label, 4, '展开 0 个局面');
+    const gen = K.quickSolveGen(L, st, raw.goals, { maxNodes: LOOM_CAP, weight: w });
+    runSliced(gen, p => {
+      jobSet(label, 4 + 92 * Math.min(1, (p.visited || 0) / LOOM_CAP),
+        '展开 ' + (p.visited || 0).toLocaleString() + ' 个局面 · ' + ((p.elapsed || 0) / 1000).toFixed(1) + 's');
+    }).then(out => {
+      if (!jobState || jobState.cancelled) return;
+      if (out && out.ok) { finishLoom(out, w, Date.now() - t0); return; }
+      tryNext();
+    }).catch(e => {
+      stopJob(true);
+      toast('求解出错：' + String((e && e.message) || e).slice(0, 100));
+    });
+  };
+  tryNext();
+}
+function finishLoom(out, w, ms) {
+  jobState = null; jobUI(false);
+  const handsMv = K.handsOf(L, out.states, out.moves);
+  solution = { moves: out.moves, hands: handsMv, states: out.states };
+  document.getElementById('svSteps').textContent = handsMv.length + ' 手';
+  document.getElementById('svStates').textContent = (out.visited || 0).toLocaleString();
+  document.getElementById('svMsg').textContent = '解 ' + handsMv.length + ' 手（' + out.moves.length +
+    ' 单位步，展开 ' + (out.visited || 0).toLocaleString() + ' 个局面，' + (ms / 1000).toFixed(1) +
+    's，权重 ' + w + '）· 快速解，未证明最短';
+  document.getElementById('loomMsg').textContent =
+    '拿到一条能走通的解：' + handsMv.length + ' 手（' + out.moves.length + ' 步）。点「播放」看回放。';
+  renderSteps(); updateUI();
+}
+function moveLabel(mv) {
+  const nm = i => (L.pieces[i] && (L.pieces[i].name || L.pieces[i].id)) || ('#' + i);
+  const dir = mv.d > 0 ? '（顺时针）' : '（逆时针）';
+  if (mv.t === 'cr') {
+    const ids = mv.ids || [mv.i, mv.j];
+    return (ids.length === 2 ? '整圆' : '同心扇形 ' + ids.length + ' 块') + ' ' +
+      ids.map(nm).join('/') + ' 同步 90°' + dir;
+  }
+  if (mv.t === 'r') return nm(mv.i) + ' 转 90°' + dir;
+  const d = mv.dx === 1 ? '右' : mv.dx === -1 ? '左' : mv.dy === 1 ? '下' : '上';
+  if (mv.t === 'ps') {
+    const ids = mv.ids || [mv.i, mv.j];
+    return '同心扇形 ' + ids.length + ' 块整体 → ' + d;
+  }
+  const segTxt = (mv.segs && mv.segs.length > 1)
+    ? mv.segs.map(s2 => (s2.dx === 1 ? '右' : s2.dx === -1 ? '左' : s2.dy === 1 ? '下' : '上') +
+      (s2.n > 1 ? s2.n : '')).join('·')
+    : null;
+  if (mv.t === 'p') {
+    const others = (mv.chain || []).filter(k => k !== mv.i).map(nm).join('、');
+    return nm(mv.i) + ' 推 ' + others + ' → ' + (segTxt || d + (mv.n > 1 ? ' ' + mv.n + ' 格' : ''));
+  }
+  return nm(mv.i) + ' → ' + (segTxt || d + (mv.n > 1 ? ' ' + mv.n + ' 格' : ''));
+}
+function renderSteps() {
+  const host = document.getElementById('steps');
+  host.innerHTML = '';
+  document.getElementById('stepCount').textContent = solution ? solution.hands.length : 0;
+  if (!solution) return;
+  let si = 0;
+  solution.hands.forEach((mv, k) => {
+    si += mv.n || 1;
+    const d = document.createElement('div');
+    d.dataset.i = k; d.dataset.s = si;
+    d.innerHTML = '<i>' + (k + 1) + '</i><span>' + moveLabel(mv) + '</span>';
+    d.onclick = () => {
+      stopPlay();
+      st = solution.states[si].map(s => ({ ...s }));
+      hands = k + 1; render(); updateUI(); markStep(k);
+    };
+    host.appendChild(d);
+  });
+}
+function markStep(k) {
+  [...document.querySelectorAll('#steps div')].forEach(d => d.classList.toggle('cur', +d.dataset.i === k));
+}
+function playSolution() {
+  if (!playable()) return;
+  if (!solution) { doSolve(); if (!solution) return; }
+  stopPlay();
+  st = solution.states[0].map(s => ({ ...s }));
+  hands = 0; render(); updateUI();
+  const handOf = [];
+  solution.hands.forEach((mv, idx) => { for (let n = 0; n < (mv.n || 1); n++) handOf.push(idx); });
+  let si = 0;
+  const stepOnce = () => {
+    if (anim && performance.now() - anim.t0 < anim.dur) return;
+    if (si >= solution.moves.length) { stopPlay(); updateUI(); return; }
+    const mv0 = solution.moves[si];
+    // 同块同方向连着走好几格：合成一次缓动（每格都起步-刹车会顿）
+    let k = si + 1;
+    while (k < solution.moves.length) {
+      const a = solution.moves[k - 1], b = solution.moves[k];
+      if (b.i === mv0.i && b.t === a.t && b.dx === a.dx && b.dy === a.dy) k++;
+      else break;
+    }
+    const prev = st;
+    let cur = st;
+    for (let q = si; q < k; q++) cur = K.apply(cur, solution.moves[q]);
+    st = cur;
+    const rot = mv0.t === 'cr' || mv0.t === 'r' || mv0.t === 'ps';
+    playMoveAll(prev, rot ? 300 : Math.min(560, 150 + 55 * (k - si - 1)), mv0);
+    si = k;
+    hands = handOf[si - 1] !== undefined ? handOf[si - 1] + 1 : si;
+    markStep(hands - 1);
+    updateUI();
+  };
+  playTimer = setInterval(stepOnce, 190);
+}
+
+/* ══════════ 后台任务（Worker + 进度条 + 终止） ══════════ */
+let JOB_MEM_CAP = 2000000;      // 内存保护上限（不是超时：撞上也能出估算分）
+function setJobCap(n) { JOB_MEM_CAP = Math.max(2000, n | 0); }
+window.setJobCap = setJobCap;
+let jobState = null;
+
+function levelFingerprint(lv) {
+  const norm = {
+    w: lv.w, h: lv.h,
+    goals: lv.goals || [],
+    pieces: (lv.pieces || []).map(p => ({
+      id: p.id, x: p.x, y: p.y, ori: p.ori | 0, shape: p.shape || null,
+      cells: p.cells || null, rot: p.rot || null, lock: !!p.lock, chainOnly: !!p.chainOnly,
+      onceOnly: !!p.onceOnly,
+      open: p.open == null ? null : p.open, flat: p.flat == null ? null : p.flat
+    }))
+  };
+  const s = JSON.stringify(norm);
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h >>> 0).toString(36) + '-' + s.length.toString(36);
+}
+
+/* 分析/求解结果缓存：同一个局面下次打开直接摆出来，不重跑 */
+const CACHE_KEY = 'sofa-klotski.cache.v5-score3-estimate';
+let anaCache = {};
+function loadCache() {
+  anaCache = {};
+  try {
+    const s = localStorage.getItem(CACHE_KEY);
+    const o = s ? JSON.parse(s) : null;
+    if (o && typeof o === 'object') anaCache = o;
+  } catch (e) { anaCache = {}; }
+}
+function saveCache() {
+  try {
+    const keys = Object.keys(anaCache).sort((a, b) => (anaCache[b].ts || 0) - (anaCache[a].ts || 0));
+    for (const k of keys.slice(12)) delete anaCache[k];       // 只留最近 12 条
+    localStorage.setItem(CACHE_KEY, JSON.stringify(anaCache));
+  } catch (e) { /* 配额满/隐私模式：忽略，不影响功能 */ }
+}
+function cacheGet() { return anaCache[levelFingerprint(raw)] || null; }
+function cacheSet(patch) {
+  const fp = levelFingerprint(raw);
+  const cur = anaCache[fp] || {};
+  anaCache[fp] = Object.assign({}, cur, patch, { ts: Date.now(), name: raw.name || '' });
+  saveCache();
+}
+
+function jobUI(show) {
+  document.getElementById('jobCard').style.display = show ? '' : 'none';
+}
+function jobSet(text, pct, detail) {
+  document.getElementById('jobText').textContent = text;
+  document.getElementById('jobBar').style.width = Math.max(0, Math.min(100, pct)) + '%';
+  if (detail !== undefined) document.getElementById('jobDetail').textContent = detail;
+}
+function jobProgressPct(p) {
+  if (!p) return 5;
+  const sat = (n, k) => 1 - Math.exp(-Math.max(0, n) / k);   // 0..1 的饱和曲线，做"大致进度"
+  if (p.phase === 'forward') return 5 + 72 * sat(p.states || 0, 40000);
+  if (p.phase === 'backward') {
+    const tot = Math.max(1, p.total || 1);
+    return 78 + 18 * Math.min(1, (p.back || 0) / tot);
+  }
+  if (p.phase === 'quick') return 2 + 16 * sat(p.visited || 0, 20000);
+  if (p.phase === 'bfs') return 18 + 78 * sat(p.visited || 0, 150000);
+  if (p.phase === 'done') return 100;
+  return 20;
+}
+function jobProgressDetail(p) {
+  if (!p) return '—';
+  const sec = ((p.elapsed || 0) / 1000).toFixed(1) + 's';
+  if (p.phase === 'forward') return '正向枚举 ' + (p.states || 0).toLocaleString() + ' 态 · ' + sec;
+  if (p.phase === 'backward') return '反向 BFS ' + (p.back || 0).toLocaleString() + ' / ' + (p.total || 0).toLocaleString() + ' 态 · ' + sec;
+  if (p.phase === 'quick') return '快速解（加权 A*）' + (p.visited || 0).toLocaleString() + ' 节点 · ' + sec;
+  if (p.phase === 'bfs') return '剪枝后 BFS ' + (p.visited || 0).toLocaleString() + ' 态 · ' + sec;
+  return sec;
+}
+
+function stopJob(silent) {
+  if (!jobState) return;
+  const which = jobState.cmd;
+  jobState.cancelled = true;
+  if (jobState.timer) { clearTimeout(jobState.timer); jobState.timer = null; }
+  jobState = null;
+  jobUI(false);
+  if (!silent) {
+    toast('已终止（未完成，不写入结果）');
+    if (which === 'analyze') document.getElementById('dfMsg').textContent = '已终止分析。';
+    else if (which === 'solve') document.getElementById('svMsg').textContent = '已终止求解。';
+    else if (which === 'loom') {
+      document.getElementById('svMsg').textContent = '已终止求解。';
+      document.getElementById('loomMsg').textContent = '已终止织布机求解：没跑完的解不作数。';
+    }
+  }
+}
+
+/** 把一个生成器切成 ~40ms 的小片跑：期间页面照常响应，进度条能刷新，随时能终止 */
+function runSliced(gen, onProgress) {
+  return new Promise((resolve, reject) => {
+    const drive = () => {
+      if (!jobState || jobState.cancelled) { resolve({ stopped: true }); return; }
+      const t0 = performance.now();
+      try {
+        for (;;) {
+          const r = gen.next();
+          if (r.done) { resolve(r.value); return; }
+          if (r.value) onProgress(r.value);
+          if (performance.now() - t0 > 40) break;      // 让浏览器去刷新界面
+        }
+      } catch (e) { reject(e); return; }
+      if (!jobState || jobState.cancelled) { resolve({ stopped: true }); return; }
+      jobState.timer = setTimeout(drive, 0);
+    };
+    drive();
+  });
+}
+
+function startJob(cmd) {
+  if (!raw.goals.length) { toast(cmd === 'analyze' ? '先设置目标才能评分' : '先设置至少一个目标'); return false; }
+  if (!playable()) return false;
+  stopJob(true);
+  const fp = levelFingerprint(raw);
+  jobState = { cmd, cancelled: false, t0: Date.now(), timer: null };
+  jobUI(true);
+  jobSet(cmd === 'analyze' ? '分析中…' : '求解中…', 3, '准备…');
+  // 分析、缓存与参考解统一绑定初始局面，避免混入用户中途走动后的结果。
+  const initial = K.initialState(raw), cached = cacheGet();
+  const initialSolution = solution && solution.states &&
+    JSON.stringify(solution.states[0]) === JSON.stringify(initial) ? solution : null;
+  const candidate = initialSolution || (cached && cached.solved) || fileSolution;
+  const gen = cmd === 'analyze'
+    ? K.analyzeGen(L, initial, raw.goals, { maxNodes: JOB_MEM_CAP, candidateMoves: candidate && candidate.moves })
+    : K.solveGen(L, st, raw.goals, { maxNodes: JOB_MEM_CAP });
+  const label = cmd === 'analyze' ? '分析中…' : '求解中…';
+  runSliced(gen, p => jobSet(label, jobProgressPct(p), jobProgressDetail(p))).then(out => {
+    const st0 = jobState;
+    jobState = null;
+    jobUI(false);
+    if (!st0 || st0.cancelled || (out && out.stopped)) return;
+    if (levelFingerprint(raw) !== fp) { toast('关卡已切换，这次结果丢弃'); return; }
+    if (cmd === 'analyze') showDiffResult(out, K.difficulty(out), Date.now() - st0.t0);
+    else showSolveResult(out, Date.now() - st0.t0);
+  }).catch(e => {
+    stopJob(true);
+    toast('计算出错：' + String((e && e.message) || e).slice(0, 120));
+  });
+  return true;
+}
+
+/* ══════════ 难度 ══════════ */
+/** 路径条数格式化：超过 2^53 之后 Number 只有约 16 位有效数字，
+ *  再逐位印出来就是假精度（末尾那几个 0 是舍入产物），所以改成「约 + 科学计数法」。 */
+const SUP_DIGIT = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+function fmtPaths(n) {
+  if (n == null) return '—';
+  if (!Number.isFinite(n)) return '溢出（超过 1.8×10³⁰⁸）';
+  if (n <= Number.MAX_SAFE_INTEGER) return n.toLocaleString();
+  const e = Math.floor(Math.log10(n));
+  const m = n / Math.pow(10, e);
+  const sup = String(e).split('').map(ch => (ch === '-' ? '⁻' : SUP_DIGIT[+ch] || ch)).join('');
+  return '约 ' + m.toFixed(2) + '×10' + sup;
+}
+function showDiffResult(res, d, ms) {
+  const msg = document.getElementById('dfMsg');
+  const it = res.interference || { branches: 0, waste: 0, same: 0, worst: 0, measured: false };
+  const estimate = res.depth < 0 ? res.estimate : null;
+  const cut = res.truncated ? '（枚举到内存上限）' : '';
+  document.getElementById('dfStates').textContent = res.states.toLocaleString() + cut;
+  document.getElementById('dfDepth').textContent = res.depth < 0
+    ? (estimate ? '参考解 ' + estimate.steps + ' 步 / ' + estimate.hands + ' 手（未证明最短）'
+      : (res.truncated || res.stopped ? '未找到（分析未完成）' : '无解'))
+    : ('最短 ' + res.depth + ' 步 / 该解 ' + res.hands + ' 手');
+  document.getElementById('dfPaths').textContent = res.depth >= 0 && it.measured ? fmtPaths(res.paths) : '—';
+  document.getElementById('dfBranch').textContent = res.depth < 0 ? '—' :
+    (it.measured ? it.branches.toFixed(2) + ' 条' : res.branching.toFixed(2) + ' 条（均值）');
+  document.getElementById('dfWaste').textContent = (res.depth < 0 || !it.measured) ? '—' : it.waste.toFixed(2) + ' 步';
+  document.getElementById('dfSame').textContent = (res.depth < 0 || !it.measured) ? '—' : it.same.toFixed(2) + ' 条';
+  if (!d) {
+    document.getElementById('dfScore').textContent = '—';
+    document.getElementById('dfBar').style.width = '0%';
+    msg.textContent = res.truncated || res.stopped ? '尚未找到解，信息不足，暂不评分；可增加分析预算后重试。' : '目标不可达（整张图都穷尽了），无法评分。';
+    return;
+  }
+  lastDiff = d;
+  document.getElementById('dfScore').innerHTML = '<b>' + d.score + '</b> · ' + d.grade +
+    (d.estimated || estimate ? '（估算）' : '');
+  document.getElementById('dfBar').style.width = Math.min(100, d.score) + '%';
+  msg.innerHTML = '构成：操作长度 ' + d.parts.depth + ' + 调度 ' + d.parts.planning + ' + 选择干扰 ' + d.parts.choice + ' + 长程调度 ' + (d.parts.endurance || 0) +
+    '（模型 v3；状态空间与路径总数不计分）' +
+    (d.estimated ? '　<i>（信息不完整，仅按已找到路径估计，不是难度下限）</i>' : '') +
+    '　·　分析初始局面 · 用时 ' + ms + 'ms，结果已存（下次打开不用重算）' +
+    (it.measured && res.paths > Number.MAX_SAFE_INTEGER
+      ? '　<i>路径条数超出精确整数范围，只保证数量级</i>' : '');
+  paintLevelMeta(d, res);
+  commitMetaToLib(d, res);
+  cacheSet({
+    diff: d, est: !!d.estimated,
+    detail: {
+      states: res.states, depth: res.depth, hands: res.hands, paths: res.paths,
+      branching: res.branching, truncated: !!res.truncated, stopped: !!res.stopped,
+      estimate: estimate ? { ...estimate, optimal: false } : null,
+      waste: it.waste, same: it.same, branches: it.branches, worst: it.worst, measured: !!it.measured,
+      ms: ms
+    }
+  });
+  const moves = estimate ? estimate.moves : res.moves;
+  if (moves && moves.length) {
+    const optimal = !estimate && res.depth >= 0;
+    const sv = { moves, optimal, visited: res.states };
+    restoreSolution(sv, optimal ? '分析得出的最短解' : '分析找到的参考解，未证明最短');
+    cacheSet({ solved: { ...sv, steps: moves.length, hands: solution.hands.length } });
+  }
+  document.getElementById('btnDiff').textContent = '重新分析';
+}
+
+/** 把算出来的评分写回「关卡数据」：
+ *  - 自定义关：直接写进 e.level.meta（等于关卡数据自带分数）
+ *  - 内置关：不能改 levels.js 文件，写在关卡库条目上（e.meta），列表照样显示
+ *  - 同时更新 raw.meta，顶栏「本关」立刻变
+ *  指纹只取棋盘结构（levelFingerprint 不含 meta），所以写回不会让缓存失效。 */
+function commitMetaToLib(d, res) {
+  if (!d) return;
+  const meta = {
+    score: d.score, grade: d.grade, scoringVersion: 3, depth: res.depth, hands: res.hands,
+    states: res.states, paths: res.paths, estimated: !!d.estimated,
+    truncated: !!res.truncated, stopped: !!res.stopped,
+    estimate: res.depth < 0 && res.estimate ? { ...res.estimate, optimal: false } : null
+  };
+  raw.meta = meta;
+  paintLevelMeta(d, res);   // 写回时也刷新「本关」面板，避免任何调用路径停留在「不计分」
+  const i = curLib ? libIndexByKey(curLib) : -1;
+  if (i >= 0) {
+    const e = lib[i];
+    if (e.level) e.level.meta = meta; else e.meta = meta;
+    persistLib();
+  }
+  // 写盘模式：分数写进这一关的 json，刷新页面后列表仍显示新分（不再是「不计分」/旧分）
+  if (diskMode && curLib) {
+    diskRun(DiskStore.update(curLib, { meta }), '难度分已写入关卡文件：' + d.score + ' 分');
+    return;
+  }
+  buildLevelList();
+}
+
+function paintLevelMeta(d, res) {
+  const sc = document.getElementById('lvScore');
+  if (!d) {
+    sc.textContent = '不计分';
+    document.getElementById('lvBar').style.width = '0%';
+    document.getElementById('lvMeta').textContent = '这一关还没分析过，点「分析难度」现算（结果会存下来）。';
+    return;
+  }
+  sc.innerHTML = '<b>' + d.score + '</b> / 100 · ' + d.grade +
+    (d.version !== 3 && d.scoringVersion !== 3 ? '（旧版，待重算）' : (d.estimated ? '（估算）' : ''));
+  document.getElementById('lvBar').style.width = Math.min(100, d.score) + '%';
+  const parts = d.parts || null;
+  const det = document.getElementById('lvMeta');
+  if (res && res.depth < 0 && res.estimate) {
+    det.textContent = '参考解 ' + res.estimate.steps + ' 步 / ' + res.estimate.hands +
+      ' 手（未证明最短），评分仅按该路径估算 · 状态 ' + (res.states || 0).toLocaleString();
+  } else if (res && res.depth != null && res.depth >= 0) {
+    const it = res.interference || {};
+    det.textContent = '最短 ' + res.depth + ' 步，该解约 ' + res.hands + ' 手 · 状态 ' + res.states.toLocaleString() +
+      (res.truncated ? '（封顶）' : '') + ' · 岔路代价/步 ' + (it.measured ? it.waste.toFixed(2) : '—') +
+      ' · 最短路径 ' + (it.measured ? fmtPaths(res.paths) + ' 条' : '—');
+  } else if (d.sample && d.sample.scores) {
+    det.textContent = '随机打乱 ' + d.sample.steps + ' 步 × ' + d.sample.rounds +
+      ' 轮抽样：平均 ' + d.sample.avg + ' 分' + (d.sample.trimmed ? '（去头尾）' : '') +
+      '，' + d.sample.min + '~' + d.sample.max + ' · 每局都不同，分数是估算';
+  } else {
+    det.textContent = '预置评分：' + (parts
+      ? '操作长度 ' + parts.depth + ' + 调度 ' + (parts.planning || 0) + ' + 选择干扰 ' + (parts.choice || 0) + ' + 长程调度 ' + (parts.endurance || 0)
+      : '—');
+  }
+}
+
+/** 用关卡文件里存的难度信息填面板（不重算、不写缓存） */
+function paintStoredMeta(m) {
+  if (!m || m.score == null) return;
+  if (m.scoringVersion !== 3 && m.version !== 3) {
+    document.getElementById('dfScore').textContent = m.score + '（旧版，待重新分析）';
+    document.getElementById('dfMsg').textContent = '此关保存的是旧评分；请重新分析后再与模型 v3 分数比较。';
+    return;
+  }
+  const cut = m.truncated ? '（枚举封顶）' : '';
+  const sp = m.sample;
+  document.getElementById('dfStates').textContent = (m.states || 0).toLocaleString() + cut;
+  document.getElementById('dfDepth').textContent = sp
+    ? (sp.scores
+      ? '抽样 ' + sp.rounds + ' 轮 × 打乱 ' + sp.steps + ' 步：平均 ' + sp.avg + ' 分' +
+        (sp.trimmed ? '（去头尾）' : '') + '，' + sp.min + '~' + sp.max
+      : '抽样 ' + sp.rounds + '×' + sp.steps + ' 步：平均 ' + sp.avg + ' 步' +
+        (sp.exact ? '（' + sp.exact + ' 轮证出最优）' : ''))
+    : m.estimate
+      ? '参考解 ' + m.estimate.steps + ' 步 / ' + m.estimate.hands + ' 手（未证明最短）'
+      : (m.depth == null || m.depth < 0 ? '未算出' : '最短 ' + m.depth + ' 步 / 该解 ' + m.hands + ' 手');
+  document.getElementById('dfPaths').textContent = !m.estimate && m.paths ? fmtPaths(m.paths) : '—';
+  document.getElementById('dfBranch').textContent = m.waste == null ? '—' : '—';
+  document.getElementById('dfWaste').textContent = m.waste == null ? '—' : m.waste.toFixed(2) + ' 步';
+  document.getElementById('dfSame').textContent = m.same == null ? '—' : m.same.toFixed(2) + ' 条';
+  document.getElementById('dfScore').innerHTML = '<b>' + m.score + '</b> · ' + m.grade + (m.estimated ? '（估）' : '');
+  document.getElementById('dfBar').style.width = Math.min(100, m.score) + '%';
+  document.getElementById('dfMsg').innerHTML = '<i>（关卡文件里存的难度信息，点「分析难度」可以重算）</i>';
+  paintLevelMeta({ ...m, scoringVersion: 3 }, m);
+}
+
+/** 载入关卡后：把以前算过的难度/解法直接摆出来 */
+function applyCached() {
+  const c = cacheGet();
+  const btnDiff = document.getElementById('btnDiff'), btnSolve = document.getElementById('btnSolve');
+  btnDiff.textContent = '分析难度';
+  btnSolve.textContent = '求解';
+  if (!c) { paintLevelMeta(raw.meta || null, null); return; }
+  if (c.diff) {
+    const det = c.detail || {};
+    showDiffResult({
+      states: det.states || 0, depth: det.depth, hands: det.hands, paths: det.paths,
+      branching: det.branching || 1, truncated: !!det.truncated,
+      stopped: !!det.stopped, estimate: det.estimate || null,
+      interference: {
+        waste: det.waste || 0, same: det.same || 0, branches: det.branches || 0,
+        worst: det.worst || 0, measured: !!det.measured
+      }
+    }, c.diff, det.ms || 0);
+    document.getElementById('dfMsg').innerHTML += '　<i>（缓存结果）</i>';
+    btnDiff.textContent = '重新分析';
+  } else if (raw.meta) paintLevelMeta(raw.meta, null);
+  if (c.solved && c.solved.moves && c.solved.moves.length) {
+    restoreSolution(c.solved);
+  }
+}
+
+function restoreSolution(sv, note) {
+  const moves = sv.moves.map(m => ({ ...m }));
+  const states = sv.states && sv.states.length ? sv.states.map(s => s.map(x => ({ ...x })))
+    : replayStates(K.initialState(raw), moves);
+  solution = { moves, hands: K.handsOf(L, states, moves), states };
+  document.getElementById('svSteps').textContent = solution.hands.length + ' 手';
+  document.getElementById('svStates').textContent = (sv.visited || states.length - 1).toLocaleString();
+  document.getElementById('svMsg').textContent = '（' + (note || '缓存的解') + '）' +
+    (sv.optimal ? '最短解 ' : '解 ') + solution.hands.length + ' 手（' + moves.length + ' 单位步' +
+    (sv.viaQuick ? '，快速解' : '') + '）。';
+  document.getElementById('btnSolve').textContent = '重新求解';
+  renderSteps();
+}
+/** 只有走法没有状态序列时，自己回放一遍 */
+function replayStates(st0, moves) {
+  const out = [st0.map(s => ({ ...s }))];
+  let cur = st0;
+  for (const m of moves) { cur = K.apply(cur, m); out.push(cur.map(s => ({ ...s }))); }
+  return out;
+}
+
+function runDiff() {
+  if (!raw.goals.length) { toast('先设置目标才能评分'); return; }
+  if (!playable()) return;
+  startJob('analyze');
+}
+
+/* ══════════ UI ══════════ */
+function checkWin() {
+  if (!raw.goals.length) return false;
+  return K.isGoal(L, st, raw.goals);
+}
+function updateUI() {
+  document.getElementById('stMoves').textContent = hands;
+  const p15card = document.getElementById('p15Card');
+  const is15 = !!(window.Puzzle15 && raw.pieces.length === 15 && L.w === 4 && L.h === 4);
+  if (p15card) p15card.style.display = is15 ? 'block' : 'none';
+  const loomcard = document.getElementById('loomCard');
+  const loom = isLoomLevel();
+  if (loomcard) loomcard.style.display = loom ? 'block' : 'none';
+  const genBtn = document.getElementById('btnSolve');
+  if (genBtn) genBtn.style.display = (is15 || loom) ? 'none' : '';
+
+  document.getElementById('stGoals').textContent = raw.goals.length;
+  const done = raw.goals.length && checkWin();
+  const ov = mode === 'edit' ? overlapInfo() : null;
+  document.getElementById('stVerdict').innerHTML = (ov && ov.total)
+    ? '<span class="badge warn">重叠/越界 ' + ov.total + '</span>'
+    : (done ? '<span class="badge ok">已达成</span>'
+      : (raw.goals.length ? '<span class="badge">未达成</span>' : '<span class="badge">无目标</span>'));
+
+  document.getElementById('goalCount').textContent = raw.goals.length;
+  // 「能否旋转」按当前局面真正的合法走法判定，而不是只看有没有多个朝向：
+  // 扫掠区被别人占住时，即便形状可转也不该给按钮。
+  const canTurn = sel != null && L.pieces[sel] && K.moves(L, st).some(m =>
+    (m.t === 'r' && m.i === sel) || (m.t === 'cr' && membersOf(m).includes(sel)));
+  const rotBtn = document.getElementById('btnRotate');
+  rotBtn.disabled = !canTurn;
+  // 禁用时补一句 why：不可转的块（L 形、自绘异形）和"当前没空位"是两回事
+  const selPc = sel != null ? L.pieces[sel] : null;
+  rotBtn.title = !selPc ? '先选中一块'
+    : !selPc.rotPlay ? '这块不能旋转（只有扇形和沙发可以）'
+      : '当前没有能转过去的位置';
+  rotBtn.dataset.why = !selPc ? 'none' : (!selPc.rotPlay ? 'norot' : 'blocked');
+  document.getElementById('goalText').textContent = !raw.goals.length ? '未设置'
+    : raw.goals.length > 3 ? raw.goals.length + ' 个目标（各自归位）'
+      : raw.goals.map(g => K.goalText(L, g)).join('  ');
+
+  if (sel != null && L.pieces[sel]) {
+    const p = L.pieces[sel];
+    const kind = p.custom ? '自绘 ' + p.oris[0].cells.length + ' 格' : (SH[p.shape] ? SH[p.shape].label : (p.shape || '?'));
+    const rule = p.sector ? '绕圆心转' : p.rotMode === 'sofa' ? '绕缺口圆心转（带平移）'
+      : p.oris.length > 1 ? '可旋转' : '不可旋转';
+    document.getElementById('selInfo').textContent =
+      '#' + sel + '  ' + (p.name || p.id) + '  ' + kind + '  ' + rule +
+      '  朝向 ' + (st[sel].ori % p.oris.length) + '/' + p.oris.length +
+      '  格位 (' + st[sel].x + ',' + st[sel].y + ')' +
+      (p.lock ? '  · 已锁定' : '') + (p.onceOnly ? '  · 一次被动' : (p.chainOnly ? '  · 被动' : ''));
+    document.getElementById('inName').value = p.name || '';
+    document.getElementById('inColor').value = p.color;
+  } else {
+    document.getElementById('selInfo').textContent = '未选中（点棋盘上的块）';
+  }
+  drawKindBtn();
+  if (paintBig && L) {
+    const w = Math.max(2, Math.min(L.w, PAINT_MAX)), h = Math.max(2, Math.min(L.h, PAINT_MAX));
+    if (w !== paintW || h !== paintH) { setPaintSize(w, h); renderPaint(); }
+    else placePaintFloat();
+  }
+  if (mode === 'play') paintLevelMeta(raw.meta || lastDiff, null);
+  syncLevelInputs();
+  updateRunBtn();
+  syncLibOps();
+  syncSelBox();
+  renderPieceList();
+  renderGoalList();
+}
+function renderPieceList() {
+  const host = document.getElementById('pillist');
+  if (!host) return;
+  host.innerHTML = '';
+  raw.pieces.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'prow' + (sel === i ? ' on' : '');
+    row.innerHTML = '<span class="sw" style="background:' + p.color + '"></span>' +
+      '<span class="nm">' + (p.name || p.id) + (p.lock ? ' 🔒' : (p.onceOnly ? ' ▣' : (p.chainOnly ? ' 🔗' : ''))) + '</span>' +
+      '<span class="lk" data-lk="' + i + '" title="锁定/解锁">' + (p.lock ? '🔒' : '·') + '</span>' +
+      '<span class="x" data-i="' + i + '">×</span>';
+    row.onclick = ev2 => {
+      if (ev2.target.dataset.i != null) { pushHist(); delPiece(i); return; }
+      if (ev2.target.dataset.lk != null) { toggleLock(i); return; }
+      sel = i; render(); updateUI();
+    };
+    host.appendChild(row);
+  });
+}
+/** 这块现在是哪一档 */
+function pieceKind(p) {
+  if (!p) return newKind;
+  return p.lock ? 'lock' : (p.onceOnly ? 'once' : (p.chainOnly ? 'passive' : 'normal'));
+}
+/** 直接把某块设成某一档（四档互斥：锁定 / 一次被动 / 被动 / 普通 只留一个） */
+function setPieceKind(i, kind) {
+  const p = raw.pieces[i];
+  if (!p) return;
+  if (pieceKind(p) === kind) return;
+  pushHist();
+  p.lock = kind === 'lock';
+  p.chainOnly = kind === 'passive';
+  p.onceOnly = kind === 'once';
+  const keep = st.map(x => ({ ...x }));
+  L = parseRaw(raw); st = keep;
+  render(); updateUI();
+  toast(KIND_TIP[kind]);
+}
+/** 一个按钮循环：普通 → 被动 → 一次被动 → 锁定 → 普通。切完的属性也当成新块的属性。 */
+function cycleKind() {
+  const p = sel != null ? raw.pieces[sel] : null;
+  const next = KIND_LIST[(KIND_LIST.indexOf(pieceKind(p)) + 1) % KIND_LIST.length];
+  newKind = next;
+  if (p) setPieceKind(sel, next);
+  else { updateUI(); toast('新块属性：' + KIND_TIP[next]); }
+  if (p) toast(KIND_TIP[next] + '（之后放的新块也是这一档）');
+}
+/** 按钮上的字：选中了就显示这块的档位，没选中就是「新块 · 档位」 */
+function drawKindBtn() {
+  const b = document.getElementById('btnKind');
+  if (!b) return;
+  const p = sel != null ? raw.pieces[sel] : null;
+  const cur = pieceKind(p);
+  b.textContent = (p ? '' : '新块 · ') + KIND_LABEL[cur];
+  b.classList.toggle('acc', cur !== 'normal');
+}
+function toggleChainOnly(i) {
+  pushHist();
+  raw.pieces[i].chainOnly = !raw.pieces[i].chainOnly;
+  const keep = st.map(x => ({ ...x }));
+  L = parseRaw(raw); st = keep;
+  render(); updateUI();
+  toast(raw.pieces[i].chainOnly
+    ? '已设为「被动」：它自己动不了，只能被别的块推着让位'
+    : '已改为主动：可以自己拖动/旋转');
+}
+function toggleLock(i) {
+  pushHist();
+  raw.pieces[i].lock = !raw.pieces[i].lock;
+  const keep = st.map(x => ({ ...x }));
+  L = parseRaw(raw); st = keep;
+  render(); updateUI();
+  toast(raw.pieces[i].lock ? '已锁定：试玩与求解时都不动' : '已解锁');
+}
+function renderGoalList() {
+  const host = document.getElementById('goalList');
+  host.innerHTML = '';
+  if (goalSel >= raw.goals.length) goalSel = -1;
+  if (!raw.goals.length) {
+    host.innerHTML = '<div class="hint">还没有目标</div>';
+    drawGoalInsp();
+    return;
+  }
+  raw.goals.forEach((g, i) => {
+    const done = K.goalOne(L, st, g);
+    const d = document.createElement('div');
+    d.className = 'prow' + (i === goalSel ? ' on' : '');
+    d.innerHTML = '<span class="sw" style="background:' + goalColor(g) + '"></span>' +
+      '<span class="nm">' + (done ? '✓ ' : '') + K.goalText(L, g) + '</span>' +
+      '<span class="x" data-i="' + i + '">×</span>';
+    d.onclick = ev2 => {
+      if (ev2.target.classList.contains('x')) {
+        pushHist(); raw.goals.splice(i, 1);
+        if (goalSel >= i) goalSel = goalSel === i ? -1 : goalSel - 1;
+        render(); updateUI();
+        return;
+      }
+      goalSel = (goalSel === i ? -1 : i);          // 再点一下收起检查器
+      render(); updateUI();
+    };
+    host.appendChild(d);
+  });
+  drawGoalInsp();
+}
+/** 选中目标的检查器：只对着"当前这一条"显示，多条目标时列表仍然只有一行一条 */
+function drawGoalInsp() {
+  const host = document.getElementById('goalInsp');
+  if (!host) return;
+  const g = goalSel >= 0 ? raw.goals[goalSel] : null;
+  host.style.display = g ? '' : 'none';
+  if (!g) return;
+  const isEmpty = !!g.empty;
+  document.getElementById('giPlace').style.display = isEmpty ? 'none' : '';
+  document.getElementById('giEmptyHint').style.display = isEmpty ? '' : 'none';
+  const msg = document.getElementById('goalInspMsg');
+  if (isEmpty) {
+    document.getElementById('giNeed').style.display = 'none';
+    msg.textContent = '空格目标：已选 ' + (g.empty || []).length + ' 格';
+    return;
+  }
+  const c = K.goalNorm(L, g) || { pieces: [], spots: [], need: 1 };
+  const one = c.pieces.length < 2;
+  document.getElementById('giNeed').style.display = one ? 'none' : '';   // 单块时"全部/任一"没区别
+  document.getElementById('btnGoalAll').classList.toggle('acc', !one && c.need !== 1);
+  document.getElementById('btnGoalAny').classList.toggle('acc', !one && c.need === 1);
+  const p = K.goalProgress(L, st, g) || { got: 0, need: c.need, spots: c.spots.length };
+  msg.textContent = c.pieces.length + ' 块 · ' + c.spots.length + ' 落点 · ' +
+    (one ? '归位' : (c.need === 1 ? '任一就位' : '全部就位（位置可换）')) +
+    ' · 现在 ' + p.got + '/' + p.need +
+    (!one && c.need !== 1 && c.spots.length < c.pieces.length ? ' · ⚠ 落点比块少，达成不了' : '');
+}
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1700);
+}
+
+/* ══════════ 关卡列表（可删 / 改 / 增 / 重命名） ══════════ */
+const LEVEL_TIP = {
+  classic: '4×5 · 经典布局',
+  yinQingYuanQue: '4×4 · 满月的自转',
+  lockedGate: '横刀立马去卒 + 焊一块',
+  ambush: '4×5 · 传统华容道最难布局',
+  quJingTongYou: '4×5 · 二横二竖沙发关最长',
+  furnitureMall: '5×5 · 双目标，状态少',
+  sofaSeat: '5×4 · 目标块就是沙发',
+  shangXiaHui: '4×4 · 两块"隔格双联"的上下交汇',
+  wanLiZhengTu: '4×7 · 已知最长关',
+  cengCengSheKa: '4×5 · 三横一竖沙发关最长',
+  fifteen: '4×4 · 数字华容道'
+};
+
+/* 写盘模式：页面由 http://127.0.0.1:PORT/ 打开且 tools/serve.js 在跑时为 true。
+ * 这时 levels/ 目录是唯一真相，增删改直接改磁盘上的 json；
+ * 用 file:// 打开时 diskMode 恒为 false，下面所有分支都退回旧的 localStorage 行为。 */
+let diskMode = false;
+let diskPacks = null;      // 服务端返回的关卡包，优先于 levelpacks.js
+let diskBusy = 0;          // 在飞的写盘请求数（测试用来等落盘完成）
+
+const LIB_STORE = 'sofa-klotski.libs.v2';
+const LIB_STORE_V1 = 'sofa-klotski.libs.v1';
+const SET_ORDER = ['待分类', '华容之书', '合移位', '推箱子', '迷宫', '随机型关卡'];
+let lib = [];             // [{ key, src:'pack'|'custom', set, name, tip, level, meta, solution }]
+let curLib = null;        // 当前载入的条目 key
+let curSet = '全部';       // 关卡集筛选
+let nameOverride = {};    // 内置关改名（只存在浏览器里）
+
+/** levels/<集>/<文件>.json 打包出来的关卡包 */
+function packEntries() {
+  const out = [];
+  ((diskMode && diskPacks) || window.LEVELPACKS || []).forEach(p => (p.levels || []).forEach(lv => {
+    out.push({
+      key: lv.key || lv.id, src: 'pack', set: p.set, name: lv.name,
+      tip: lv.tip || '', origin: lv.origin || '', note: lv.note || lv.tip || '', declared: lv.declared || null,
+      dir: lv.dir || '',                      // 子文件夹（'华容之书/古谱'），列表按它分组
+      file: lv.file, level: lv.level, meta: lv.meta, solution: lv.solution
+    });
+  }));
+  return out;
+}
+function defaultLib() { return packEntries(); }
+function loadLib() {
+  lib = defaultLib();
+  nameOverride = {};
+  if (diskMode) return;   // 写盘模式：磁盘是唯一真相，别混入浏览器里的旧副本
+  try {
+    const s2 = localStorage.getItem(LIB_STORE);
+    if (s2) {
+      const o = JSON.parse(s2);
+      nameOverride = (o && o.names) || {};
+      (o && o.customs || []).forEach(e => { if (e && e.level) lib.push(Object.assign({}, e, { src: 'custom', set: e.set || '待分类' })); });
+    } else {
+      // 旧版把整份 lib 都存在一个数组里：只捞回自定义关
+      const a = JSON.parse(localStorage.getItem(LIB_STORE_V1) || 'null');
+      if (Array.isArray(a)) a.forEach(e => { if (e && e.src === 'custom' && e.level) lib.push(Object.assign({}, e, { src: 'custom', set: e.set || '待分类' })); });
+    }
+  } catch (e) { /* 隐私模式/坏数据：只用内置 */ }
+  lib.forEach(e => { if (nameOverride[e.key]) e.name = nameOverride[e.key]; });
+  if (dedupeLib()) persistLib();
+}
+
+/** 同名只留一条，而且**一律以关卡包（磁盘文件）为准**。
+ *  历史上（老版本、脚本、手滑点「另存新关」）会在 localStorage 里留下和内置关同名的副本，
+ *  列表就会出现两条一样的关：一条 78 分（磁盘）一条 92 分（旧副本）；
+ *  更糟的是旧副本会顶掉磁盘那份（分数/布局都变回旧的）。
+ *  规则：
+ *    内置 + 自定义 → 丢自定义（文件才是唯一真相，浏览器副本连"改过"都不算）；
+ *    自定义 + 自定义 → 留后存的那条（另存新关遇到重名会自动加序号，正常不会撞）。
+ *  返回"有没有真的合并过"，合并过就顺手写回 localStorage 清干净。 */
+function dedupeLib() {
+  const seen = new Map();
+  const out = [];
+  let changed = false;
+  for (const e of lib) {
+    const nm = e.name || ('#' + e.key);
+    const prev = seen.get(nm);
+    if (!prev) { seen.set(nm, e); out.push(e); continue; }
+    const prevPack = prev.src === 'pack', ePack = e.src === 'pack';
+    if (!prevPack && !ePack) {                       // 两条都是自定义：新的赢
+      out[out.indexOf(prev)] = e; seen.set(nm, e); changed = true; continue;
+    }
+    if (prevPack && !ePack) { changed = true; continue; }   // 内置在前、自定义在后 → 丢自定义
+    // 自定义在前、内置在后 → 把内置那条换到前面来（结果还是只有一条）
+    out[out.indexOf(prev)] = e; seen.set(nm, e); changed = true;
+  }
+  if (changed) lib = out;
+  return changed;
+}
+function persistLib() {
+  if (diskMode) return;   // 写盘模式下每个操作各自调 REST，不再做全量 dump
+  const customs = lib.filter(e => e.src === 'custom');
+  try {
+    localStorage.setItem(LIB_STORE, JSON.stringify({ customs, names: nameOverride }));
+  } catch (e) { }
+}
+
+/* ── 写盘模式的公共通道 ──────────────────────────────────────
+ * 写成功后从服务端重拉一次关卡包：列表、分数、文件名全部以磁盘为准。
+ * 只重建列表，不动当前棋盘（用户在编辑器里摆到一半不会被重置）。 */
+async function reloadDisk(keepCur) {
+  const j = await DiskStore.list();
+  diskPacks = j.packs;
+  const keep = keepCur === false ? null : curLib;
+  loadLib();
+  curLib = keep && lib.some(e => e.key === keep) ? keep : (lib[0] ? lib[0].key : null);
+  buildLevelList();
+  return j;
+}
+function diskFail(err) { toast('写盘失败：' + (err && err.message || err)); }
+function diskRun(p, okMsg) {
+  diskBusy++;
+  return Promise.resolve(p).then(async j => {
+    diskBusy--;
+    await reloadDisk();
+    if (okMsg) toast(okMsg);
+    return j;
+  }).catch(async e => {
+    diskBusy--;
+    diskFail(e);
+    try { await reloadDisk(); } catch (x) { }
+    return null;
+  });
+}
+function levelOfEntry(e) {
+  if (!e) return null;
+  if (e.level) return JSON.parse(JSON.stringify(e.level));
+  const f = LV[e.key];
+  return f ? f() : null;
+}
+/* ── 框选的批量操作 ────────────────────────────────────── */
+function boxSelList() { return [...selSet].filter(i => raw.pieces[i]); }
+function syncSelBox() {
+  const n = boxSelList().length;
+  const cnt = document.getElementById('selCount');
+  if (cnt) cnt.textContent = String(n);
+  const info = document.getElementById('selBoxInfo');
+  if (info) {
+    info.textContent = n
+      ? '已框住 ' + n + ' 块：' + boxSelList().slice(0, 6).map(i => raw.pieces[i].name || raw.pieces[i].id).join('、') +
+        (n > 6 ? ' …' : '')
+      : '在空白处按住拖动 → 框住要一起处理的块（按住 Shift 追加）';
+  }
+}
+function afterBatch() {
+  L = parseRaw(raw);
+  roundStart = st.map(s => ({ ...s }));
+  syncViewBox(); render(); updateUI();
+}
+function boxDelete() {
+  if (!selSet.size) { toast('先框选几块'); return; }
+  pushHist();
+  const ids = new Set(boxSelList().map(i => raw.pieces[i].id));
+  raw.pieces = raw.pieces.filter((p, i) => !selSet.has(i));
+  raw.goals = (raw.goals || []).filter(g => !goalPieces(g).some(id => ids.has(id)));
+  selSet.clear(); sel = null; goalSel = -1;
+  st = K.initialState(raw);
+  afterBatch();
+  toast('删掉 ' + ids.size + ' 块（引用它们的目标也一起删了）');
+}
+function boxCopy() {
+  if (!selSet.size) { toast('先框选几块'); return; }
+  pushHist();
+  const made = [];
+  for (const i of boxSelList()) {
+    const p = JSON.parse(JSON.stringify(raw.pieces[i]));
+    p.id = uniqueId(p.shape === 'custom' ? 'c' : 'u');
+    p.x = Math.min(L.w - 1, p.x + 1);
+    p.y = Math.min(L.h - 1, p.y + 1);
+    p.name = (p.name || '块') + '·副本';
+    delete p.hero;
+    made.push(p);
+  }
+  raw.pieces = raw.pieces.concat(made);
+  st = K.initialState(raw);
+  selSet = new Set(made.map((_, k) => raw.pieces.length - made.length + k));
+  sel = Math.max.apply(null, [...selSet]);
+  afterBatch();
+  toast('复制了 ' + made.length + ' 块（往右下挪了一格）');
+}
+function boxKind(kind) {
+  if (!selSet.size) { toast('先框选几块'); return; }
+  pushHist();
+  for (const i of boxSelList()) {
+    const p = raw.pieces[i];
+    delete p.lock; delete p.chainOnly; delete p.onceOnly;
+    if (kind === 'lock') p.lock = true;
+    else if (kind === 'passive') p.chainOnly = true;
+    else if (kind === 'once') p.onceOnly = true;
+  }
+  afterBatch();
+  toast('已把 ' + selSet.size + ' 块设为' + (KIND_LABEL[kind] || kind));
+}
+/* ── 框选整组编辑（快捷键与拖拽共用） ────────────────────
+ *  batch = 框住的块放到 2 块以上；这时 Q/E / WASD / 方向键 / Delete / 属性键
+ *  都作用在整组上，不再只动"最后点中的那一块"。 */
+let pieceClip = null;                       // Ctrl+C 的剪贴板：{minX,minY,items:[块原始 JSON]}
+const boxBatch = () => mode === 'edit' && selSet.size > 1;
+
+/** 整组平移：所有块同一个位移，夹在棋盘内（一起贴边就停住） */
+function boxMove(dx, dy) {
+  const list = boxSelList();
+  if (!list.length || (!dx && !dy)) return false;
+  let loX = -Infinity, hiX = Infinity, loY = -Infinity, hiY = Infinity;
+  for (const i of list) {
+    const b = pieceBox(st, i);
+    loX = Math.max(loX, -b.x); hiX = Math.min(hiX, L.w - b.w - b.x);
+    loY = Math.max(loY, -b.y); hiY = Math.min(hiY, L.h - b.h - b.y);
+  }
+  const mx = Math.max(loX, Math.min(hiX, dx));
+  const my = Math.max(loY, Math.min(hiY, dy));
+  if (!mx && !my) { toast('已经贴边了'); return false; }
+  pushHist();
+  for (const i of list) { st[i].x += mx; st[i].y += my; }
+  syncRaw(); render(); updateUI();
+  return true;
+}
+
+/** 一批块里能转的有几块（矩形块只有 1 个朝向，转不了） */
+const piecesTurnable = (list) => [...list].filter(i => L.pieces[i] && L.pieces[i].oris.length > 1);
+/** 整组旋转（每块绕自己的转轴），不能转的跳过 */
+function boxTurn(d) {
+  const list = boxSelList();
+  if (!list.length) { toast('先框选几块'); return; }
+  const turnable = piecesTurnable(list);
+  if (!turnable.length) { toast('框住的块都不可旋转'); return; }
+  pushHist();
+  for (const i of turnable) applyEditTurn(i, d);
+  syncRaw(); render(); updateUI();
+  const skip = list.length - turnable.length;
+  toast((d > 0 ? '顺时针' : '逆时针') + '转了 ' + turnable.length + ' 块' +
+    (skip ? '（' + skip + ' 块不可转，跳过）' : ''));
+}
+
+/** 同一档位再按一次 = 退回普通（框选的批量切换） */
+function boxToggleKind(kind) {
+  const list = boxSelList();
+  if (!list.length) { toast('先框选几块'); return; }
+  const all = list.every(i => pieceKind(raw.pieces[i]) === kind);
+  boxKind(all ? 'normal' : kind);
+}
+
+function boxSelectAll() {
+  if (mode !== 'edit') return;
+  selSet = new Set(raw.pieces.map((_, i) => i));
+  sel = selSet.size ? Math.max.apply(null, [...selSet]) : null;
+  render(); updateUI();
+  toast('全选 ' + selSet.size + ' 块');
+}
+
+/** 复制到剪贴板（不落到盘上）：记住相对位置，粘贴时整组一起放 */
+function boxCopyClip() {
+  const list = boxSelList();
+  if (!list.length) { toast('先框选几块'); return; }
+  const items = list.map(i => JSON.parse(JSON.stringify(raw.pieces[i])));
+  pieceClip = {
+    minX: Math.min.apply(null, items.map(p => p.x)),
+    minY: Math.min.apply(null, items.map(p => p.y)),
+    items
+  };
+  toast('复制了 ' + items.length + ' 块（Ctrl+V 粘贴）');
+}
+
+/** 粘贴：位置优先取"最后点过的棋盘格"当左上角，否则整体往右下挪一格 */
+function boxPaste() {
+  if (!pieceClip || !pieceClip.items.length) { toast('剪贴板是空的（先 Ctrl+C）'); return; }
+  if (mode !== 'edit') { toast('切到编辑模式再粘贴'); return; }
+  pushHist();
+  const ox = lastBoardCell ? lastBoardCell[0] : pieceClip.minX + 1;
+  const oy = lastBoardCell ? lastBoardCell[1] : pieceClip.minY + 1;
+  const made = pieceClip.items.map(p => {
+    const q = JSON.parse(JSON.stringify(p));
+    q.id = uniqueId(q.shape === 'custom' ? 'c' : 'u');
+    q.x = Math.max(0, Math.min(L.w - 1, ox + (p.x - pieceClip.minX)));
+    q.y = Math.max(0, Math.min(L.h - 1, oy + (p.y - pieceClip.minY)));
+    delete q.hero;
+    return q;
+  });
+  raw.pieces = raw.pieces.concat(made);
+  st = K.initialState(raw);
+  selSet = new Set(made.map((_, k) => raw.pieces.length - made.length + k));
+  sel = Math.max.apply(null, [...selSet]);
+  afterBatch();
+  toast('贴上 ' + made.length + ' 块（已框选，可直接拖动）');
+}
+
+function libIndexByKey(k) { return lib.findIndex(e => e.key === k); }
+/** 保存类按钮只在编辑模式出现；写盘模式下「恢复内置」没有意义（磁盘就是唯一真相），也不显示 */
+function syncLibOps() {
+  const ops = document.getElementById('libOps');
+  if (!ops) return;
+  ops.style.display = mode === 'edit' ? '' : 'none';
+  const reset = document.getElementById('btnLibReset');
+  if (reset) reset.style.display = diskMode ? 'none' : '';
+}
+function libSets() {
+  const n = {};
+  lib.forEach(e => { n[e.set || '待分类'] = (n[e.set || '待分类'] || 0) + 1; });
+  const out = SET_ORDER.filter(s => n[s] || s === '合移位');   // 空集也留着，好往里加关
+  Object.keys(n).forEach(s => { if (out.indexOf(s) < 0) out.push(s); });
+  return out.map(s => ({ set: s, n: n[s] || 0 }));
+}
+
+/** 高亮当前关卡（按条目 key 与名字双保险） */
+function markLevel() {
+  const host = document.getElementById('lvList');
+  if (!host || !raw) return;
+  [...host.children].forEach(b => {
+    const nm = b.querySelector('.nm') ? b.querySelector('.nm').textContent : '';
+    b.classList.toggle('on', nm === raw.name || (curLib && b.dataset.key === curLib));
+  });
+}
+
+function buildSetBar() {
+  const host = document.getElementById('setBar');
+  if (!host) return;
+  host.innerHTML = '';
+  const total = lib.length;
+  const mk = (label, set, n) => {
+    const b = document.createElement('button');
+    b.dataset.set = set;
+    b.className = set === curSet ? 'on' : '';
+    b.innerHTML = label + '<i>' + n + '</i>';
+    b.onclick = () => { curSet = set; buildLevelList(); };
+    host.appendChild(b);
+  };
+  mk('全部', '全部', total);
+  libSets().forEach(s => mk(s.set, s.set, s.n));
+}
+
+/* ── 关卡列表的排序 / 文件夹 ──
+ * 排序：默认（文件编号）/ 难度（易→难）/ 难度倒序（难→易）/ 关卡大小（棋盘大→小）
+ * 文件夹：levels 支持多层子目录，条目按 `dir` 分组，文件夹本身是个可展开的条目。 */
+let lvSort = 'default';
+let openDirs = {};
+try {
+  lvSort = localStorage.getItem('sofa-klotski.lvsort') || 'default';
+  openDirs = JSON.parse(localStorage.getItem('sofa-klotski.opendirs') || '{}') || {};
+} catch (e) { lvSort = 'default'; openDirs = {}; }
+function saveListPrefs() {
+  try {
+    localStorage.setItem('sofa-klotski.lvsort', lvSort);
+    localStorage.setItem('sofa-klotski.opendirs', JSON.stringify(openDirs));
+  } catch (e) { }
+}
+function metaOfEntry(e) {
+  let probe = null;
+  try { probe = levelOfEntry(e); } catch (err) { probe = null; }
+  return (probe && probe.meta) || e.meta || null;
+}
+function sortEntries(list) {
+  const arr = list.slice();
+  const score = e => { const m = metaOfEntry(e); return m && m.score != null ? m.score : -1; };
+  const area = e => {
+    let probe = null;
+    try { probe = levelOfEntry(e); } catch (err) { probe = null; }
+    return probe ? (probe.w | 0) * (probe.h | 0) : 0;
+  };
+  if (lvSort === 'scoreAsc') arr.sort((a, b) => (score(a) < 0 ? 999 : score(a)) - (score(b) < 0 ? 999 : score(b)));
+  else if (lvSort === 'scoreDesc') arr.sort((a, b) => score(b) - score(a));
+  else if (lvSort === 'size') arr.sort((a, b) => area(b) - area(a));
+  return arr;                       // default：保持关卡包里的顺序（= 文件编号）
+}
+
+function buildLevelList() {
+  const host = document.getElementById('lvList');
+  host.innerHTML = '';
+  buildSetBar();
+  const sel = document.getElementById('lvSort');
+  if (sel && sel.value !== lvSort) sel.value = lvSort;
+  const all = curSet === '全部' ? lib : lib.filter(e => (e.set || '待分类') === curSet);
+  const list = sortEntries(all);
+
+  // 默认排序时按目录分组（子文件夹折叠）；其它排序就用平铺列表，一眼看到全局顺序
+  const groups = [];
+  if (lvSort === 'default') {
+    const idx = new Map();
+    for (const e of list) {
+      const dir = e.dir && e.dir !== '.' ? e.dir : '';
+      if (!idx.has(dir)) { idx.set(dir, { dir, items: [] }); groups.push(idx.get(dir)); }
+      idx.get(dir).items.push(e);
+    }
+  } else groups.push({ dir: '', items: list });
+
+  for (const g of groups) {
+    const isFolder = !!g.dir && g.dir.indexOf('/') >= 0;
+    if (isFolder) {
+      const open = !!openDirs[g.dir];
+      const fb = document.createElement('button');
+      fb.className = 'lvbtn dir' + (open ? ' open' : '');
+      fb.title = g.dir + '\n点一下' + (open ? '收起' : '展开');
+      fb.innerHTML = '<span class="nm">' + (open ? '▿ ' : '▸ ') + g.dir.split('/').pop() + '</span>' +
+        '<span class="sc">' + g.items.length + ' 关</span>';
+      fb.onclick = () => { openDirs[g.dir] = !open; saveListPrefs(); buildLevelList(); };
+      host.appendChild(fb);
+      if (!open) continue;
+    }
+    for (const e of g.items) renderLevelRow(host, e, isFolder);
+  }
+
+  const cnt = document.getElementById('libCount');
+  if (cnt) cnt.textContent = all.length + (curSet === '全部' ? '' : ' / ' + lib.length);
+}
+
+function renderLevelRow(host, e, indented) {
+  {
+    const i = lib.indexOf(e);
+    let probe = null;
+    try { probe = levelOfEntry(e); } catch (err) { probe = null; }
+    const nm = e.name || (probe && probe.name) || ('关卡 ' + (i + 1));
+    const m = (probe && probe.meta) || e.meta || null;
+    const b = document.createElement('button');
+    b.className = 'lvbtn' + (indented ? ' sub' : '') +
+      (curLib && curLib === e.key ? ' on' : '') + (raw && raw.name === nm ? ' on' : '');
+    b.dataset.key = e.key;
+    b.dataset.i = i;
+    b.dataset.set = e.set || '';
+    // 悬停只说两行：这一关的来历（源步数 / 我们的步数）+ 文件路径，别堆废话
+    const line1 = [e.note || e.tip || e.origin || e.set || '']
+      .map(x => String(x).trim()).filter(Boolean).join(' ');
+    const nums = [];
+    if (e.declared) nums.push(e.declared);
+    if (e.solution && e.solution.steps) nums.push(e.solution.steps);
+    // 有源步数就写「源/我们」（如 93/83）；只有我们算的，就写「N 步」
+    const numTxt = nums.length === 2 ? nums.join('/') : (nums.length === 1 && e.declared ? String(nums[0]) : (nums.length ? nums[0] + ' 步' : ''));
+    b.title = (line1 + (numTxt ? ' ' + numTxt : '')).trim() +
+      (probe && probe.shuffle ? '\n随机打乱 ' + (probe.shuffleSteps || 0) + ' 步（每次复位重新出题）' : '') +
+      (e.file ? '\n' + e.file : '');
+    b.innerHTML = '<span class="nm">' + nm + '</span>' +
+      '<span class="sc">' + (m && m.score != null ? m.score + ' 分 · ' + m.grade + (m.estimated ? '（估算）' : '') : '不计分') + '</span>' +
+      (diskMode ? '<span class="ed" title="重命名">✎</span>' +
+        '<span class="del" title="删除">×</span>' : '');   // 纯 html 打开 = 只读库，不显示改名/删除
+    b.onclick = ev2 => {
+      const t = ev2.target;
+      if (t.classList.contains('ed')) { startRename(i, b); return; }
+      if (t.classList.contains('del')) { deleteLibEntry(i, b); return; }
+      loadLibEntry(i);
+    };
+    host.appendChild(b);
+  }
+}
+
+function loadLibEntry(i) {
+  const e = lib[i];
+  if (!e) return;
+  const lv = levelOfEntry(e);
+  if (!lv) { toast('这一关的存档坏了'); return; }
+  lv.name = e.name || lv.name;
+  if (e.note) lv.note = e.note;
+  if (!lv.meta && e.meta) lv.meta = e.meta;
+  curLib = e.key;
+  loadLevel(lv);
+  fileSolution = (e.solution && e.solution.moves && e.solution.moves.length) ? e.solution : null;
+  updateRunBtn();
+  if (e.meta && e.meta.score != null) paintStoredMeta(e.meta);   // 文件里带着难度信息，直接摆出来
+  if (e.solution && e.solution.steps) {
+    toast('已载入：' + lv.name + '（参考解法 ' + e.solution.steps + ' 步' +
+      (e.solution.optimal ? '' : '，未证明最优') + '）');
+  } else toast('已载入：' + lv.name);
+}
+
+function startRename(i, row) {
+  const e = lib[i];
+  const span = row.querySelector('.nm');
+  if (!span || row.querySelector('input')) return;
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.value = e.name || (levelOfEntry(e) || {}).name || '';
+  input.style.width = '120px';
+  input.onclick = ev2 => ev2.stopPropagation();
+  const commit = () => {
+    const v = (input.value || '').trim();
+    if (v) {
+      e.name = v;
+      if (!diskMode && e.src === 'pack') nameOverride[e.key] = v;
+      if (curLib === e.key) { raw.name = v; document.getElementById('lvName').textContent = v; }
+      if (diskMode) diskRun(DiskStore.update(e.key, { name: v, rename: true }), '已改名并重写文件：' + v);
+      else persistLib();
+    }
+    buildLevelList();
+  };
+  input.onkeydown = ev2 => {
+    if (ev2.key === 'Enter') { ev2.preventDefault(); commit(); }
+    if (ev2.key === 'Escape') { ev2.preventDefault(); buildLevelList(); }
+  };
+  input.onblur = commit;
+  span.replaceWith(input);
+  input.focus();
+  input.select();
+}
+
+let pendingDel = null;          // 待确认删除的条目 key（不靠 DOM 节点：列表重建也不丢）
+async function deleteLibEntry(i, row) {
+  const e = lib[i];
+  if (!e) return;
+  const now = Date.now();
+  if (!pendingDel || pendingDel.key !== e.key || now - pendingDel.at > 4000) {
+    pendingDel = { key: e.key, at: now };
+    const del = row.querySelector('.del');
+    if (del) del.textContent = '确认×';
+    row.style.borderColor = '#ff8d92';
+    toast('再点一次「确认×」就删除这一关');
+    setTimeout(() => {
+      if (pendingDel && pendingDel.key === e.key) { pendingDel = null; buildLevelList(); }
+    }, 4000);
+    return;
+  }
+  pendingDel = null;
+  const gone = lib[i];
+  if (diskMode) {
+    const wasCur = gone.key === curLib;
+    const j = await diskRun(DiskStore.remove(gone.key),
+      '已移入 levels/_trash：' + (gone.name || gone.key));
+    if (j && wasCur && lib.length) loadLibEntry(0);
+    return;
+  }
+  lib.splice(i, 1);
+  persistLib();
+  if (gone.key === curLib) {
+    curLib = null;
+    const first = lib.filter(e => curSet === '全部' || (e.set || '待分类') === curSet)[0] || lib[0];
+    if (first) loadLibEntry(lib.indexOf(first));
+  }
+  buildLevelList();
+  toast('已删除：' + (gone.name || gone.key));
+}
+
+/** 把当前棋盘存成一条关卡记录 */
+function snapshotCurrent() {
+  syncRaw();
+  const out = JSON.parse(JSON.stringify(raw));
+  out.name = out.name || '新关卡';
+  // 只有「这一版局面」真的算过分才带 meta：指纹对不上就别把旧分数沿用到改过的棋局上
+  const c = anaCache[levelFingerprint(out)];
+  if (c && c.diff) {
+    const det = c.detail || {};
+    out.meta = {
+      score: c.diff.score, grade: c.diff.grade, scoringVersion: 3,
+      estimate: det.estimate || null, truncated: !!det.truncated, stopped: !!det.stopped,
+      depth: det.depth, hands: det.hands, states: det.states,
+      paths: det.paths, estimated: !!c.est
+    };
+  } else {
+    delete out.meta;
+  }
+  return out;
+}
+async function libSaveCurrent() {
+  if (!raw) return;
+  const entry = curLib && lib[libIndexByKey(curLib)];
+  // 非写盘模式下内置关是只读副本，改了只能另存；写盘模式下允许直接覆盖那个 json
+  if (!entry || (!diskMode && entry.src === 'pack')) { libAddCurrent(); return; }
+  const lv = snapshotCurrent();
+  if (diskMode) {
+    // 只改名/改备注（指纹没变）就保留文件里已有的难度分；局面变了旧分数作废
+    const same = entry.level && levelFingerprint(lv) === levelFingerprint(entry.level);
+    const j = await diskRun(DiskStore.update(curLib, {
+      level: lv, name: lv.name, rename: true, note: raw.note || '',
+      meta: lv.meta || (same ? (entry.meta || null) : null), solution: same ? (entry.solution || null) : null
+    }), '已写回文件：' + lv.name);
+    if (j) {
+      raw.name = lv.name;
+      document.getElementById('lvName').textContent = lv.name;
+    }
+    return;
+  }
+  const same = entry.level && levelFingerprint(lv) === levelFingerprint(entry.level);
+  entry.level = lv;
+  entry.name = lv.name;
+  entry.solution = same ? entry.solution : null;                      // 局面变了，旧解法作废
+  persistLib();
+  buildLevelList();
+  toast('已覆盖保存：' + entry.name);
+}
+async function libAddCurrent() {
+  if (!raw) return;
+  const lv = snapshotCurrent();
+  let base = lv.name || '新关卡', nm = base, n = 2;
+  while (lib.some(e => e.name === nm)) nm = base + ' ' + (n++);
+  lv.name = nm;
+  if (diskMode) {
+    const set = (curSet && curSet !== '全部') ? curSet : '待分类';
+    const j = await diskRun(DiskStore.create({
+      level: lv, set, name: nm, tip: '编辑器里新建的关', note: raw.note || '',
+      meta: lv.meta || null
+    }), '已写入 levels/' + set + '：' + nm);
+    if (!j) return;
+    const found = lib.find(e => e.name === nm);
+    if (found) curLib = found.key;
+    raw.name = nm;
+    document.getElementById('lvName').textContent = nm;
+    buildLevelList();
+    return;
+  }
+  const key = 'u' + Date.now().toString(36);
+  lib.push({ key, src: 'custom', set: '待分类', name: nm, level: lv, tip: '你在编辑器里存的关' });
+  persistLib();
+  curLib = key;
+  raw.name = nm;
+  document.getElementById('lvName').textContent = nm;
+  buildLevelList();
+  toast('已新增关卡：' + nm);
+}
+function libReset() {
+  if (diskMode) { toast('写盘模式没有本地副本；删掉的关在 levels/_trash/ 里可以找回'); return; }
+  try { localStorage.removeItem(LIB_STORE); localStorage.removeItem(LIB_STORE_V1); } catch (e) { }
+  loadLib();
+  curLib = null;
+  buildLevelList();
+  loadLibEntry(0);
+  toast('已恢复内置关卡');
+}
+
+/* ══════════ 绑定 ══════════ */
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const wasEdit = mode === 'edit';
+  if (wasEdit) syncRaw();
+  mode = b.dataset.mode;
+  [...e.currentTarget.children].forEach(c => c.classList.toggle('on', c === b));
+  document.getElementById('playPane').style.display = mode === 'play' ? '' : 'none';
+  document.getElementById('solvePane').style.display = mode === 'solve' ? '' : 'none';
+  document.getElementById('editPane').style.display = mode === 'edit' ? '' : 'none';
+  // 随机型关卡：编辑看基准态（不然拖一下就把打乱后的局面当成关卡存进去了），
+  // 从编辑回到试玩/求解时重新出一道题。
+  if (raw.shuffle) {
+    if (mode === 'edit') { st = baseState(); roundStart = st.map(x => ({ ...x })); }
+    else if (wasEdit) st = newRound();
+  }
+  sel = null; render(); updateUI();
+  const ovNow = overlapInfo();
+  if (ovNow.total) toast(mode === 'edit'
+    ? '提示：当前有 ' + ovNow.total + ' 处重叠/越界，编辑时允许，但试玩前要修好'
+    : '还有 ' + ovNow.total + ' 处叠放/越界：试玩与求解已暂停，请回编辑模式分开');
+});
+document.getElementById('btnRotate').onclick = () => {
+  if (sel == null) return;
+  if (!L.pieces[sel].rotPlay) { toast('这块不能旋转（只有扇形和沙发可以）'); return; }
+  pushHist();
+  if (!tryTurn(sel, 1)) toast('这里转不动：落点被占用、方向不合法，或扇形旋转区域受限');
+  updateUI();
+};
+
+document.getElementById('cbGoalBox').onchange = e => {
+  showGoalBox = !!e.target.checked;
+  try { localStorage.setItem('sofa-klotski.goalbox', showGoalBox ? '1' : '0'); } catch (err) { }
+  render();
+};
+document.getElementById('btnGoalMove').onclick = () => {
+  goalEdit = !goalEdit;
+  const b = document.getElementById('btnGoalMove');
+  b.classList.toggle('acc', goalEdit);
+  b.textContent = goalEdit ? '结束设置' : '设置目标';
+  if (goalEdit && !showGoalBox) {
+    showGoalBox = true;
+    document.getElementById('cbGoalBox').checked = true;
+  }
+  render();
+  toast(goalEdit
+    ? '目标设置：拖目标框换位置；选中的是空格目标时，点空格子加入/移出'
+    : '已退出目标设置');
+};
+document.getElementById('btnUndo').onclick = undo;
+document.getElementById('btnReset').onclick = reset;
+document.getElementById('btnSolve').onclick = () => { stopPlay(); doSolve(); };
+document.getElementById('btnPlay').onclick = playSolution;
+/** 棋盘是否还在本轮开局姿态（用来把「参考解法」和「归位」合成一个按钮） */
+function atStartPose() {
+  const st0 = (raw.shuffle && roundStart && roundStart.length === raw.pieces.length)
+    ? roundStart : K.initialState(raw);
+  if (!st || st.length !== st0.length) return false;
+  for (let i = 0; i < st0.length; i++) {
+    const a = st[i], b = st0[i];
+    if (!a || a.x !== b.x || a.y !== b.y || a.ori !== b.ori) return false;
+  }
+  return true;
+}
+/** 求解器只有一个动作按钮（#btnPlay），三态：
+ *    不在开局        → 「复位」
+ *    开局 + 有解     → 「播放」（当前解来自关卡文件时写成「参考解法 N 步」）
+ *    开局 + 还没解   → 「播放」（点一下先求解再播）
+ *  不再让「播放」和「参考解法」两个按钮并排出现。 */
+function updateRunBtn() {
+  const b = document.getElementById('btnPlay');
+  if (!b) return;
+  const sol = (solution && solution.moves && solution.moves.length) ? solution : null;
+  const refOnly = !sol && fileSolution && fileSolution.moves && fileSolution.moves.length ? fileSolution : null;
+  if (!atStartPose()) {
+    b.dataset.act = 'reset';
+    b.textContent = '复位';
+    b.title = '回到开局（播到一半、播完了都能一键复位）';
+    b.classList.remove('acc');
+    return;
+  }
+  if (sol && sol.fromFile) {
+    b.dataset.act = 'play';
+    b.textContent = '参考解法 ' + sol.moves.length + ' 步';
+    b.title = '关卡文件里的参考解法（点一下开始播放）';
+    b.classList.remove('acc');
+    return;
+  }
+  if (sol) {
+    b.dataset.act = 'play';
+    b.textContent = '播放';
+    b.title = '播放这次的解：' + sol.moves.length + ' 步 / ' + sol.hands.length + ' 手';
+    b.classList.add('acc');
+    return;
+  }
+  if (refOnly) {
+    b.dataset.act = 'ref';
+    b.textContent = '参考解法 ' + (refOnly.steps || refOnly.moves.length) + ' 步';
+    b.title = '关卡文件 levels/…json 里存的解法' +
+      (refOnly.optimal ? '（已验证最短）' : '（未证明最优，仅供参考）');
+    b.classList.remove('acc');
+    return;
+  }
+  b.dataset.act = 'solve';
+  b.textContent = '播放';
+  b.title = '还没有解：点一下先求解，再播放';
+  b.classList.add('acc');
+}
+document.getElementById('btnPlay').onclick = () => {
+  const act = document.getElementById('btnPlay').dataset.act;
+  if (act === 'reset') { stopPlay(); reset(); toast('已复位'); return; }
+  if (act === 'ref') {
+    restoreSolution({ moves: fileSolution.moves, optimal: fileSolution.optimal, visited: 0, viaQuick: !fileSolution.optimal });
+    if (solution) solution.fromFile = true;         // 标一下：这个解来自关卡文件
+    document.getElementById('svMsg').textContent = '（关卡文件里的解法）' +
+      (fileSolution.optimal ? '最短解 ' : '解 ') + solution.hands.length + ' 手（' + solution.moves.length + ' 单位步）。';
+    updateRunBtn();
+    playSolution();
+    return;
+  }
+  playSolution();
+};
+document.getElementById('btnDiff').onclick = runDiff;
+document.getElementById('jobStop').onclick = () => stopJob(false);
+document.getElementById('btnFast').onclick = () => runP15('fast');
+document.getElementById('btnLoomFast').onclick = () => runLoomSolve();
+document.getElementById('btnOpt').onclick = () => runP15('opt');
+document.getElementById('btnLayer').onclick = () => runP15('layer');
+document.getElementById('btnLibBlank').onclick = () => {
+  // 「清空棋盘」：块与目标全清，名字回到新关卡（免得「存为当前关」把原关覆盖成空盘）。
+  // 走撤销栈，Ctrl+Z 能救回来。
+  pushHist();
+  raw.pieces = [];
+  raw.goals = [];
+  raw.name = '新关卡';
+  delete raw.meta;
+  delete raw.solution;
+  curLib = null;
+  L = parseRaw(raw); st = []; sel = null; goalSel = -1; roundStart = [];
+  syncViewBox(); buildScene();
+  document.getElementById('lvName').textContent = raw.name;
+  document.getElementById('inLvName').value = raw.name;
+  render(); updateUI();
+  toast('棋盘已清空：从形状库拿块开始摆，Ctrl+Z 可撤销');
+};
+/* 随机型关卡的两个属性：随机打乱 / 打乱步数（存进关卡文件的 level 里） */
+document.getElementById('cbShuffle').onchange = e => {
+  pushHist();
+  raw.shuffle = !!e.target.checked;
+  if (raw.shuffle && !(raw.shuffleSteps > 0)) raw.shuffleSteps = 200;
+  if (!raw.shuffle) delete raw.shuffleSteps;
+  // 编辑态看的是基准态，这里不重新出题；等回到试玩/求解时会按新设置打乱
+  render(); updateUI();
+  toast(raw.shuffle
+    ? '已设为随机打乱：每次载入/复位都从底面走 ' + shuffleSteps() + ' 步随机出题'
+    : '已取消随机打乱：每次都用关卡里的摆法开局');
+};
+document.getElementById('inShuffleSteps').onchange = e => {
+  if (!raw.shuffle) return;
+  const v = Math.max(1, Math.min(200000, Math.round(+e.target.value) || 200));
+  pushHist();
+  raw.shuffleSteps = v;
+  syncLevelInputs();
+  toast('打乱步数改为 ' + v);
+};
+document.getElementById('btnResize').onclick = () => {
+  // 上限放到 1000×1000（棋盘就是个坐标平面，引擎本身不限制尺寸）
+  const w = Math.max(2, Math.min(1000, Math.round(+document.getElementById('inW').value) || 4));
+  const h = Math.max(2, Math.min(1000, Math.round(+document.getElementById('inH').value) || 5));
+  pushHist(); resizeBoard(w, h); toast('棋盘改为 ' + w + '×' + h);
+};
+document.getElementById('inName').oninput = e => {
+  if (sel == null) return;
+  raw.pieces[sel].name = e.target.value;
+  if (L.pieces[sel]) L.pieces[sel].name = e.target.value;   // 渲染读的是 L，两边都得改
+  render(); renderPieceList(); updateUI();
+};
+document.getElementById('inColor').oninput = e => {
+  if (sel == null) return;
+  raw.pieces[sel].color = e.target.value;
+  if (L.pieces[sel]) L.pieces[sel].color = e.target.value;
+  render(); renderPieceList(); updateUI();
+};
+/* 关卡名 / 备注（都是关卡本来就有的字段，这里只是给它一个入口） */
+function syncLevelInputs() {
+  const n = document.getElementById('inLvName'), t = document.getElementById('inLvNote');
+  if (n && document.activeElement !== n) n.value = raw.name || '';
+  if (t && document.activeElement !== t) t.value = raw.note || '';
+  const cb = document.getElementById('cbShuffle'), st2 = document.getElementById('inShuffleSteps');
+  if (cb && document.activeElement !== cb) cb.checked = !!raw.shuffle;
+  if (st2 && document.activeElement !== st2) st2.value = raw.shuffle ? shuffleSteps() : '';
+  if (st2) st2.disabled = !raw.shuffle;
+}
+let touchTimer = null;
+function touchLibEntry(patch) {
+  if (!curLib) return;
+  const e = lib[libIndexByKey(curLib)];
+  if (!e) return;
+  if (diskMode) {
+    // 写盘模式：**改名不在这里发生**。原来每敲一个字就 DiskStore.update({name})，
+    // 会把文件名改来改去；一旦新名字和别的关撞上（尤其是缺 level 包装的坏文件），
+    // 就会出现"这一关被改名成别人的名字"。现在名字只留在内存里，
+    // 点「存为当前关」时带 rename:true 一次写下去，撞名由服务端 409 拦住。
+    if (patch.name !== undefined) raw.name = patch.name;
+    if (patch.note !== undefined) {
+      e.note = patch.note;
+      clearTimeout(touchTimer);
+      touchTimer = setTimeout(() => {
+        const cur = lib[libIndexByKey(curLib)];
+        if (cur) diskRun(DiskStore.update(curLib, { note: cur.note }), null);
+      }, 900);
+    }
+    return;
+  }
+  Object.assign(e, patch);
+  if (e.src === 'pack') {                      // 内置关不能改文件，改名走 localStorage 覆盖
+    if (patch.name) nameOverride[e.key] = patch.name;
+  } else if (e.level) {
+    e.level.name = e.name;
+    if (patch.note !== undefined) e.level.note = e.note;
+  }
+  persistLib();
+  buildLevelList();
+}
+document.getElementById('inLvName').oninput = e => {
+  raw.name = e.target.value;
+  L.name = raw.name;
+  document.getElementById('lvName').textContent = raw.name || '未命名';
+  touchLibEntry({ name: raw.name });
+};
+document.getElementById('inLvNote').oninput = e => {
+  raw.note = e.target.value;
+  touchLibEntry({ note: raw.note });
+};
+document.getElementById('btnKind').onclick = () => cycleKind();document.getElementById('btnDel').onclick = () => { if (sel != null) { pushHist(); delPiece(sel); } };
+document.getElementById('btnSetGoalOne').onclick = () => {
+  if (sel == null || !raw.pieces[sel]) { toast('先选中一个块'); return; }
+  pushHist();
+  raw.goals.push({ piece: raw.pieces[sel].id, cells: K.pieceCells(L, st, sel) });
+  goalSel = raw.goals.length - 1;
+  render(); updateUI();
+  toast('已加入目标：' + (raw.pieces[sel].name || raw.pieces[sel].id));
+};
+/** 进入「设置目标」模式（不来回切） */
+function enterGoalEdit() {
+  if (!goalEdit) document.getElementById('btnGoalMove').click();
+}
+document.getElementById('btnGoalEmpty').onclick = () => {
+  pushHist();
+  raw.goals.push({ empty: [] });
+  goalSel = raw.goals.length - 1;
+  enterGoalEdit();
+  render(); updateUI();
+  toast('点棋盘上的空格子，把它加进这个「空格目标」');
+};
+/** 当前选中的那条目标（不是归位类的返回 null） */
+function curGoal() {
+  const g = goalSel >= 0 ? raw.goals[goalSel] : null;
+  return g && !g.empty ? g : null;
+}
+document.getElementById('btnGoalSpot').onclick = () => {
+  const g = curGoal(); if (!g) return;
+  pushHist();
+  const ss = ensureSpots(g);
+  ss.push(freeSpot(ss[ss.length - 1] || []));
+  enterGoalEdit();
+  render(); updateUI();
+  toast('加了一个落点：拖到想要的位置 —— 到任一个都算达成');
+};
+document.getElementById('btnGoalPiece').onclick = () => {
+  const g = curGoal(); if (!g) return;
+  if (sel == null || !raw.pieces[sel]) { toast('先在棋盘上选中要拉进来的块'); return; }
+  const id = raw.pieces[sel].id;
+  const ids = goalPieces(g);
+  if (ids.indexOf(id) >= 0) { toast('这块已经在这个目标里了'); return; }
+  pushHist();
+  ids.push(id);
+  goalSetPieces(g, ids);
+  const ss = ensureSpots(g);
+  while (ss.length < ids.length) ss.push(freeSpot(ss[ss.length - 1] || []));
+  render(); updateUI();
+  toast('这组现在 ' + ids.length + ' 块：每块各占一个落点，位置可以换');
+};
+document.getElementById('btnGoalAll').onclick = () => {
+  const g = curGoal(); if (!g) return;
+  pushHist();
+  g.need = 'all';
+  const ids = goalPieces(g), ss = ensureSpots(g);
+  while (ss.length < ids.length) ss.push(freeSpot(ss[ss.length - 1] || []));   // 落点不够就补：否则永远达不成
+  render(); updateUI();
+  toast('全部就位：每块各占一个落点，位置可以互换');
+};
+document.getElementById('btnGoalAny').onclick = () => {
+  const g = curGoal(); if (!g) return;
+  pushHist();
+  g.need = 'any';
+  render(); updateUI();
+  toast('任一就位：这几块里只要有一块到位就算达成');
+};
+document.getElementById('btnClearGoals').onclick = () => { pushHist(); raw.goals = []; render(); updateUI(); };
+document.getElementById('btnDump').onclick = () => {
+  syncRaw();
+  const out = { name: raw.name, w: raw.w, h: raw.h, goals: raw.goals, pieces: [] };
+  if (raw.note) out.note = raw.note;
+  if (raw.meta) out.meta = raw.meta;      // 算过的分数一起导出，粘回 levels.js 就有分
+  for (let i = 0; i < raw.pieces.length; i++) {
+    const p = raw.pieces[i];
+    const o = { id: p.id, x: st[i].x, y: st[i].y, ori: st[i].ori,
+      shape: p.shape, color: p.color, name: p.name, hero: !!p.hero };
+    if (p.lock) o.lock = true;
+    if (p.chainOnly) o.chainOnly = true;
+    if (p.onceOnly) o.onceOnly = true;
+    // 自绘块必须原样带走规则字段：rot:false / flat / pair / nodedup 丢了，重载就变成另一种块
+    for (const k of ['cells', 'rot', 'flat', 'pair', 'nodedup', 'open', 'pivot', 'art'])
+      if (p[k] !== undefined) o[k] = p[k];
+    out.pieces.push(o);
+  }
+  document.getElementById('jsonBox').value = JSON.stringify(out, null, 1);
+  document.getElementById('jsonBox').select();
+};
+document.getElementById('btnLoad').onclick = () => {
+  try { loadLevel(JSON.parse(document.getElementById('jsonBox').value)); buildLevelList(); toast('已载入'); }
+  catch (err) { toast('JSON 解析失败：' + err.message); }
+};
+document.getElementById('btnNewCustom').onclick = addCustomPiece;
+document.getElementById('btnPaintBig').onclick = togglePaintBig;
+document.getElementById('btnBoxCopy').onclick = boxCopy;
+document.getElementById('btnBoxDel').onclick = boxDelete;
+document.getElementById('btnBoxAll').onclick = () => boxSelectAll();
+document.getElementById('btnBoxClear').onclick = () => { selSet.clear(); boxSel = null; render(); updateUI(); };
+document.getElementById('btnBoxNormal').onclick = () => boxKind('normal');
+document.getElementById('btnBoxPassive').onclick = () => boxKind('passive');
+document.getElementById('btnBoxOnce').onclick = () => boxKind('once');
+document.getElementById('btnBoxLock').onclick = () => boxKind('lock');
+document.getElementById('lvSort').onchange = e => {
+  lvSort = e.target.value || 'default';
+  saveListPrefs();
+  buildLevelList();
+};
+document.getElementById('btnLibSave').onclick = libSaveCurrent;
+document.getElementById('btnLibAdd').onclick = libAddCurrent;
+document.getElementById('btnLibReset').onclick = libReset;
+document.getElementById('btnClearPaint').onclick = () => {
+  paintCells.fill(-1); renderPaint(); toast('画布已清空');
+};
+/* ══════════ 自绘棋盘 ══════════ */
+function paintPreviewPath(v) {
+  if (v === 0) return 'M0 0h1v1h-1z';
+  if (v >= 5 && v <= 8) return SEG_PATH[v - 5];
+  if (v === 9) return DISC_PATH;
+  const arc = ARC_CORNER[v];
+  const ax = arc[0], ay = arc[1];
+  const qx = ax === 0 ? 1 : -1, qy = ay === 0 ? 1 : -1;
+  const A = [ax, ay + qy], B = [ax + qx, ay];
+  const sw = qx === qy ? 0 : 1;
+  return `M${ax} ${ay}L${A[0]} ${A[1]}A1 1 0 0 ${sw} ${B[0]} ${B[1]}Z`;
+}
+/** 画布当前画出来的是不是纯扇形：直接决定这个自绘块能不能转、绕哪转 */
+function paintedDesc() {
+  const list = [];
+  for (let i = 0; i < paintCells.length; i++) {
+    const v = paintCells[i];
+    if (v < 0) continue;
+    const q = { c: i % paintW, r: Math.floor(i / paintW) };
+    if (v >= 1 && v <= 4) q.arc = ARC_CORNER[v].slice();
+    else if (v >= 5 && v <= 8) q.seg = v - 5;
+    else if (v === 9) q.disc = true;
+    list.push(q);
+  }
+  return list;
+}
+function updatePaintInfo() {
+  const host = document.getElementById('paintInfo');
+  if (!host) return;
+  const list = paintedDesc();
+  if (!list.length) { host.textContent = '画布为空'; return; }
+  const norm = K.normDesc(list);
+  const sec = K.sectorDesc(norm);
+  const segC = K.segCenterOf(norm);
+  const comps = K.components(norm.map(q => [q.c, q.r])).length;
+  const nSeg = norm.filter(q => q.seg != null).length;
+  const nDisc = norm.filter(q => q.disc).length;
+  const extra = (nSeg ? '弓形 ' + nSeg + ' 块' : '') + (nDisc ? (nSeg ? ' + ' : '') + '内切圆 ' + nDisc + ' 块' : '');
+  host.innerHTML = sec
+    ? '<b style="color:#6ee29a">' + ({ 1: '1/4 圆', 2: '半圆', 3: '3/4 圆', 4: '整圆' })[sec.quads.length] +
+      '</b>：可旋转，只绕圆心 (' + sec.center.join(',') + ')'
+    : segC
+      ? '<b style="color:#6ee29a">斜半圆</b>：可旋转，绕圆心 (' + segC.join(',') + ')（= 方块中心）'
+      : '<b class="warn">自定义形状</b>：不可旋转' +
+        (comps > 1 ? '（' + comps + ' 段不相邻，会用重心连线连起来）' : '') +
+        (extra ? '；含' + extra : '');
+}
+/** 画布格子的图标：空格是虚线框；弓形这种贴边月牙额外画个虚线格当参照 */
+function paintCellSvg(v) {
+  const SZ = 'width="100%" height="100%" viewBox="0 0 1 1"';
+  if (v < 0) return '<svg ' + SZ + '>' +
+    '<rect x="0.02" y="0.02" width="0.96" height="0.96" fill="none" stroke="#332a52" stroke-width="0.06"/></svg>';
+  const guide = (v >= 5 && v <= 8)
+    ? '<rect x="0.03" y="0.03" width="0.94" height="0.94" fill="none" stroke="#4a3f70"'
+      + ' stroke-width="0.04" stroke-dasharray="0.12 0.1"/>'
+    : '';
+  return '<svg ' + SZ + '>' + guide +
+    '<path d="' + paintPreviewPath(v) + '" fill="#c9b8f5" stroke="#2b2444" stroke-width="0.05"/></svg>';
+}
+function renderPaint() {
+  const host = document.getElementById('paint');
+  const sizeKey = paintW + 'x' + paintH;
+  if (host.dataset.size !== sizeKey) {
+    host.innerHTML = '';
+    host.dataset.size = sizeKey;
+    host.style.gridTemplateColumns = 'repeat(' + paintW + ',1fr)';
+    host.style.gridTemplateRows = 'repeat(' + paintH + ',1fr)';
+    for (let i = 0; i < paintW * paintH; i++) {
+      const b = document.createElement('button');
+      b.dataset.i = i;
+      host.appendChild(b);
+    }
+  }
+  [...host.children].forEach((b, i) => { b.innerHTML = paintCellSvg(paintCells[i]); });
+  updatePaintInfo();
+  placePaintFloat();
+}
+/** 改画布尺寸，保留左上角已有的内容 */
+function setPaintSize(nw, nh) {
+  if (nw === paintW && nh === paintH) return;
+  const ow = paintW, oh = paintH, old = paintCells;
+  const next = new Array(nw * nh).fill(-1);
+  for (let r = 0; r < Math.min(nh, oh); r++)
+    for (let c = 0; c < Math.min(nw, ow); c++) next[r * nw + c] = old[r * ow + c];
+  paintW = nw; paintH = nh; paintCells = next;
+}
+/** 展开时把画布贴到棋盘上：位置/宽高都按棋盘那一格的真实像素算 */
+function placePaintFloat() {
+  const host = document.getElementById('paint');
+  if (!host || !paintBig || !L) return;
+  const r = svg.getBoundingClientRect();
+  const s = Math.min(r.width / viewW(), r.height / viewH());
+  // 棋盘格 (0,0) 在屏幕上的位置（含缩放与平移），画布跟着走才不会错位
+  const x0 = r.left + (r.width - s * viewW()) / 2 - view.x * s;
+  const y0 = r.top + (r.height - s * viewH()) / 2 - view.y * s;
+  host.style.position = 'fixed';
+  host.style.left = (x0 + s * Math.floor((L.w - paintW) / 2)) + 'px';
+  host.style.top = (y0 + s * Math.floor((L.h - paintH) / 2)) + 'px';
+  host.style.width = (s * paintW) + 'px';
+  host.style.height = (s * paintH) + 'px';
+}
+let paintHome = null;         // 收起时放回侧栏的位置
+function togglePaintBig() {
+  const host = document.getElementById('paint');
+  const btn = document.getElementById('btnPaintBig');
+  if (!paintBig) {
+    paintHome = host.parentNode;
+    const w = Math.max(2, Math.min(L.w, PAINT_MAX));
+    const h = Math.max(2, Math.min(L.h, PAINT_MAX));
+    setPaintSize(w, h);
+    document.body.appendChild(host);
+    host.classList.add('float');
+    paintBig = true;
+    btn.textContent = '收起';
+    btn.classList.add('acc');
+    renderPaint();
+    if (w !== L.w || h !== L.h) toast('棋盘太大，画布只展开到 ' + w + '×' + h + '（一格 = 棋盘一格）');
+    else toast('画布已展开到棋盘大小 ' + w + '×' + h + '：一格对一格，直接照着棋盘画');
+  } else {
+    host.classList.remove('float');
+    host.style.position = host.style.left = host.style.top = host.style.width = host.style.height = '';
+    paintBig = false;
+    if (paintHome) paintHome.insertBefore(host, paintHome.querySelector('.row'));
+    btn.textContent = '⤢ 展开';
+    btn.classList.remove('acc');
+    setPaintSize(PAINT_N, PAINT_N);
+    renderPaint();
+  }
+}
+window.addEventListener('resize', () => { if (paintBig) placePaintFloat(); });
+function paintAt(i) {
+  if (paintCells[i] === brush) return;
+  paintCells[i] = brush;
+  document.getElementById('paint').children[i].innerHTML = paintCellSvg(paintCells[i]);
+  updatePaintInfo();
+}
+(function buildBrush() {
+  const host = document.getElementById('brush');
+  // 弓形只是贴着一条边的一道月牙，光看形状认不出朝向 —— 图标里加个虚线方格当参照
+  const icon = slot => slot === 'erase'
+    ? '<svg width="18" height="18" viewBox="0 0 1 1"><path d="M0.15 0.15L0.85 0.85M0.85 0.15L0.15 0.85" stroke="#ff8d92" stroke-width="0.12" stroke-linecap="round"/></svg>'
+    : '<svg width="18" height="18" viewBox="-0.08 -0.08 1.16 1.16">'
+      + (slot === 'seg'
+        ? '<rect x="0" y="0" width="1" height="1" fill="none" stroke="#4a3f70" stroke-width="0.05" stroke-dasharray="0.12 0.1"/>'
+        : '')
+      + '<path d="' + paintPreviewPath(brushValue(slot)) +
+      '" fill="#c9b8f5" stroke="#2b2444" stroke-width="0.05"/></svg>';
+  BRUSHES.forEach(br => {
+    const b = document.createElement('button');
+    b.title = br.label;
+    b.dataset.slot = br.slot;
+    b.innerHTML = icon(br.slot);
+    b.classList.toggle('on', br.slot === brushSlot);
+    b.onclick = () => {
+      // 同一种图形再点一下 = 把它自己转 90°（四种圆角不再各占一个按钮）
+      if (br.slot === brushSlot && br.turn) {
+        if (br.turn === 'quarter') brushQ = ARC_NEXT[brushQ];
+        else brushSeg = (brushSeg + 1) % 4;
+        brush = brushValue(brushSlot);
+        b.innerHTML = icon(brushSlot);
+        toast(br.turn === 'quarter' ? '1/4 圆已转 90°' : '弓形已转 90°');
+        return;
+      }
+      brushSlot = br.slot;
+      brush = brushValue(brushSlot);
+      [...host.children].forEach(c => c.classList.toggle('on', c === b));
+      b.innerHTML = icon(brushSlot);
+    };
+    host.appendChild(b);
+  });
+  const paintHost = document.getElementById('paint');
+  /* 拖动连续放块：指针跑得快时 pointermove 会跳格，这里按 Bresenham 把中间格子补齐，
+   * 不然一笔横着拖过去只留下两头的点。 */
+  let lastPaintCell = null;
+  function paintLine(i) {
+    if (lastPaintCell == null) { paintAt(i); lastPaintCell = i; return; }
+    let c0 = lastPaintCell % paintW, r0 = Math.floor(lastPaintCell / paintW);
+    const c1 = i % paintW, r1 = Math.floor(i / paintW);
+    const dx = Math.abs(c1 - c0), dy = Math.abs(r1 - r0);
+    const sx = c0 < c1 ? 1 : -1, sy = r0 < r1 ? 1 : -1;
+    let err = dx - dy, c = c0, r = r0, guard = 0;
+    while (guard++ < 4096) {
+      paintAt(r * paintW + c);
+      if (c === c1 && r === r1) break;
+      const e2 = 2 * err;
+      if (e2 > -dy) { err -= dy; c += sx; }
+      if (e2 < dx) { err += dx; r += sy; }
+    }
+    lastPaintCell = i;
+  }
+  paintHost.addEventListener('pointerdown', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    painting = true;
+    lastPaintCell = null;
+    paintLine(+b.dataset.i);
+    paintHost.setPointerCapture(e.pointerId);
+  });
+  paintHost.addEventListener('pointermove', e => {
+    if (!painting) return;
+    const t = document.elementFromPoint(e.clientX, e.clientY);
+    if (t && t.dataset && t.dataset.i != null) paintLine(+t.dataset.i);
+  });
+  paintHost.addEventListener('pointerup', () => { painting = false; lastPaintCell = null; });
+  paintHost.addEventListener('pointercancel', () => { painting = false; lastPaintCell = null; });
+})();
+renderPaint();
+
+/* ══════════ 形状调色板 ══════════ */
+(function buildPalette() {
+  const host = document.getElementById('pal');
+  const CV = 36, PAD = 2, S = (CV - PAD * 2) / 3;
+  // 固定顺序：基础四形状 → 沙发(4)/半圆(5) → 其它形状，老脚本按下标点也不会错位
+  const ORDER = ['2x2', '2x1', '1x2', '1x1', 'sofa', 'semi', 'diagSemi', '1x3', 'L3', 'L4', 'T4',
+    'quarter', 'threeQuarter', 'disc'];
+  ORDER.filter(k => SH[k]).forEach(k => {
+    const sh = SH[k];
+    const seq = sh.cells.map(q => Array.isArray(q) ? q : [q.c, q.r]);
+    const bb = K.bbox(seq);
+    const tx = (CV - bb[0] * S) / 2, ty = (CV - bb[1] * S) / 2;
+    let inner;
+    if (sh.art === 'diagSemi') {
+      const pv = sh.pivot || [0.5, 1.5];
+      inner = '<g transform="translate(' + pv[0] + ' ' + pv[1] + ')">'
+        + '<path d="M-0.5 -0.5A0.7071 0.7071 0 0 1 0.5 0.5L-0.5 0.5Z" fill="#c9b8f5"'
+        + ' stroke="#2b2444" stroke-width="1" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g>';
+    } else if (sh.art === 'sofa') {
+      inner = '<path d="' + SOFA_PATH + '" fill="#c9b8f5" stroke="#2b2444" stroke-width="1"'
+        + ' vector-effect="non-scaling-stroke" stroke-linejoin="round"/>';
+    } else {
+      const art = K.artOf(sh.cells.map(q => Array.isArray(q)
+        ? { c: q[0], r: q[1], arc: null }
+        : { c: q.c, r: q.r, arc: q.arc || null }));
+      inner = '<path d="' + art.fill + '" fill="#c9b8f5"/>'
+        + '<path d="' + art.stroke + '" fill="none" stroke="#2b2444" stroke-width="1"'
+        + ' vector-effect="non-scaling-stroke" stroke-linecap="round"/>';
+    }
+    const b = document.createElement('button');
+    b.dataset.k = k;
+    b.title = sh.label;
+    b.innerHTML = '<svg width="' + CV + '" height="' + CV + '" viewBox="0 0 ' + CV + ' ' + CV + '">'
+      + '<g transform="translate(' + tx + ' ' + ty + ') scale(' + S + ')">' + inner + '</g></svg>';
+    b.onclick = () => choosePalette(k);
+    host.appendChild(b);
+  });
+})();
+
+/** 挑一个形状（再挑一次同一个 = 取消）。键盘 Q/W/A/S 和调色板按钮共用 */
+function paintPalOn() {
+  [...document.querySelectorAll('#pal button')].forEach(c => c.classList.toggle('on', c.dataset.k === palShape));
+}
+function choosePalette(k) {
+  const same = palShape === k;
+  palShape = same ? null : k;
+  paintPalOn();
+  if (palShape) toast('已选「' + ((SH[k] && SH[k].label) || k) + '」：点棋盘放下（' +
+    KIND_LABEL[newKind] + '，再按一次取消）');
+}
+
+/* 兼容旧测试/脚本里的关卡工厂名与预设按钮 id（新版已改成关卡列表） */
+const levelRef = () => LV.classic();
+const levelClassic = () => LV.classic();
+const levelSemi = () => LV.yinQingYuanQue();
+const levelN15 = () => LV.fifteen();
+const levelBlank = () => LV.blank();
+(function legacyButtons() {
+  const map = { btnClassic: 'classic', btnSemi: 'yinQingYuanQue', btnN15: 'fifteen', btnBlank: 'blank' };
+  const box = document.createElement('div');
+  box.style.display = 'none';
+  for (const id of Object.keys(map)) {
+    const b = document.createElement('button');
+    b.id = id;
+    b.textContent = LV[map[id]]().name;      // 老脚本会读按钮文字核对关卡名
+    b.onclick = () => loadLevel(LV[map[id]]());
+    box.appendChild(b);
+  }
+  document.body.appendChild(box);
+})();
+
+/* 启动：file:// 下 probe() 不发请求、直接 resolve(false)，旧行为完全不变；
+ * http:// 且写盘服务在跑时，先拿到磁盘上的关卡包再建库。 */
+async function boot() {
+  diskMode = await DiskStore.probe();
+  if (diskMode) {
+    try { diskPacks = (await DiskStore.list()).packs; }
+    catch (e) { diskMode = false; diskPacks = null; }
+  }
+  const hint = document.getElementById('libHint');
+  if (hint) hint.innerHTML = diskMode
+    ? '<b style="color:#7ddc9a">写盘模式</b>：增改删直接改 <code>levels/&lt;关卡集&gt;/NN_名字.json</code>；' +
+      '改名会同步改文件名，难度分写进关卡文件，删除的关移到 <code>levels/_trash/</code> 可找回。'
+    : '内置关在 <code>levels/&lt;关卡集&gt;/&lt;编号&gt;_&lt;名字&gt;.json</code>（一关一文件，含难度与解法）；' +
+      '你的改动存在浏览器 localStorage 里';
+  loadCache();                     // 先读缓存，loadLevel 里要用
+  loadLib();
+  loadLevel(levelOfEntry(lib[0]));
+  curLib = lib[0] ? lib[0].key : null;
+  buildLevelList();
+  /* 页面初始化完成的信号：cdp 测试靠它判断"可以开始操作了"，不用死等 */
+  window.__ready = true;
+}
+boot();
+</script>
+</body>
+</html>

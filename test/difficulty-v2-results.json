@@ -1,0 +1,82 @@
+[
+  {
+    "name": "classic",
+    "old": 67,
+    "score": 86,
+    "depth": 76,
+    "hands": 63,
+    "states": 25955,
+    "estimated": false,
+    "cognition": {
+      "active": 10,
+      "switches": 63,
+      "revisits": 54,
+      "retreats": 3,
+      "setup": 55,
+      "maxSetup": 28,
+      "decisions": 69,
+      "temptation": 134.88044787374955,
+      "measured": true
+    }
+  },
+  {
+    "name": "yinQingYuanQue",
+    "old": 41,
+    "score": 65,
+    "depth": 40,
+    "hands": 35,
+    "states": 10988,
+    "estimated": false,
+    "cognition": {
+      "active": 6,
+      "switches": 31,
+      "revisits": 26,
+      "retreats": 1,
+      "setup": 29,
+      "maxSetup": 11,
+      "decisions": 30,
+      "temptation": 38.341478103541235,
+      "measured": true
+    }
+  },
+  {
+    "name": "lockedGate",
+    "old": 47,
+    "score": 68,
+    "depth": 39,
+    "hands": 34,
+    "states": 26745,
+    "estimated": false,
+    "cognition": {
+      "active": 8,
+      "switches": 34,
+      "revisits": 27,
+      "retreats": 1,
+      "setup": 30,
+      "maxSetup": 13,
+      "decisions": 38,
+      "temptation": 62.99911762592831,
+      "measured": true
+    }
+  },
+  {
+    "name": "ambush",
+    "old": 84,
+    "score": 92,
+    "depth": 114,
+    "hands": 100,
+    "states": 81340,
+    "estimated": false,
+    "cognition": {
+      "active": 10,
+      "switches": 100,
+      "revisits": 91,
+      "retreats": 7,
+      "setup": 84,
+      "maxSetup": 10,
+      "decisions": 110,
+      "temptation": 185.34269835553576,
+      "measured": true
+    }
+  }
+]

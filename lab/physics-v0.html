@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>沙发华容道 · 试玩器 v0.1</title>
+<style>
+  :root{
+    --bg:#0b0910; --panel:#151122; --panel2:#1c1730; --line:#2b2444;
+    --txt:#e9e4f7; --dim:#938bb0; --acc:#a855f7; --acc2:#22b14c;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:radial-gradient(1200px 800px at 20% -10%,#1b1330 0%,var(--bg) 60%);
+    color:var(--txt);font:14px/1.5 "Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  header{
+    display:flex;align-items:center;gap:18px;padding:12px 18px;
+    border-bottom:1px solid var(--line);background:rgba(21,17,34,.9);flex:0 0 auto;
+  }
+  .brand{font-size:15px;font-weight:600;letter-spacing:.3px}
+  .brand span{color:var(--dim);font-weight:400;font-size:12px;margin-left:6px}
+  .tabs{display:flex;gap:4px;background:var(--panel2);padding:3px;border-radius:9px}
+  .tabs button{
+    border:0;background:transparent;color:var(--dim);font:inherit;font-size:13px;
+    padding:5px 14px;border-radius:7px;cursor:pointer;transition:.15s;
+  }
+  .tabs button.on{background:var(--acc);color:#fff;box-shadow:0 2px 12px rgba(168,85,247,.4)}
+  .stat{margin-left:auto;color:var(--dim);font-size:13px}
+  .stat b{color:var(--txt);font-variant-numeric:tabular-nums}
+  main{flex:1;display:flex;min-height:0}
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;min-width:0}
+  #board{
+    height:min(78vh,760px);max-width:100%;aspect-ratio:4/5;
+    touch-action:none;cursor:default;user-select:none;
+    filter:drop-shadow(0 18px 40px rgba(0,0,0,.55));
+  }
+  aside{
+    width:308px;flex:0 0 308px;border-left:1px solid var(--line);
+    background:rgba(21,17,34,.72);padding:16px;overflow-y:auto;
+  }
+  aside h3{
+    margin:0 0 8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--dim);font-weight:600;
+  }
+  .card{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:12px}
+  .row{display:flex;gap:7px;flex-wrap:wrap}
+  button.b{
+    flex:1 1 auto;min-width:62px;border:1px solid var(--line);background:#241c3c;color:var(--txt);
+    font:inherit;font-size:12.5px;padding:7px 9px;border-radius:8px;cursor:pointer;transition:.15s;
+  }
+  button.b:hover{background:#2f2450;border-color:#463a6b}
+  button.b:active{transform:translateY(1px)}
+  button.b.acc{background:var(--acc);border-color:var(--acc)}
+  button.b.acc:hover{background:#b975f8}
+  button.b.on{background:var(--acc2);border-color:var(--acc2);color:#04160a}
+  .k{color:var(--dim);font-size:12px}
+  .kv{display:flex;justify-content:space-between;font-size:12.5px;padding:2px 0}
+  .kv span:last-child{font-variant-numeric:tabular-nums}
+  .hint{color:var(--dim);font-size:12px;line-height:1.7}
+  .hint kbd{
+    background:#2a2244;border:1px solid #3b3160;border-bottom-width:2px;border-radius:4px;
+    padding:0 5px;font:11px/1.6 ui-monospace,Consolas,monospace;color:#d6cff0;
+  }
+  .pal{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .pal button{
+    border:1px solid var(--line);background:#241c3c;border-radius:8px;padding:6px 0;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;height:40px;
+  }
+  .pal button.on{border-color:var(--acc);background:#33235a;box-shadow:0 0 0 2px rgba(168,85,247,.3)}
+  .pal i{display:block;background:#c9b8f5;border-radius:3px}
+  textarea{
+    width:100%;height:88px;resize:vertical;background:#100c1c;color:#cfc7e8;
+    border:1px solid var(--line);border-radius:8px;padding:8px;font:11.5px/1.45 ui-monospace,Consolas,monospace;
+  }
+  .bar{height:6px;border-radius:4px;background:#2a2244;overflow:hidden;margin-top:6px}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,#22b14c,#7ddc9a)}
+  .badge{font-size:11px;padding:1px 6px;border-radius:20px;background:#2a2244;color:var(--dim)}
+  .badge.ok{background:rgba(34,177,76,.18);color:#6ee29a}
+  .badge.no{background:rgba(237,28,36,.18);color:#ff8d92}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">沙发华容道<span>Sofa Klotski · 几何内核 v0.1</span></div>
+  <div class="tabs" id="tabs">
+    <button data-mode="play" class="on">试玩</button>
+    <button data-mode="edit">编辑</button>
+  </div>
+  <div class="stat">步数 <b id="stMoves">0</b> · 沙发角度 <b id="stDeg">0°</b></div>
+</header>
+
+<main>
+  <div class="stage"><svg id="board" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <aside>
+    <h3>沙发 · 当前位姿</h3>
+    <div class="card">
+      <div class="kv"><span class="k">中心</span><span id="sofaPos">—</span></div>
+      <div class="kv"><span class="k">角度</span><span id="sofaDeg">—</span></div>
+      <div class="kv"><span class="k">此处可转范围</span><span id="sofaRange">—</span></div>
+      <div class="kv"><span class="k">碰撞</span><span id="sofaHit"><span class="badge ok">自由</span></span></div>
+      <div class="hint" style="margin-top:8px">
+        可转范围 = 从当前姿态出发、不碰撞地连续旋转的极限角度。这是判断“这里能不能拐过去”的直接依据。
+      </div>
+    </div>
+
+    <h3>操作</h3>
+    <div class="card">
+      <div class="hint">
+        <b style="color:#cfc7e8">方块</b>：直接拖动，按最近的方向吸附成格内滑动，遇到阻挡自动停。<br>
+        <b style="color:#cfc7e8">沙发</b>：按住拖动 = 连续平移；<kbd>Shift</kbd>+拖动 = 像转方向盘一样旋转；<kbd>滚轮</kbd> / <kbd>Q</kbd><kbd>E</kbd> = 旋转 1.5°（<kbd>Shift</kbd> 一次 15°）；<kbd>方向键</kbd> = 微调平移。<br>
+        <kbd>Ctrl</kbd>+<kbd>Z</kbd> 撤销，<kbd>R</kbd> 重置。
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="b" id="btnUndo">撤销</button>
+        <button class="b" id="btnReset">重置</button>
+        <button class="b" id="btnLock">锁定方块</button>
+      </div>
+    </div>
+
+    <h3>求解器 <span class="badge" id="solverBadge">空闲 0</span></h3>
+    <div class="card">
+      <div class="kv"><span class="k">沙发可达位姿</span><span id="sReach">—</span></div>
+      <div class="kv"><span class="k">可达重心格位</span><span id="sPos">—</span></div>
+      <div class="kv"><span class="k">目标姿态</span><span id="sGoal">未设置</span></div>
+      <div class="kv"><span class="k">目标可达</span><span id="sGoalOk">—</span></div>
+      <div class="row" style="margin-top:9px">
+        <button class="b" id="btnReach">分析可达域</button>
+        <button class="b" id="btnGoal">设为目标</button>
+      </div>
+      <div class="row" style="margin-top:7px">
+        <button class="b acc" id="btnSolve">求解并播放</button>
+        <button class="b" id="btnClearGoal">清目标</button>
+      </div>
+      <div class="hint" style="margin-top:8px" id="solverMsg">
+        在 (x, y, θ) 上按 0.05 格 / 2.5° 采样，用真实几何判碰撞后做 BFS。
+      </div>
+    </div>
+
+    <h3>该先挪哪块</h3>
+    <div class="card">
+      <div class="row"><button class="b" id="btnRank">分析一步前瞻</button></div>
+      <div id="rankList" class="hint" style="margin-top:8px">点上面的按钮，按“挪完以后沙发能用的位形空间有多大”排序。</div>
+    </div>
+
+    <h3>关卡</h3>
+    <div class="card">
+      <div class="row">
+        <button class="b acc" id="btnRef">参考图 · 拐角</button>
+        <button class="b" id="btnBlank">空白棋盘</button>
+      </div>
+      <div class="row" style="margin-top:7px">
+        <button class="b" id="btnDump">导出 JSON</button>
+        <button class="b" id="btnLoad">载入 JSON</button>
+      </div>
+      <textarea id="jsonBox" spellcheck="false" placeholder="点的 JSON 会出现在这里；粘贴后点“载入 JSON”。"></textarea>
+    </div>
+
+    <div id="editPane" style="display:none">
+      <h3>编辑</h3>
+      <div class="card">
+        <div class="pal" id="pal"></div>
+        <div class="row" style="margin-top:9px">
+          <button class="b" id="btnDel">删除选中</button>
+          <button class="b" id="btnClear">清空方块</button>
+        </div>
+        <div class="kv" style="margin-top:8px"><span class="k">已填格数</span><span id="fillInfo">—</span></div>
+        <div class="kv"><span class="k">重叠 / 越界</span><span id="validInfo">—</span></div>
+        <div class="hint" style="margin-top:8px">选一个形状再点棋盘格子即可摆放；点中已有方块可拖动或删除。</div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<script src="../sofa-shape.js"></script>
+<script src="sofa-geom.js"></script>
+<script src="sofa-cspace.js"></script>
+<script>
+'use strict';
+/* ───────────────────────── 几何内核 ───────────────────────── */
+
+const SOFA = window.SOFA_OUTLINE;              // 沙发轮廓（格单位，原点=包围盒中心，y 向下）
+const G = window.SofaGeom;
+const SOFA_CACHE = { poly: null, pose: null };
+
+function sofaCache(pose) {
+  const c = SOFA_CACHE;
+  if (c.pose && c.pose.cx === pose.cx && c.pose.cy === pose.cy && c.pose.deg === pose.deg) return c;
+  c.pose = { cx: pose.cx, cy: pose.cy, deg: pose.deg };
+  c.poly = G.polyFor(SOFA, pose);
+  c.bb = G.bboxOf(c.poly);
+  return c;
+}
+const pointInPoly = (x, y, poly) => G.pointInPoly(x, y, poly);
+/* ───────────────────────── 关卡状态 ───────────────────────── */
+
+const PAL = ['#ed1c24', '#ff7f27', '#fff200', '#00a2e8', '#3f48cc', '#ffaec9', '#b97a57', '#a349a4'];
+
+function levelRef() {
+  return {
+    name: '参考图 · 拐角',
+    w: 4, h: 5,
+    blocks: [
+      { id: 'r', x: 0, y: 0, w: 1, h: 2, c: '#ed1c24' },
+      { id: 'o', x: 1, y: 0, w: 2, h: 2, c: '#ff7f27' },
+      { id: 'y', x: 3, y: 0, w: 1, h: 2, c: '#fff200' },
+      { id: 'c', x: 1, y: 2, w: 2, h: 1, c: '#00a2e8' },
+      { id: 'b', x: 3, y: 2, w: 1, h: 2, c: '#3f48cc' },
+      { id: 'p', x: 1, y: 4, w: 1, h: 1, c: '#ffaec9' },
+      { id: 'n', x: 2, y: 4, w: 1, h: 1, c: '#b97a57' },
+      { id: 'm', x: 3, y: 4, w: 1, h: 1, c: '#a349a4' }
+    ],
+    sofa: { cx: 0.498, cy: 3.499, deg: 0 }
+  };
+}
+function levelBlank() {
+  return { name: '空白', w: 4, h: 5, blocks: [], sofa: { cx: 2, cy: 2.5, deg: 0 } };
+}
+
+let L = null;            // 当前关卡（可变）
+let sofa = null;         // {cx,cy,deg}
+let blocks = null;       // [{id,x,y,w,h,c}]
+let mode = 'play';
+let sel = null;          // 'sofa' | block 引用
+let locked = false;
+let moves = 0;
+let history = [];
+let paletteShape = null; // 编辑模式待放置形状 [w,h]
+let uid = 1;
+
+function snapshot() {
+  return {
+    blocks: blocks.map(b => ({ ...b })),
+    sofa: { ...sofa },
+    moves
+  };
+}
+function pushHistory() {
+  history.push(snapshot());
+  if (history.length > 400) history.shift();
+  updateUI();
+}
+function undo() {
+  const s = history.pop();
+  if (!s) return;
+  blocks = s.blocks; sofa = s.sofa; moves = s.moves;
+  buildScene(); syncScene(); updateUI();
+}
+function reset() {
+  blocks = L.blocks.map(b => ({ ...b }));
+  sofa = { ...L.sofa };
+  moves = 0; sel = null; history = [];
+  buildScene(); syncScene(); updateUI();
+}
+function loadLevel(lv) {
+  L = JSON.parse(JSON.stringify(lv));
+  blocks = L.blocks.map(b => ({ ...b }));
+  sofa = { ...L.sofa };
+  moves = 0; sel = null; history = []; uid = 1;
+  goal = null; lastReach = null;
+  if (playTimer) { clearInterval(playTimer); playTimer = null; }
+  document.getElementById('board').setAttribute('viewBox', `0 0 ${L.w} ${L.h}`);
+  document.getElementById('board').style.aspectRatio = `${L.w}/${L.h}`;
+  buildScene(); syncScene(); updateUI();
+  document.getElementById('sReach').textContent = '—';
+  document.getElementById('sPos').textContent = '—';
+  document.getElementById('sGoal').textContent = '未设置';
+  document.getElementById('sGoalOk').textContent = '—';
+  document.getElementById('solverBadge').textContent = '空闲 0';
+  document.getElementById('rankList').textContent = '点上面的按钮，按“挪完以后沙发能用的位形空间有多大”排序。';
+  setMsg('在 (x, y, θ) 上按 0.05 格 / 2.5° 采样，用真实几何判碰撞后做 BFS。');
+}
+/* ───────────────────────── 合法性判定 ───────────────────────── */
+
+/** 沙发在 pose 下是否撞墙/撞方块；返回 null 表示合法 */
+function sofaConflict(pose) {
+  return G.conflict(L, blocks, pose, SOFA);
+}
+/** 方块放到 (nx,ny) 是否合法（含与沙发的关系） */
+function blockFits(blk, nx, ny) {
+  return G.fits(L, blocks, sofa, SOFA, blk, nx, ny);
+}
+/* ───────────────────────── 渲染 ───────────────────────── */
+
+const svg = document.getElementById('board');
+const NS = 'http://www.w3.org/2000/svg';
+const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+let gGrid, gBlocks, gSofa, sofaPath, layerSel, pivotRing, pivotCore, gReach, gGoal;
+const blockEls = new Map();
+
+/** Catmull-Rom -> 三次贝塞尔，让 160 点轮廓看上去是完全光滑的 */
+function smoothPath(pts, closed) {
+  const n = pts.length;
+  const f = v => Math.round(v * 10000) / 10000;
+  let d = `M ${f(pts[0][0])} ${f(pts[0][1])}`;
+  const last = closed ? n : n - 1;
+  for (let i = 0; i < last; i++) {
+    const p0 = pts[(i - 1 + n) % n], p1 = pts[i % n], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6, c1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ` C ${f(c1x)} ${f(c1y)} ${f(c2x)} ${f(c2y)} ${f(p2[0])} ${f(p2[1])}`;
+  }
+  return closed ? d + ' Z' : d;
+}
+
+function buildScene() {
+  svg.innerHTML = '';
+  blockEls.clear();
+  const { w, h } = L;
+  svg.appendChild(el('rect', { x: 0, y: 0, width: w, height: h, rx: 0.10, fill: '#201a2e' }));
+  gGrid = el('g', { stroke: 'rgba(255,255,255,.055)', 'stroke-width': 0.012 });
+  for (let i = 1; i < w; i++) gGrid.appendChild(el('line', { x1: i, y1: 0, x2: i, y2: h }));
+  for (let j = 1; j < h; j++) gGrid.appendChild(el('line', { x1: 0, y1: j, x2: w, y2: j }));
+  svg.appendChild(gGrid);
+
+  gReach = el('g', {});       // 求解器：沙发可达域（垫在棋子下面）
+  svg.appendChild(gReach);
+
+  gSofa = el('g', {});
+  sofaPath = el('path', {
+    d: smoothPath(SOFA, true),
+    fill: '#22b14c',
+    stroke: '#062d12',
+    'stroke-width': 0.022,
+    'stroke-linejoin': 'round'
+  });
+  gSofa.appendChild(sofaPath);
+  // 重心把手：拖动/旋转的中枢，恒常显示（凹槽里的"抓手"）
+  pivotRing = el('circle', {
+    r: 0.085, fill: 'rgba(4,32,13,.72)', stroke: 'rgba(180,255,200,.55)', 'stroke-width': 0.016
+  });
+  pivotCore = el('circle', { r: 0.026, fill: 'rgba(220,255,230,.9)' });
+  gSofa.appendChild(pivotRing);
+  gSofa.appendChild(pivotCore);
+  svg.appendChild(gSofa);
+
+  gBlocks = el('g', {});
+  svg.appendChild(gBlocks);
+
+  gGoal = el('g', {});        // 目标姿态的虚影
+  svg.appendChild(gGoal);
+
+  layerSel = el('g', {});
+  svg.appendChild(layerSel);
+
+  const frame = el('rect', {
+    x: 0, y: 0, width: w, height: h, rx: 0.10, fill: 'none',
+    stroke: 'rgba(168,85,247,.35)', 'stroke-width': 0.03
+  });
+  svg.appendChild(frame);
+}
+
+function syncScene() {
+  for (const b of blocks) {
+    let r = blockEls.get(b.id);
+    if (!r) {
+      r = el('rect', { rx: 0.05, stroke: '#08060f', 'stroke-width': 0.022 });
+      r.dataset.id = b.id;
+      gBlocks.appendChild(r);
+      blockEls.set(b.id, r);
+    }
+    r.setAttribute('x', b.x); r.setAttribute('y', b.y);
+    r.setAttribute('width', b.w); r.setAttribute('height', b.h);
+    r.setAttribute('fill', b.c);
+  }
+  for (const [id, r] of blockEls) {
+    if (!blocks.some(b => b.id === id)) { r.remove(); blockEls.delete(id); }
+  }
+  gSofa.setAttribute('transform', `translate(${sofa.cx} ${sofa.cy}) rotate(${sofa.deg})`);
+  // 目标姿态虚影
+  if (gGoal) {
+    gGoal.innerHTML = '';
+    if (goal) {
+      gGoal.appendChild(el('path', {
+        d: smoothPath(SOFA, true), fill: 'rgba(251,191,36,.13)', stroke: '#fbbf24',
+        'stroke-width': 0.02, 'stroke-dasharray': '0.07 0.06',
+        transform: `translate(${goal.cx} ${goal.cy}) rotate(${goal.deg})`
+      }));
+    }
+  }
+  pivotRing.setAttribute('cx', 0);
+  pivotRing.setAttribute('cy', 0);
+  pivotRing.setAttribute('stroke', sel === 'sofa' ? 'rgba(255,255,255,.95)' : 'rgba(180,255,200,.55)');
+  // 选中高亮
+  layerSel.innerHTML = '';
+  if (sel === 'sofa') {
+    layerSel.appendChild(el('path', {
+      d: smoothPath(SOFA, true), fill: 'none', stroke: '#fff',
+      'stroke-width': 0.028, 'stroke-dasharray': '0.09 0.07', opacity: 0.85,
+      transform: `translate(${sofa.cx} ${sofa.cy}) rotate(${sofa.deg})`
+    }));
+  } else if (sel && sel.id) {
+    layerSel.appendChild(el('rect', {
+      x: sel.x, y: sel.y, width: sel.w, height: sel.h, rx: 0.075,
+      fill: 'none', stroke: '#fff', 'stroke-width': 0.028, 'stroke-dasharray': '0.09 0.07'
+    }));
+  }
+}
+
+/* ───────────────────────── 交互 ───────────────────────── */
+
+function toCell(e) {
+  const r = svg.getBoundingClientRect();
+  const s = Math.min(r.width / L.w, r.height / L.h);
+  const ox = r.left + (r.width - s * L.w) / 2;
+  const oy = r.top + (r.height - s * L.h) / 2;
+  return { x: (e.clientX - ox) / s, y: (e.clientY - oy) / s, s };
+}
+
+let drag = null;
+
+function pickAt(x, y) {
+  // C 形沙发的重心落在自己的凹槽里，纯粹按像素命中会让人觉得"点不中"，
+  // 所以重心附近 0.16 格一律算命中沙发（那里同时也是旋转手感最好的位置）。
+  if (Math.hypot(x - sofa.cx, y - sofa.cy) < 0.16) return 'sofa';
+  if (pointInPoly(x, y, sofaCache(sofa).poly)) return 'sofa';
+  for (let i = blocks.length - 1; i >= 0; i--) {
+    const b = blocks[i];
+    if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) return b;
+  }
+  return null;
+}
+
+svg.addEventListener('pointerdown', e => {
+  if (e.button === 2) return;
+  const p = toCell(e);
+  let hit = pickAt(p.x, p.y);
+  // Shift 按在重心附近（哪怕落在凹槽空处）也算抓住沙发，方便"方向盘"式旋转
+  if (!hit && e.shiftKey && Math.hypot(p.x - sofa.cx, p.y - sofa.cy) < 0.62) hit = 'sofa';
+
+  // 编辑模式：点了调色板里的形状 -> 摆一个
+  if (mode === 'edit' && paletteShape && (!hit || hit === 'sofa' || hit.id == null)) {
+    const [bw, bh] = paletteShape;
+    const gx = Math.floor(p.x - bw / 2 + 0.5);
+    const gy = Math.floor(p.y - bh / 2 + 0.5);
+    const blk = { id: 'u' + (uid++), x: gx, y: gy, w: bw, h: bh, c: PAL[Math.floor(Math.random() * PAL.length)] };
+    if (blockFits(blk, gx, gy)) {
+      pushHistory();
+      blocks.push(blk);
+      sel = blk;
+      syncScene(); updateUI();
+    }
+    return;
+  }
+
+  if (!hit) { sel = null; syncScene(); return; }
+  sel = hit;
+  svg.setPointerCapture(e.pointerId);
+  if (hit === 'sofa') {
+    if (e.shiftKey) {
+      // Shift 拖动 = 像转方向盘一样直接转
+      drag = {
+        kind: 'sofaRot', moved: false, snap: snapshot(),
+        ang0: Math.atan2(p.y - sofa.cy, p.x - sofa.cx), deg0: sofa.deg
+      };
+    } else {
+      drag = { kind: 'sofa', sx: p.x, sy: p.y, ox: sofa.cx, oy: sofa.cy, moved: false, snap: snapshot() };
+    }
+  } else {
+    drag = { kind: 'block', blk: hit, sx: p.x, sy: p.y, ox: hit.x, oy: hit.y, snap: snapshot() };
+  }
+  syncScene(); updateUI();
+});
+
+svg.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const p = toCell(e);
+
+  if (drag.kind === 'block') {
+    const b = drag.blk;
+    if (locked) return;
+    const dx = p.x - drag.sx, dy = p.y - drag.sy;
+    const useX = Math.abs(dx) >= Math.abs(dy);
+    const want = useX ? Math.round(drag.ox + dx) : Math.round(drag.oy + dy);
+    let guard = 0;
+    while (guard++ < 64) {
+      const cur = useX ? b.x : b.y;
+      if (cur === want) break;
+      const step = Math.sign(want - cur);
+      const nx = useX ? cur + step : b.x;
+      const ny = useX ? b.y : cur + step;
+      if (!blockFits(b, nx, ny)) break;
+      b.x = nx; b.y = ny; moves++;
+      drag.moved = true;
+    }
+    syncScene(); updateUI();
+    return;
+  }
+
+  // 沙发：连续平移，0.008 格步进 + 轴分离滑墙
+  if (drag.kind === 'sofaRot') {
+    const a = Math.atan2(p.y - sofa.cy, p.x - sofa.cx);
+    let dd = (a - drag.ang0) * 180 / Math.PI;
+    while (dd > 180) dd -= 360;
+    while (dd < -180) dd += 360;
+    rotateTo(drag.deg0 + dd);
+    drag.moved = true;
+    syncScene(); updateUI();
+    return;
+  }
+  const tx = drag.ox + (p.x - drag.sx), ty = drag.oy + (p.y - drag.sy);
+  const tryMove = (dx, dy) => {
+    const dist = Math.hypot(dx, dy);
+    if (dist < 1e-9) return true;
+    const n = Math.ceil(dist / 0.008);
+    const sxs = dx / n, sys = dy / n;
+    let ok = false;
+    for (let i = 0; i < n; i++) {
+      const np = { cx: sofa.cx + sxs, cy: sofa.cy + sys, deg: sofa.deg };
+      if (sofaConflict(np)) break;
+      sofa.cx = np.cx; sofa.cy = np.cy; ok = true;
+    }
+    return ok;
+  };
+  const dx = tx - sofa.cx, dy = ty - sofa.cy;
+  if (!tryMove(dx, dy)) {
+    // 斜向被挡就拆成两个正交方向，得到“贴墙滑”的手感
+    if (!tryMove(dx, 0)) tryMove(0, dy);
+  }
+  drag.moved = true;
+  syncScene(); updateUI();
+});
+
+function endDrag() {
+  if (!drag) return;
+  if (drag.moved) { history.push(drag.snap); if (history.length > 400) history.shift(); }
+  drag = null;
+  updateUI();
+}
+svg.addEventListener('pointerup', endDrag);
+svg.addEventListener('pointercancel', endDrag);
+svg.addEventListener('contextmenu', e => e.preventDefault());
+
+// 滚轮旋转沙发
+svg.addEventListener('wheel', e => {
+  if (!sofa) return;
+  e.preventDefault();
+  const big = e.shiftKey ? 15 : 1.5;
+  rotateBy(Math.sign(e.deltaY) * big);
+}, { passive: false });
+
+function rotateBy(delta) {
+  rotateTo(sofa.deg + delta, true);
+}
+/** 连续转到 target 度；遇到碰撞就停在极限处 */
+function rotateTo(target, countMove) {
+  const before = sofa.deg;
+  let dir = Math.sign(target - sofa.deg);
+  let left = Math.abs(target - sofa.deg);
+  let guard = 0;
+  while (left > 1e-9 && guard++ < 900) {
+    const step = Math.min(0.4, left) * dir;
+    const np = { cx: sofa.cx, cy: sofa.cy, deg: sofa.deg + step };
+    if (sofaConflict(np)) break;
+    sofa.deg = np.deg;
+    left -= Math.abs(step);
+  }
+  if (countMove && sofa.deg !== before) moves++;
+  if (sofa.deg !== before) { syncScene(); updateUI(); }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'TEXTAREA') return;
+  const k = e.key;
+  if ((e.ctrlKey || e.metaKey) && k.toLowerCase() === 'z') { e.preventDefault(); undo(); return; }
+  if (k === 'r' || k === 'R') { reset(); return; }
+  if (k === 'q' || k === 'Q') { rotateBy(-(e.shiftKey ? 15 : 1.5)); return; }
+  if (k === 'e' || k === 'E') { rotateBy(e.shiftKey ? 15 : 1.5); return; }
+  if (k === 'Delete' || k === 'Backspace') {
+    if (sel && sel.id) { pushHistory(); blocks = blocks.filter(b => b !== sel); sel = null; syncScene(); updateUI(); }
+    return;
+  }
+  const dirs = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+  if (dirs[k]) {
+    e.preventDefault();
+    const [dx, dy] = dirs[k];
+    if (!sel) return;
+    if (sel === 'sofa') {
+      const np = { cx: sofa.cx + dx * 0.05, cy: sofa.cy + dy * 0.05, deg: sofa.deg };
+      if (!sofaConflict(np)) { sofa = np; syncScene(); updateUI(); }
+    } else if (!locked) {
+      if (blockFits(sel, sel.x + dx, sel.y + dy)) { pushHistory(); sel.x += dx; sel.y += dy; moves++; syncScene(); updateUI(); }
+    }
+  }
+});
+
+/* ───────────────────────── 诊断 ───────────────────────── */
+
+function rotRange(step = 0.5) {
+  return G.rotRange(L, blocks, sofa, SOFA, step, 180);
+}
+
+/* ───────────────────────── 求解器 ───────────────────────── */
+const CS = window.SofaCspace;
+const SOLVE_STEP = 0.05;     // 采样步长（格）
+const SOLVE_TH = 2.5;        // 采样角度步长（度）
+const DIRS4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+let goal = null;             // 目标位姿 {cx,cy,deg}
+let lastReach = null;
+let playTimer = null;
+
+const setMsg = t => { document.getElementById('solverMsg').textContent = t; };
+
+function buildCspace(bs) {
+  return CS.build(L, bs, SOFA, { step: SOLVE_STEP, thStep: SOLVE_TH });
+}
+
+function drawReach(cs, res) {
+  gReach.innerHTML = '';
+  if (!res || !res.proj) return;
+  // 按行合并连通的格位再一次性画，避免相邻小方块叠色出现条纹
+  const ds = Math.max(cs.step, 0.1);
+  const scale = ds / cs.step;
+  const ndi = Math.floor(cs.ni / scale), ndj = Math.floor(cs.nj / scale);
+  const mark = new Uint8Array(ndi * ndj);
+  for (let j = 0; j < cs.nj; j++) {
+    for (let i = 0; i < cs.ni; i++) {
+      if (!res.proj[j * cs.ni + i]) continue;
+      const di = Math.min(ndi - 1, Math.floor(i / scale));
+      const dj = Math.min(ndj - 1, Math.floor(j / scale));
+      mark[dj * ndi + di] = 1;
+    }
+  }
+  let d = '';
+  for (let dj = 0; dj < ndj; dj++) {
+    let i = 0;
+    while (i < ndi) {
+      if (!mark[dj * ndi + i]) { i++; continue; }
+      let k = i;
+      while (k + 1 < ndi && mark[dj * ndi + k + 1]) k++;
+      const x = (i * ds).toFixed(3), y = (dj * ds).toFixed(3);
+      const w = ((k - i + 1) * ds).toFixed(3);
+      d += `M${x} ${y}h${w}v${(ds * 1.04).toFixed(3)}h${-w}z`;
+      i = k + 1;
+    }
+  }
+  if (d) gReach.appendChild(el('path', { d, fill: 'rgba(56,189,248,.20)', 'shape-rendering': 'crispEdges' }));
+}
+
+function analyzeReach() {
+  const t0 = performance.now();
+  const cs = buildCspace(blocks);
+  const res = CS.reach(cs, sofa, goal);
+  const ms = Math.round(performance.now() - t0);
+  lastReach = { cs, res, ms };
+  drawReach(cs, res);
+  document.getElementById('sReach').textContent = res.ok ? res.visited.toLocaleString() : '起点被压住';
+  document.getElementById('sPos').textContent = res.ok ? res.posCount.toLocaleString() : '—';
+  document.getElementById('solverBadge').textContent = '空闲 ' + cs.freeCount.toLocaleString();
+  document.getElementById('sGoalOk').innerHTML = goal
+    ? (res.reached ? '<span class="badge ok">可达</span>' : '<span class="badge no">不可达</span>')
+    : '—';
+  setMsg(`位形空间 ${cs.ni}×${cs.nj}×${cs.nth}，精确求交 ${cs.stats.exact.toLocaleString()} 次，用时 ${ms}ms`);
+  updateUI();
+  return lastReach;
+}
+
+function stopPlay() {
+  if (playTimer) { clearInterval(playTimer); playTimer = null; }
+}
+
+function playPath(segs) {
+  stopPlay();
+  const poses = [];
+  for (let i = 0; i < segs.length - 1; i++) {
+    const a = segs[i], b = segs[i + 1];
+    let dd = b.deg - a.deg;
+    while (dd > 180) dd -= 360;
+    while (dd < -180) dd += 360;
+    const n = Math.max(2, Math.ceil(Math.hypot(b.cx - a.cx, b.cy - a.cy) / 0.02), Math.ceil(Math.abs(dd) / 1));
+    for (let t = 0; t < n; t++) {
+      poses.push({ cx: a.cx + (b.cx - a.cx) * t / n, cy: a.cy + (b.cy - a.cy) * t / n, deg: a.deg + dd * t / n });
+    }
+  }
+  poses.push(segs[segs.length - 1]);
+  let i = 0, tick = 0;
+  playTimer = setInterval(() => {
+    if (i >= poses.length) { stopPlay(); return; }
+    sofa = poses[i++];
+    syncScene();
+    if ((tick++ & 3) === 0) updateUI();
+  }, 16);
+}
+
+function solveToGoal() {
+  if (!goal) { setMsg('先在面板上点“设为目标”：把沙发摆到想去的姿态，再点一次。'); return; }
+  const r = analyzeReach();
+  if (!r.res.ok) { setMsg('当前姿态本身就不合法，没法从这儿出发。'); return; }
+  if (!r.res.reached) {
+    setMsg(`目标不可达：沙发此刻只能到达 ${r.res.visited.toLocaleString()} 个位姿（可见蓝色区域），`
+      + `目标在它的连通分量之外。先挪方块腾地方。`);
+    return;
+  }
+  const segs = CS.shortcut(r.cs, r.res.path);
+  setMsg(`目标可达。原始路径 ${r.res.path.length} 节点 → 压缩成 ${segs.length - 1} 段，正在播放。`);
+  playPath(segs);
+}
+
+function doRank() {
+  const host = document.getElementById('rankList');
+  host.textContent = '计算中…';
+  setTimeout(() => {
+    const t0 = performance.now();
+    const base = buildCspace(blocks).freeCount;
+    const rows = [];
+    for (const b of blocks) {
+      for (const [dx, dy] of DIRS4) {
+        if (!blockFits(b, b.x + dx, b.y + dy)) continue;
+        const bx = b.x, by = b.y;
+        b.x += dx; b.y += dy;
+        const cs = buildCspace(blocks);
+        b.x = bx; b.y = by;
+        const res = CS.reach(cs, sofa);
+        rows.push({ id: b.id, dx, dy, free: cs.freeCount, reach: res.visited, pos: res.posCount });
+      }
+    }
+    rows.sort((a, b) => b.reach - a.reach || b.free - a.free);
+    const ms = Math.round(performance.now() - t0);
+    if (!rows.length) { host.textContent = '没有合法的一步可走了。'; return; }
+    const best = rows[0];
+    host.innerHTML = `基准空闲位形 ${base.toLocaleString()}（${ms}ms）<br>`
+      + rows.slice(0, 5).map((r, i) => {
+        const label = `${i === 0 ? '★ ' : ''}${r.id} 挪 (${r.dx > 0 ? '+' : ''}${r.dx}, ${r.dy > 0 ? '+' : ''}${r.dy})`;
+        return `<div style="display:flex;justify-content:space-between;margin-top:4px">
+          <a href="#" data-id="${r.id}" data-dx="${r.dx}" data-dy="${r.dy}"
+             style="color:${i === 0 ? '#7ddc9a' : '#cfc7e8'};text-decoration:none">${label}</a>
+          <span style="color:#938bb0">可达 ${r.reach.toLocaleString()} · 空闲 ${r.free.toLocaleString()}</span></div>`;
+      }).join('')
+      + `<div style="margin-top:6px;color:#938bb0">点任意一条即可执行该步并重新分析。</div>`;
+    [...host.querySelectorAll('a')].forEach(a => {
+      a.onclick = ev => {
+        ev.preventDefault();
+        const id = a.dataset.id;
+        const b = blocks.find(z => z.id === id);
+        const nx = b.x + (+a.dataset.dx), ny = b.y + (+a.dataset.dy);
+        if (!blockFits(b, nx, ny)) return;
+        pushHistory();
+        b.x = nx; b.y = ny; moves++;
+        syncScene(); analyzeReach();
+      };
+    });
+  }, 30);
+}
+
+document.getElementById('btnReach').onclick = () => { stopPlay(); analyzeReach(); };
+document.getElementById('btnGoal').onclick = () => {
+  goal = { cx: +sofa.cx.toFixed(4), cy: +sofa.cy.toFixed(4), deg: +sofa.deg.toFixed(2) };
+  syncScene();
+  document.getElementById('sGoal').textContent =
+    `${goal.cx.toFixed(2)}, ${goal.cy.toFixed(2)} @ ${goal.deg}°`;
+  setMsg('已把沙发当前姿态记为目标。把它拖回起点，再点“求解并播放”。');
+};
+document.getElementById('btnClearGoal').onclick = () => {
+  goal = null; syncScene();
+  document.getElementById('sGoal').textContent = '未设置';
+  document.getElementById('sGoalOk').textContent = '—';
+};
+document.getElementById('btnSolve').onclick = () => { stopPlay(); solveToGoal(); };
+document.getElementById('btnRank').onclick = () => { stopPlay(); doRank(); };
+
+function updateUI() {
+  document.getElementById('stMoves').textContent = moves;
+  document.getElementById('stDeg').textContent = sofa.deg.toFixed(1) + '°';
+  document.getElementById('sofaPos').textContent = `${sofa.cx.toFixed(2)}, ${sofa.cy.toFixed(2)}`;
+  document.getElementById('sofaDeg').textContent = sofa.deg.toFixed(1) + '°';
+  const [lo, hi] = rotRange();
+  document.getElementById('sofaRange').textContent =
+    (lo >= 179.9 && hi >= 179.9) ? '全向 360°' : `−${lo.toFixed(1)}° / +${hi.toFixed(1)}°`;
+  const cf = sofaConflict(sofa);
+  document.getElementById('sofaHit').innerHTML = cf
+    ? '<span class="badge no">撞到 ' + (cf === 'wall' ? '边界' : '方块') + '</span>'
+    : '<span class="badge ok">自由</span>';
+  const filled = blocks.reduce((s, b) => s + b.w * b.h, 0);
+  document.getElementById('fillInfo').textContent = `${filled} / ${L.w * L.h}`;
+  let bad = 0;
+  for (let i = 0; i < blocks.length; i++) for (let j = i + 1; j < blocks.length; j++) {
+    const a = blocks[i], b = blocks[j];
+    if (a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y) bad++;
+  }
+  document.getElementById('validInfo').innerHTML = bad
+    ? `<span class="badge no">${bad} 处重叠</span>` : '<span class="badge ok">OK</span>';
+}
+
+/* ───────────────────────── 界面按钮 ───────────────────────── */
+
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  mode = b.dataset.mode;
+  [...e.currentTarget.children].forEach(c => c.classList.toggle('on', c === b));
+  document.getElementById('editPane').style.display = mode === 'edit' ? '' : 'none';
+  if (mode === 'edit') { sel = null; syncScene(); }
+});
+document.getElementById('btnUndo').onclick = undo;
+document.getElementById('btnReset').onclick = reset;
+document.getElementById('btnLock').onclick = e => {
+  locked = !locked;
+  e.currentTarget.classList.toggle('on', locked);
+};
+document.getElementById('btnRef').onclick = () => loadLevel(levelRef());
+document.getElementById('btnBlank').onclick = () => loadLevel(levelBlank());
+document.getElementById('btnDump').onclick = () => {
+  const out = {
+    name: L.name, w: L.w, h: L.h,
+    blocks: blocks.map(b => ({ id: b.id, x: b.x, y: b.y, w: b.w, h: b.h, c: b.c })),
+    sofa: { cx: +sofa.cx.toFixed(4), cy: +sofa.cy.toFixed(4), deg: +sofa.deg.toFixed(2) }
+  };
+  document.getElementById('jsonBox').value = JSON.stringify(out, null, 1);
+  document.getElementById('jsonBox').select();
+};
+document.getElementById('btnLoad').onclick = () => {
+  try {
+    const v = JSON.parse(document.getElementById('jsonBox').value);
+    loadLevel(v);
+  } catch (err) { alert('JSON 解析失败：' + err.message); }
+};
+document.getElementById('btnClear').onclick = () => { pushHistory(); blocks = []; sel = null; syncScene(); updateUI(); };
+document.getElementById('btnDel').onclick = () => {
+  if (sel && sel.id) { pushHistory(); blocks = blocks.filter(b => b !== sel); sel = null; syncScene(); updateUI(); }
+};
+
+// 调色板
+(function buildPalette() {
+  const host = document.getElementById('pal');
+  const shapes = [[2, 2], [2, 1], [1, 2], [1, 1]];
+  for (const [w, h] of shapes) {
+    const b = document.createElement('button');
+    b.dataset.w = w; b.dataset.h = h;
+    b.innerHTML = `<i style="width:${w * 11}px;height:${Math.max(6, h * 11)}px"></i>`;
+    b.title = `${w}×${h}`;
+    b.onclick = () => {
+      const same = paletteShape && paletteShape[0] === w && paletteShape[1] === h;
+      paletteShape = same ? null : [w, h];
+      [...host.children].forEach(c => c.classList.toggle('on', !same && c === b));
+    };
+    host.appendChild(b);
+  }
+})();
+
+loadLevel(levelRef());
+</script>
+</body>
+</html>

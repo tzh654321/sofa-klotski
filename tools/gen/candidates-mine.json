@@ -1,0 +1,37 @@
+[
+ {
+  "key": "sofaBend",
+  "note": "沙发必须转 3 次才让开底行（新规则下缺口嘴要空）",
+  "level": {
+   "name": "沙发过弯", "w": 4, "h": 5,
+   "goals": [{ "piece": "hero", "label": "底行正中", "cells": [[1, 3], [2, 3], [1, 4], [2, 4]] }],
+   "pieces": [
+    { "id": "hero", "x": 2, "y": 1, "ori": 0, "shape": "2x2", "color": "#ff7f27", "name": "曹操", "hero": true },
+    { "id": "zhang", "x": 0, "y": 3, "ori": 0, "shape": "1x2", "color": "#3f48cc", "name": "张飞" },
+    { "id": "zhao", "x": 1, "y": 1, "ori": 0, "shape": "1x2", "color": "#3f48cc", "name": "赵云" },
+    { "id": "guan", "x": 1, "y": 0, "ori": 0, "shape": "2x1", "color": "#00a2e8", "name": "关羽" },
+    { "id": "huang", "x": 0, "y": 1, "ori": 0, "shape": "1x2", "color": "#3f48cc", "name": "黄忠" },
+    { "id": "sofa", "x": 1, "y": 3, "ori": 1, "shape": "sofa", "color": "#22b14c", "name": "沙发" },
+    { "id": "p1", "x": 3, "y": 0, "ori": 0, "shape": "1x1", "color": "#ffaec9", "name": "卒1" },
+    { "id": "p2", "x": 0, "y": 0, "ori": 0, "shape": "1x1", "color": "#ffaec9", "name": "卒2" }
+   ]
+  }
+ },
+ {
+  "key": "shaBan",
+  "note": "4×4 两空格：方块要下沉，沙发只能靠过弯让位（半圆还得转）",
+  "level": {
+   "name": "沙半", "w": 4, "h": 4,
+   "goals": [{ "piece": "sq", "label": "右下两行", "cells": [[1, 2], [2, 2], [1, 3], [2, 3]] }],
+   "pieces": [
+    { "id": "sq", "x": 0, "y": 0, "ori": 0, "shape": "2x2", "color": "#ff7f27", "name": "方块", "hero": true },
+    { "id": "sem", "x": 1, "y": 3, "ori": 2, "shape": "semi", "color": "#a349a4", "name": "半圆" },
+    { "id": "bar", "x": 2, "y": 0, "ori": 0, "shape": "2x1", "color": "#b97a57", "name": "2×1" },
+    { "id": "sofa", "x": 1, "y": 2, "ori": 3, "shape": "sofa", "color": "#22b14c", "name": "沙发" },
+    { "id": "d1", "x": 2, "y": 1, "ori": 0, "shape": "1x1", "color": "#00a2e8", "name": "1×1" },
+    { "id": "d2", "x": 0, "y": 3, "ori": 0, "shape": "1x1", "color": "#3f48cc", "name": "1×1" },
+    { "id": "d3", "x": 3, "y": 1, "ori": 0, "shape": "1x1", "color": "#ed1c24", "name": "1×1" }
+   ]
+  }
+ }
+]

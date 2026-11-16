@@ -1,0 +1,1014 @@
+{
+ "set": "合移位",
+ "id": "合移位-05",
+ "name": "巨石阵",
+ "origin": "大迷宫",
+ "lvKey": null,
+ "note": "用户存档「大迷宫」（预设.txt 20×20）",
+ "source": "hrs",
+ "level": {
+  "name": "巨石阵",
+  "w": 20,
+  "h": 20,
+  "pieces": [
+   {
+    "id": "wall1",
+    "x": 3,
+    "y": 0,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall2",
+    "x": 11,
+    "y": 0,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall3",
+    "x": 16,
+    "y": 0,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall4",
+    "x": 0,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall5",
+    "x": 2,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall6",
+    "x": 6,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall7",
+    "x": 9,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall8",
+    "x": 15,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall9",
+    "x": 19,
+    "y": 2,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall10",
+    "x": 5,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall11",
+    "x": 12,
+    "y": 3,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall12",
+    "x": 1,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall13",
+    "x": 16,
+    "y": 4,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall14",
+    "x": 4,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall15",
+    "x": 7,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall16",
+    "x": 10,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall17",
+    "x": 13,
+    "y": 5,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall18",
+    "x": 17,
+    "y": 6,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall19",
+    "x": 2,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall20",
+    "x": 9,
+    "y": 7,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "hero",
+    "x": 18,
+    "y": 7,
+    "ori": 0,
+    "shape": "2x2",
+    "color": "#9E9E9E",
+    "name": "巨石",
+    "hero": true
+   },
+   {
+    "id": "wall21",
+    "x": 5,
+    "y": 8,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall22",
+    "x": 12,
+    "y": 8,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall23",
+    "x": 16,
+    "y": 8,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall24",
+    "x": 4,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall25",
+    "x": 8,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall26",
+    "x": 14,
+    "y": 9,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall27",
+    "x": 0,
+    "y": 10,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall28",
+    "x": 9,
+    "y": 10,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall29",
+    "x": 19,
+    "y": 10,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall30",
+    "x": 3,
+    "y": 11,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall31",
+    "x": 12,
+    "y": 11,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall32",
+    "x": 17,
+    "y": 11,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall33",
+    "x": 0,
+    "y": 12,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall34",
+    "x": 6,
+    "y": 12,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall35",
+    "x": 9,
+    "y": 12,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall36",
+    "x": 14,
+    "y": 12,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall37",
+    "x": 3,
+    "y": 13,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall38",
+    "x": 8,
+    "y": 14,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall39",
+    "x": 17,
+    "y": 14,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall40",
+    "x": 19,
+    "y": 14,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall41",
+    "x": 5,
+    "y": 15,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall42",
+    "x": 12,
+    "y": 15,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall43",
+    "x": 15,
+    "y": 15,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall44",
+    "x": 0,
+    "y": 16,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall45",
+    "x": 10,
+    "y": 16,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall46",
+    "x": 17,
+    "y": 16,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall47",
+    "x": 5,
+    "y": 17,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall48",
+    "x": 8,
+    "y": 17,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall49",
+    "x": 2,
+    "y": 18,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall50",
+    "x": 13,
+    "y": 18,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall51",
+    "x": 3,
+    "y": 19,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall52",
+    "x": 11,
+    "y": 19,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   },
+   {
+    "id": "wall53",
+    "x": 18,
+    "y": 19,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#616161",
+    "name": "立石",
+    "lock": true
+   }
+  ],
+  "goals": [
+   {
+    "piece": "hero",
+    "label": "底行正中",
+    "cells": [
+     [
+      2,
+      14
+     ],
+     [
+      3,
+      14
+     ],
+     [
+      2,
+      15
+     ],
+     [
+      3,
+      15
+     ]
+    ]
+   }
+  ],
+  "origin": "大迷宫"
+ },
+ "meta": {
+  "score": 1,
+  "grade": "太简单",
+  "depth": 65,
+  "hands": 1,
+  "states": 175,
+  "paths": 6,
+  "waste": 0.77,
+  "same": 1.05,
+  "estimated": false,
+  "scoringVersion": 3,
+  "estimate": null,
+  "parts": {
+   "depth": 0.1,
+   "planning": 0,
+   "endurance": 0,
+   "choice": 0.6,
+   "trap": 0.6,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": false,
+  "confidence": "结构估计",
+  "cognition": {
+   "active": 1,
+   "switches": 0,
+   "revisits": 0,
+   "retreats": 0,
+   "maxSetup": 0,
+   "temptation": 10.58
+  },
+  "ms": 15
+ },
+ "solution": {
+  "solver": "bfs-optimal",
+  "optimal": true,
+  "steps": 65,
+  "hands": 1,
+  "moves": [
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 20,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   }
+  ]
+ },
+ "hrsFrom": "大迷宫"
+}
