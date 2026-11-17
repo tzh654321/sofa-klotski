@@ -1,0 +1,70 @@
+# sofa-klotski · 不进 GitHub 的文件
+# 仓库根目录：D:/code/hrd/sofa-klotski
+#
+# 注意：.gitignore 只作用于「尚未被 git 跟踪」的文件。
+# 本仓库已有部分截图/日志被跟踪过，需要执行一次
+#   git rm -r --cached -q --ignore-unmatch shots/ tools/gen/logs/ levels/_trash/
+# 才会真正从仓库里移除（磁盘文件不受影响）。
+
+# ── 测试验收截图：149 张 PNG / 约 20 MB，纯本地验收产物 ──
+# 页面、README 都没有引用；如需保留个别展示图，用 ! 反忽略：
+# !shots/cover.png
+shots/
+
+# ── 生成器 / 求解探针的运行日志 ──
+tools/gen/logs/
+*.err
+*.log
+*.jsonl
+
+# ── 关卡回收站、备份文件 ──
+levels/_trash/
+*.bak
+*.tmp
+*~
+
+# ── 临时调试 / 一次性探针脚本（下划线开头）──
+test/_*
+tools/inbox/_*
+**/_dbg*
+**/_probe*
+**/_smoke*
+
+# ── 本地服务运行时产物与本机凭据 ──
+.env
+.env.*
+*.local
+
+# ── 依赖与语言缓存 ──
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ── 编辑器 / 操作系统垃圾 ──
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*.lnk
+
+# ── 备份压缩包与大体积临时素材 ──
+*.zip
+*.7z
+*.rar
+*.gz
+*.raw
+
+# ── 本地会话 / 工具数据（非项目源码）──
+.workbuddy/
+.acl-recovery/
+
+# ── 明确保留，勿误加进忽略规则 ──
+#   levelpacks.js            页面直接 <script> 加载的关卡包，虽是构建产物但必须入库
+#   levels/**/*.json         关卡数据（唯一真相）
+#   tools/inbox/*.json|*.js  add-levels / import-hanoi / import-loom 的导入源数据
+#   test/*benchmark.json     p15-pdb-bench.cjs 的测试输入
+#   lab/                     几何 / 物理实验源码
+#   *.test.js / *.test.cjs   回归测试代码
