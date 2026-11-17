@@ -14,9 +14,12 @@ const { launch, sleep } = require('./cdp.js');
   ok((await ev('raw.name')) === '阴晴圆缺', '默认关卡 = 待分类里的「阴晴圆缺」', await ev('raw.name'));
   // 关卡数每次加关都会变：从页面里的关卡包算，别写死数字
   const TOTAL0 = await ev('LEVELPACKS.reduce((a,p)=>a+p.levels.length,0)');
-  ok((await ev('document.querySelectorAll("#lvList button").length')) === TOTAL0,
-    '关卡列表 = 关卡包总数（' + TOTAL0 + ' 关，四套关卡集）',
-    await ev('document.querySelectorAll("#lvList button").length'));
+  // 默认排序会把子文件夹折叠成一行：先全部展开，再数「关卡行」（不含文件夹按钮本身）
+  await ev(`openDirs = Object.fromEntries([...new Set(lib.map(e => e.dir).filter(d => d && d.indexOf('/') >= 0))].map(d => [d, true])); buildLevelList(); void 0`);
+  await sleep(150);
+  ok((await ev('document.querySelectorAll("#lvList button:not(.dir)").length')) === TOTAL0,
+    '关卡列表 = 关卡包总数（' + TOTAL0 + ' 关，展开子文件夹后逐条列出）',
+    await ev('document.querySelectorAll("#lvList button:not(.dir)").length'));
   ok((await ev('document.querySelectorAll(\'#board [data-part="axis"]\').length')) === 0, '不再画旋转中心图标');
   await b.shot(path.join(__dirname, '..', 'shots', 'v15-cover.png'));
 

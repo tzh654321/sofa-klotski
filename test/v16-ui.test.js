@@ -81,7 +81,11 @@ const SHUANG_XIE = {
   ok(n0 === TOTAL, '内置关卡 = 关卡包总数（' + TOTAL + ' 关）', n0);
   await ev('document.getElementById("btnLibAdd").click()'); await sleep(250);
   ok(await ev('lib.length') === n0 + 1, '「另存新关」多出一条', await ev('lib.length'));
-  ok((await ev('document.querySelectorAll("#lvList button").length')) === n0 + 1, '列表同步重建');
+  // 子文件夹默认折叠：展开后再数关卡行（文件夹按钮带 .dir，不计入）
+  await ev(`openDirs = Object.fromEntries([...new Set(lib.map(e => e.dir).filter(d => d && d.indexOf('/') >= 0))].map(d => [d, true])); buildLevelList(); void 0`);
+  await sleep(150);
+  ok((await ev('document.querySelectorAll("#lvList button:not(.dir)").length')) === n0 + 1,
+    '列表同步重建（展开子文件夹后逐条数）');
   // 纯 html（file://）打开 = 只读关库：不提供改名/删除（改名/删除只在本地服务写盘模式下有）
   ok(await ev('document.querySelectorAll("#lvList .ed").length') === 0, '不显示重命名');
   ok(await ev('document.querySelectorAll("#lvList .del").length') === 0, '不显示删除');

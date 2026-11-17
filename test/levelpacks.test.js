@@ -34,8 +34,14 @@ console.log('\n[2] 每个关卡文件都能用');
 let bad = [];
 const files = [];
 const scanDir = (dir, rel) => {
-  for (const f of fs.readdirSync(dir).filter(x => x.endsWith('.json') && x[0] !== '_')) {
-    if (!fs.statSync(path.join(dir, f)).isFile()) continue;
+  for (const f of fs.readdirSync(dir).filter(x => x[0] !== '_')) {
+    // 关卡集里允许再套子文件夹（如 华容之书/中分最长）；根目录下的子文件夹本身就是关卡集，
+    // 由下面按 dirs 逐个扫，别在这里重复进
+    if (fs.statSync(path.join(dir, f)).isDirectory()) {
+      if (rel) scanDir(path.join(dir, f), rel + '/' + f);
+      continue;
+    }
+    if (!f.endsWith('.json')) continue;
     const p = path.join(dir, f);
     files.push(rel ? rel + '/' + f : f);
     try {

@@ -92,13 +92,13 @@
       "ok": true,
       "steps": 18,
       "expanded": 224903,
-      "ms": 889
+      "ms": 959
     },
     "after": {
       "ok": true,
       "steps": 18,
       "expanded": 108774,
-      "ms": 137
+      "ms": 216
     }
   },
   {
@@ -124,14 +124,14 @@
     ],
     "before": {
       "ok": false,
-      "expanded": 764929,
+      "expanded": 891084,
       "ms": 3000,
       "lowerBound": 13
     },
     "after": {
       "ok": false,
-      "expanded": 1872420,
-      "ms": 3001,
+      "expanded": 2181210,
+      "ms": 3000,
       "lowerBound": 25
     }
   },
@@ -158,14 +158,14 @@
     ],
     "before": {
       "ok": false,
-      "expanded": 781724,
-      "ms": 3001,
+      "expanded": 917813,
+      "ms": 3000,
       "lowerBound": 14
     },
     "after": {
       "ok": false,
-      "expanded": 1718727,
-      "ms": 3049,
+      "expanded": 2017158,
+      "ms": 3000,
       "lowerBound": 26
     }
   },
@@ -192,14 +192,14 @@
     ],
     "before": {
       "ok": false,
-      "expanded": 661405,
+      "expanded": 911872,
       "ms": 3000,
       "lowerBound": 12
     },
     "after": {
       "ok": false,
-      "expanded": 1807173,
-      "ms": 3120,
+      "expanded": 1820619,
+      "ms": 3001,
       "lowerBound": 24
     }
   }

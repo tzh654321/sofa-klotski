@@ -14,10 +14,15 @@ const ROOT = path.join(__dirname, '..');
 const DIR = path.join(ROOT, 'levels', '合移位');
 const FILE = path.join(DIR, '05_汉诺塔.json');
 
+/* 五层同心环按「五行」取名（从外到内 火·木·土·水·金），两根锁定条叫门柱；
+ * 配色只微调两处：金环从粉改成金 #e8b923，门柱从近黑改成深石板灰 #4a4a55（深色底上还能看清轮廓） */
 const NAMES = {
-  c8: '最大盘·朱', c9: '次大盘·翠', c10: '中盘·棕',
-  c11: '次小盘·靛', c12: '最小盘·桃',
-  c24: '左立柱', c25: '右立柱'
+  c8: '火环', c9: '木环', c10: '土环', c11: '水环', c12: '金环',
+  c24: '门柱', c25: '门柱'
+};
+const COLORS = {
+  c8: '#d42b63', c9: '#22b14c', c10: '#b97a57', c11: '#2b4d91', c12: '#e8b923',
+  c24: '#4a4a55', c25: '#4a4a55'
 };
 
 function main() {
@@ -25,10 +30,13 @@ function main() {
   for (const p of lv.pieces) {
     if (!NAMES[p.id]) throw new Error('没给滑块 ' + p.id + ' 起名');
     p.name = NAMES[p.id];
+    if (COLORS[p.id]) p.color = COLORS[p.id];
+    if (p.id === 'c8') p.hero = true;          // 目标块 = 最外一层火环
   }
   lv.solver = 'hanoi';
-  lv.note = '五盘汉诺塔：三根柱位、五个嵌套 U 形盘，把朱色最大盘搬到最右柱。' +
-    '求解走 tools/solve-hanoi.js（整盘搬动宏动作递归，31 手）；单格 BFS 在这关会组合爆炸。';
+  lv.note = '五层同心环（火·木·土·水·金）套在左厅，两根门柱隔出三厅，只有第 9~13 行是贯通走廊；' +
+    '目标是把最外层的火环整块搬进右厅，所以得先一层层把里面的环卸下来。' +
+    '求解走 tools/solve-hanoi.js（整盘搬动的宏动作递归，31 次），单格 BFS 在这关会组合爆炸。';
 
   const L = K.parse(lv), st0 = K.initialState(lv);
   const used = new Set(), bad = [];
@@ -57,7 +65,7 @@ function main() {
   const rec = {
     set: '合移位', id: '合移位-05', name: lv.name,
     origin: '玩家提供的五盘汉诺塔', lvKey: null,
-    note: lv.note, tip: '合移位改编 · ' + lv.w + '×' + lv.h + ' · 五盘汉诺塔',
+    note: lv.note, tip: '玩家提供 · ' + lv.w + '×' + lv.h + ' · 五盘汉诺塔',
     source: 'user-json',
     level: lv,
     meta: {

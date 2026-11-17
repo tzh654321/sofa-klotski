@@ -2,7 +2,11 @@ const fs=require('fs'),vm=require('vm'),path=require('path'),assert=require('ass
 // 按编号前缀找文件：关卡改名（如 31_思之弥艰 → 31_深度求索）不该让测试炸
 // dir 传空串 = levels 根目录（「待分类」已经不是一个文件夹了）
 const findByNo=(dir,no)=>{const p=path.join(__dirname,'../levels',dir||'');
- const f=fs.readdirSync(p).find(x=>x.startsWith(no)&&x.endsWith('.json')&&x[0]!=='_'&&fs.statSync(path.join(p,x)).isFile());
+ // 关卡集里允许再套子文件夹（如 华容之书/半圆最长），逐层找；返回相对 levels 的路径
+ const look=(d,rel)=>{for(const x of fs.readdirSync(d)){const q=path.join(d,x);
+   if(fs.statSync(q).isDirectory()){const r=look(q,rel?rel+'/'+x:x);if(r)return r;continue;}
+   if(x.startsWith(no)&&x.endsWith('.json')&&x[0]!=='_')return rel?rel+'/'+x:x;}return null;};
+ const f=look(p,'');
  if(!f)throw new Error('找不到 '+(dir||'levels')+'/'+no+'*.json');return (dir?dir+'/':'')+f;};
 for(const file of [findByNo('华容之书','17_'),findByNo('华容之书','31_'),findByNo('','07_')]){
  const e=JSON.parse(fs.readFileSync(path.join(__dirname,'../levels',file))),raw=c.resolveShapes(e.level),L=K.parse(raw),s=K.initialState(raw),t=Date.now();

@@ -186,10 +186,20 @@ const ok = (c, m, x) => {
     await sleep(300);
     const mid = JSON.parse(await ev(`(function(){const r=svg.getBoundingClientRect();return JSON.stringify({x:r.left+r.width/2,y:r.top+r.height/2});})()`));
     ok(await ev('JSON.stringify(view)') === '{"z":1,"x":0,"y":0}', '进场是 1 倍、左上对齐');
-    await send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: mid.x, y: mid.y, deltaX: 0, deltaY: -120 });
+    const box0 = JSON.parse(await ev(`(function(){const r=svg.getBoundingClientRect();return JSON.stringify([Math.round(r.width),Math.round(r.height)]);})()`));
+    // 放大到棋盘比舞台大：棋盘元素自己变宽高，而不是缩 viewBox 裁一块
+    for (let k = 0; k < 8; k++) {
+      await send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: mid.x, y: mid.y, deltaX: 0, deltaY: -120 });
+      await sleep(60);
+    }
     await sleep(200);
     const v1 = JSON.parse(await ev('JSON.stringify(view)'));
     ok(v1.z > 1, '滚轮放大（z=' + v1.z.toFixed(2) + '）', v1);
+    const box1 = JSON.parse(await ev(`(function(){const r=svg.getBoundingClientRect();return JSON.stringify([Math.round(r.width),Math.round(r.height)]);})()`));
+    ok(box1[0] > box0[0] * 2 && box1[1] > box0[1] * 2,
+      '棋盘整体跟着变大（元素真的变宽高，不是原地裁切）', [box0, box1]);
+    ok(await ev(`svg.getAttribute('viewBox')`) === '0 0 200 200',
+      'viewBox 始终是整个棋盘（没有裁切）', await ev(`svg.getAttribute('viewBox')`));
     await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: mid.x, y: mid.y, button: 'right', buttons: 2, clickCount: 1 });
     for (let k = 1; k <= 6; k++) { await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: mid.x - k * 12, y: mid.y, button: 'right', buttons: 2 }); await sleep(16); }
     await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: mid.x - 72, y: mid.y, button: 'right', buttons: 0, clickCount: 1 });

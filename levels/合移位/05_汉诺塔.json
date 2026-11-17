@@ -4,8 +4,8 @@
  "name": "汉诺塔",
  "origin": "玩家提供的五盘汉诺塔",
  "lvKey": null,
- "note": "五盘汉诺塔：三根柱位、五个嵌套 U 形盘，把朱色最大盘搬到最右柱。求解走 tools/solve-hanoi.js（整盘搬动宏动作递归，31 手）；单格 BFS 在这关会组合爆炸。",
- "tip": "合移位改编 · 29×14 · 五盘汉诺塔",
+ "note": "五层同心环（火·木·土·水·金）套在左厅，两根门柱隔出三厅，只有第 9~13 行是贯通走廊；目标是把最外层的火环整块搬进右厅，所以得先一层层把里面的环卸下来。求解走 tools/solve-hanoi.js（整盘搬动的宏动作递归，31 次），单格 BFS 在这关会组合爆炸。",
+ "tip": "玩家提供 · 29×14 · 五盘汉诺塔",
  "source": "user-json",
  "level": {
   "name": "汉诺塔",
@@ -94,8 +94,8 @@
     "ori": 0,
     "shape": "custom",
     "color": "#d42b63",
-    "name": "最大盘·朱",
-    "hero": false,
+    "name": "火环",
+    "hero": true,
     "cells": [
      {
       "c": 0,
@@ -175,7 +175,7 @@
     "ori": 0,
     "shape": "custom",
     "color": "#22b14c",
-    "name": "次大盘·翠",
+    "name": "木环",
     "hero": false,
     "cells": [
      {
@@ -256,7 +256,7 @@
     "ori": 0,
     "shape": "custom",
     "color": "#b97a57",
-    "name": "中盘·棕",
+    "name": "土环",
     "hero": false,
     "cells": [
      {
@@ -337,7 +337,7 @@
     "ori": 0,
     "shape": "custom",
     "color": "#2b4d91",
-    "name": "次小盘·靛",
+    "name": "水环",
     "hero": false,
     "cells": [
      {
@@ -417,8 +417,8 @@
     "y": 4,
     "ori": 0,
     "shape": "custom",
-    "color": "#ffaec9",
-    "name": "最小盘·桃",
+    "color": "#e8b923",
+    "name": "金环",
     "hero": false,
     "cells": [
      {
@@ -482,8 +482,8 @@
     "y": 0,
     "ori": 0,
     "shape": "custom",
-    "color": "#161025",
-    "name": "左立柱",
+    "color": "#4a4a55",
+    "name": "门柱",
     "hero": false,
     "lock": true,
     "cells": [
@@ -532,8 +532,8 @@
     "y": 0,
     "ori": 0,
     "shape": "custom",
-    "color": "#161025",
-    "name": "右立柱",
+    "color": "#4a4a55",
+    "name": "门柱",
     "hero": false,
     "lock": true,
     "cells": [
@@ -577,18 +577,51 @@
     "rot": false
    }
   ],
-  "note": "五盘汉诺塔：三根柱位、五个嵌套 U 形盘，把朱色最大盘搬到最右柱。求解走 tools/solve-hanoi.js（整盘搬动宏动作递归，31 手）；单格 BFS 在这关会组合爆炸。",
+  "note": "五层同心环（火·木·土·水·金）套在左厅，两根门柱隔出三厅，只有第 9~13 行是贯通走廊；目标是把最外层的火环整块搬进右厅，所以得先一层层把里面的环卸下来。求解走 tools/solve-hanoi.js（整盘搬动的宏动作递归，31 次），单格 BFS 在这关会组合爆炸。",
   "solver": "hanoi"
  },
  "meta": {
   "score": 39,
   "grade": "中等",
-  "depth": 906,
+  "depth": null,
   "hands": 31,
-  "states": 243,
-  "paths": null,
+  "states": 200001,
+  "paths": 0,
+  "waste": 0,
+  "same": 0,
   "estimated": true,
-  "ms": 268
+  "scoringVersion": 3,
+  "estimate": {
+   "steps": 906,
+   "hands": 31,
+   "cognition": {
+    "active": 5,
+    "revisits": 26,
+    "retreats": 1,
+    "maxSetup": 15,
+    "switches": 31,
+    "temptation": 0,
+    "measured": false,
+    "proxy": true,
+    "maxPlateau": 31
+   },
+   "optimal": false,
+   "source": "validated-candidate"
+  },
+  "parts": {
+   "depth": 17.3,
+   "planning": 20.9,
+   "endurance": 1.1,
+   "choice": 0,
+   "trap": 0,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": true,
+  "confidence": "参考解结构估算，未证明最短，分数不是上下界",
+  "cognition": null,
+  "ms": 16089
  },
  "solution": {
   "solver": "hanoi",

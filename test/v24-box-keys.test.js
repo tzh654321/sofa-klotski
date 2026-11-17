@@ -186,7 +186,8 @@ const ok = (c, m, x) => {
     const after = await pos();
     ok(after[1][0] === before[1][0] + 1 && after[0][0] === before[0][0] && after[2][0] === before[2][0],
       '只选中一块时按 D 只动那一块', { before, after });
-    ok(await ev('selSet.size') === 0, '点单块不会顺手框上（框选已清）', await ev('selSet.size'));
+    ok(await ev('selSet.size') === 1 && await ev('[...selSet][0]') === 1,
+      '点单块 = 选择集里只有它（单选并入选择集）', await ev('JSON.stringify([...selSet])'));
   }
 
   console.log('\n[7] 没有 JS 异常');

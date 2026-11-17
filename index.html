@@ -23,8 +23,13 @@
   .stat{margin-left:auto;color:var(--dim);font-size:13px;display:flex;gap:14px;align-items:center}
   .stat b{color:var(--txt);font-variant-numeric:tabular-nums}
   main{flex:1;display:flex;min-height:0}
-  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-width:0;position:relative}
-  #board{height:min(78vh,780px);max-width:100%;touch-action:none;user-select:none;
+  /* 舞台可滚动、滚动条隐藏：缩放时棋盘整块变大（元素真的变宽高），
+     超出舞台就靠滚动/拖动平移查看，而不是把棋盘塞回原来的大小再裁切。 */
+  .stage{flex:1;display:flex;align-items:flex-start;justify-content:flex-start;padding:16px;
+         min-width:0;position:relative;overflow:auto;scrollbar-width:none}
+  .stage::-webkit-scrollbar{width:0;height:0}
+  /* margin:auto 在 flex 里既能居中，内容超出时又能正常滚到左/上边 */
+  #board{margin:auto;flex:0 0 auto;display:block;touch-action:none;user-select:none;
          filter:drop-shadow(0 18px 40px rgba(0,0,0,.55));cursor:default}
   aside{width:340px;flex:0 0 340px;border-left:1px solid var(--line);
         background:rgba(21,17,34,.72);padding:13px;overflow-y:auto}
@@ -251,6 +256,17 @@
         </div>
       </div>
 
+      <div class="card" id="hanoiCard" style="display:none">
+        <div class="kv"><span class="k">专用求解</span><span>汉诺塔（整盘搬动）</span></div>
+        <div class="row" style="margin-top:7px">
+          <button class="b acc" id="btnHanoiFast">载入最优解</button>
+        </div>
+        <div class="hint" id="hanoiMsg" style="margin-top:6px">
+          五个嵌套盘搬到最右柱。单格 BFS 在这关会组合爆炸（200 万节点 / 153 秒仍无解）；
+          改成「整盘搬动」宏动作后只需 2⁵−1 = 31 次，递归瞬间出解。<b>整盘搬动最优，不保证单格最短</b>。
+        </div>
+      </div>
+
       <h3>解法步骤 <span class="badge" id="stepCount">0</span></h3>
       <div class="card" style="padding:5px"><div id="steps"></div></div>
     </div>
@@ -277,33 +293,18 @@
         <div class="hint" style="margin-top:6px">改尺寸后超出的块会被裁掉；随机打乱的关按现在的摆法当底面，难度分取多轮抽样。</div>
       </div>
 
-      <h3>选中块</h3>
-      <div class="card">
+      <!-- 选中 = 一块或多块，同一个面板：单选就是"只有一块的框选"，不再分两套 UI -->
+      <h3>选中 <span class="badge" id="selCount">0</span></h3>
+      <div class="card" id="selBoxCard">
         <div class="grid2">
           <label class="k">名称<input type="text" id="inName" placeholder="如 曹操"></label>
-          <label class="k">颜色<input type="color" id="inColor" style="width:100%"></label>
+          <label class="k">颜色<input type="color" id="inColor" style="width:100%"
+                              title="改色作用到当前选中的所有块，并成为之后放的新块的颜色"></label>
         </div>
         <div class="row" style="margin-top:7px">
           <button class="b" id="btnKind" title="点一下切换：普通 → 被动 → 一次被动 → 锁定。切换后的属性也会成为之后放的新块的属性">普通</button>
           <button class="b" id="btnSetGoalOne">设为目标</button>
-          <button class="b" id="btnDel">删除</button>
-        </div>
-        <div class="hint" id="selInfo" style="margin-top:6px">未选中</div>
-        <div class="hint" style="margin-top:4px">
-          <kbd>Q</kbd>/<kbd>E</kbd> 旋转 · <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · 也可以直接拖
-        </div>
-      </div>
-
-      <h3>框选 <span class="badge" id="selCount">0</span></h3>
-      <div class="card" id="selBoxCard">
-        <div class="hint" id="selBoxInfo" style="margin-top:0">
-          在空白处按住拖动 → 框住要一起处理的块（按住 <kbd>Shift</kbd> 追加）
-        </div>
-        <div class="row" style="margin-top:7px">
-          <button class="b" id="btnBoxCopy" title="复制一份（Ctrl+D）；Ctrl+C 复制到剪贴板、Ctrl+V 粘到最后点过的那格">复制</button>
           <button class="b" id="btnBoxDel">删除</button>
-          <button class="b" id="btnBoxAll" title="全选（Ctrl+A）">全选</button>
-          <button class="b" id="btnBoxClear">取消框选</button>
         </div>
         <div class="row kindrow" style="margin-top:6px">
           <span class="k">一起设为</span>
@@ -312,21 +313,29 @@
           <button class="b" id="btnBoxOnce" title="快捷键 O">▣ 一次</button>
           <button class="b" id="btnBoxLock" title="快捷键 L">🔒 锁定</button>
         </div>
-        <div class="hint" style="margin-top:7px">
-          拖住框住的任意一块 = <b style="color:#cfc7e8">整组一起挪</b>（拖回原处可复原）<br>
-          <kbd>Q</kbd>/<kbd>E</kbd> 整组旋转 · <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 或方向键 整组移动<br>
-          <kbd>Delete</kbd> 删除 · <kbd>Ctrl</kbd>+<kbd>A</kbd> 全选 · <kbd>Ctrl</kbd>+<kbd>C</kbd>/<kbd>V</kbd> 复制粘贴 ·
-          <kbd>L</kbd>/<kbd>P</kbd>/<kbd>O</kbd>/<kbd>N</kbd> 改档位 · <kbd>Esc</kbd> 取消 · <kbd>Ctrl</kbd>+<kbd>Z</kbd> 撤销
+        <div class="row" style="margin-top:6px">
+          <button class="b" id="btnBoxCopy" title="复制一份（Ctrl+D）；Ctrl+C 复制到剪贴板、Ctrl+V 粘到最后点过的那格">复制</button>
+          <button class="b" id="btnBoxAll" title="全选（Ctrl+A）">全选</button>
+          <button class="b" id="btnBoxClear">取消选择</button>
         </div>
-      </div>
-        <div class="hint" style="margin-top:2px">
-          <kbd>1</kbd>1×1 · <kbd>2</kbd>横1×2 · <kbd>3</kbd>竖1×2 · <kbd>4</kbd>2×2（再按一次取消）· <kbd>Esc</kbd> 取消
+        <div class="hint" id="selInfo" style="margin-top:6px">未选中（点棋盘上的块，或在空白处拖出框选）</div>
+        <div class="hint" id="selBoxInfo" style="margin-top:4px">
+          在空白处按住拖动 → 框住要一起处理的块（按住 <kbd>Shift</kbd> 追加）
+        </div>
+        <div class="hint" style="margin-top:4px">
+          重叠处<b style="color:#cfc7e8">再点一下 = 选下一层</b> · 拖住选中里任意一块 = <b style="color:#cfc7e8">整组一起挪</b>（拖回原处可复原）<br>
+          <kbd>Q</kbd>/<kbd>E</kbd> 旋转 · <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 或方向键 移动 ·
+          <kbd>Delete</kbd> 删除 · <kbd>Ctrl</kbd>+<kbd>A</kbd> 全选 · <kbd>Ctrl</kbd>+<kbd>C</kbd>/<kbd>V</kbd> 复制粘贴<br>
+          <kbd>L</kbd>/<kbd>P</kbd>/<kbd>O</kbd>/<kbd>N</kbd> 改档位 · <kbd>Esc</kbd> 取消 · <kbd>Ctrl</kbd>+<kbd>Z</kbd> 撤销
         </div>
       </div>
 
       <h3>从形状库添加</h3>
       <div class="card">
         <div class="pal" id="pal"></div>
+        <div class="hint" style="margin-top:2px">
+          <kbd>1</kbd>1×1 · <kbd>2</kbd>横1×2 · <kbd>3</kbd>竖1×2 · <kbd>4</kbd>2×2（再按一次取消）· <kbd>Esc</kbd> 取消
+        </div>
       </div>
 
       <h3>自绘滑块</h3>
@@ -491,6 +500,8 @@ const KIND_TIP = {
   lock: '锁定：试玩和求解时都纹丝不动'
 };
 let newKind = 'normal';
+/* 新块的颜色：沿用上次选过的颜色（点面板上的色块就更新），不再每放一块随机一次 */
+let newColor = PALETTE[3];
 let paintW = PAINT_N, paintH = PAINT_N;          // 画布当前是几×几（展开时 = 棋盘）
 let paintBig = false;                            // 是不是展开在棋盘上
 let paintCells = new Array(paintW * paintH).fill(-1), painting = false;
@@ -554,6 +565,7 @@ function loadLevel(r) {
   stopJob(true);                       // 切换关卡时把还在跑的分析/求解停掉
   sel = null; hands = 0; history = []; solution = null; anim = null;
   selSet.clear(); boxSel = null; lastBoardCell = null;    // 换关后旧下标全废
+  pickCycle = { key: '', k: 0 };
   palShape = null; lastDiff = raw.meta || null; goalSel = -1;
   fileSolution = null; updateRunBtn();
   [...document.querySelectorAll('#pal button')].forEach(x => x.classList.remove('on'));
@@ -1013,7 +1025,7 @@ function render() {
       'pointer-events': 'none'
     }));
   }
-  // 框选的块：细虚线轮廓（单选那块已经有一条白描边了，不重复画）
+  // 同组其余块：细虚线轮廓（主选那块已经有一条白描边了，不重复画）
   selSet.forEach(i => {
     if (i === sel || !L.pieces[i]) return;
     gSel.appendChild(el('path', {
@@ -1219,34 +1231,57 @@ function playMoveAll(prev, dur, move) {
 
 /* ══════════ 交互 ══════════ */
 /* ── 视口：滚轮/双指缩放、右键或拖动背景平移 ──
- * 只改 viewBox（x,y,w,h），块的坐标仍是棋盘格，所有渲染/命中都自动跟着走。 */
+ * 缩放 = **把整个棋盘按 z 倍放大**（改 svg 元素的 px 宽高，viewBox 始终是整个棋盘 0,0,w,h），
+ * 而不是缩 viewBox 去裁一块 —— 后者会让"棋盘还是原来那么大、内容被切掉"。
+ * 放大后棋盘比舞台大，舞台自己滚动；view.x / view.y 记的是"滚到第几格"，和平移量同单位。 */
 let view = { z: 1, x: 0, y: 0 };
 const VIEW_Z_MAX = 24;
-const viewW = () => L.w / view.z;
-const viewH = () => L.h / view.z;
+const stageEl = () => svg.parentElement;
+/** 舞台可用区域（扣掉 padding；滚动条宽度是 0，所以不会随缩放反复抖） */
+function stageBox() {
+  const s = stageEl(), cs = getComputedStyle(s);
+  return {
+    w: Math.max(40, s.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)),
+    h: Math.max(40, s.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom))
+  };
+}
+/** 一格现在占多少屏幕 px */
+function scaleNow() {
+  if (!L) return 1;
+  const b = stageBox();
+  return Math.min(b.w / L.w, b.h / L.h) * view.z;
+}
+const viewW = () => stageBox().w / Math.max(1e-6, scaleNow());   // 一屏能看几格
+const viewH = () => stageBox().h / Math.max(1e-6, scaleNow());
 function clampView() {
-  view.x = Math.max(0, Math.min(L.w - viewW(), view.x));
-  view.y = Math.max(0, Math.min(L.h - viewH(), view.y));
+  const b = stageBox(), k = scaleNow();
+  view.x = Math.max(0, Math.min(Math.max(0, L.w - b.w / k), view.x));
+  view.y = Math.max(0, Math.min(Math.max(0, L.h - b.h / k), view.y));
 }
 function applyView() {
   if (!L) return;
+  const k = scaleNow();
+  svg.style.width = (L.w * k) + 'px';
+  svg.style.height = (L.h * k) + 'px';
+  svg.setAttribute('viewBox', `0 0 ${L.w} ${L.h}`);
   clampView();
-  svg.setAttribute('viewBox', `${view.x} ${view.y} ${viewW()} ${viewH()}`);
-  svg.style.aspectRatio = `${L.w}/${L.h}`;
+  const s = stageEl();
+  s.scrollLeft = view.x * k;
+  s.scrollTop = view.y * k;
 }
 function resetView() { view = { z: 1, x: 0, y: 0 }; applyView(); }
 function cellAt(clientX, clientY) {
   const r = svg.getBoundingClientRect();
-  const vw = viewW(), vh = viewH();
-  const s = Math.min(r.width / vw, r.height / vh);
-  return {
-    x: view.x + (clientX - (r.left + (r.width - s * vw) / 2)) / s,
-    y: view.y + (clientY - (r.top + (r.height - s * vh) / 2)) / s
-  };
+  const k = r.width / L.w;                 // 元素宽高比 = 棋盘宽高比，不存在黑边
+  return { x: (clientX - r.left) / k, y: (clientY - r.top) / k };
 }
 function zoomAt(clientX, clientY, factor) {
   const p0 = cellAt(clientX, clientY);
+  const z0 = view.z;
   view.z = Math.max(1, Math.min(VIEW_Z_MAX, view.z * factor));
+  if (view.z === z0) return;
+  applyView();
+  // 让光标下那一格在放大后仍然待在光标底下
   const p1 = cellAt(clientX, clientY);
   view.x += p0.x - p1.x;
   view.y += p0.y - p1.y;
@@ -1265,6 +1300,30 @@ function pickAt(cx, cy) {
   if (c < 0 || r < 0 || c >= L.w || r >= L.h) return null;
   const i = gridNow()[r * L.w + c];
   return i < 0 ? null : i;
+}
+/* ── 重叠处点一下 = 换一层 ──
+ *  编辑期允许叠放，同一个格子上可能压着好几块。占格表只记得住最后画的那一块，
+ *  所以这里另外算一份「这一格压着哪些块」（按画上去的先后，后面的在上面），
+ *  同一格反复点就一层层往下选，选到底再回到最上面。 */
+let pickCycle = { key: '', k: 0 };
+function stackAt(cx, cy) {
+  const c = Math.floor(cx), r = Math.floor(cy);
+  if (!(c >= 0 && r >= 0 && c < L.w && r < L.h)) return [];
+  const out = [];
+  for (let i = 0; i < L.pieces.length; i++) {
+    const cs = K.pieceCells(L, st, i);
+    for (let n = 0; n < cs.length; n++) if (cs[n][0] === c && cs[n][1] === r) { out.push(i); break; }
+  }
+  return out;
+}
+/** 这一格该选中哪一块：同一格第一次点 = 最上面那块，再点就往下翻一层 */
+function pickStacked(cx, cy, fallback) {
+  const stack = stackAt(cx, cy);
+  if (stack.length < 2) { pickCycle = { key: '', k: 0 }; return fallback; }
+  const key = Math.floor(cx) + ',' + Math.floor(cy);
+  if (pickCycle.key === key) pickCycle.k = (pickCycle.k - 1 + stack.length) % stack.length;
+  else pickCycle = { key, k: stack.length - 1 };
+  return stack[pickCycle.k];
 }
 const membersOf = m => m.ids || [m.i, m.j];
 /** 同心的扇形伙伴：两块半圆叠在同一组格子上就是一个整圆。
@@ -1463,6 +1522,7 @@ svg.addEventListener('pointerdown', e => {
     if (i == null) {
       // 空白处按下 = 框选（Shift 追加）；不拖动就是普通的"取消选择"
       sel = null;
+      pickCycle = { key: '', k: 0 };
       if (!e.shiftKey) selSet.clear();
       svg.setPointerCapture(e.pointerId);
       drag = { kind: 'box', sx: p.x, sy: p.y, add: !!e.shiftKey };
@@ -1470,15 +1530,18 @@ svg.addEventListener('pointerdown', e => {
       render(); updateUI();
       return;
     }
-    // Shift 点块 = 加进框选；点一块**没被框住**的 = 只留它（旧框选作废）
-    if (e.shiftKey) selSet.add(i);
-    else if (!selSet.has(i)) selSet.clear();
-    sel = i;
+    // 重叠处再点一下 = 选下面那一层（占格表只记得住最上面一块）
+    const hit = pickStacked(p.x, p.y, i);
+    // Shift 点块 = 加进选择；点一块**没被选中**的 = 只留它（旧选择作废）。
+    // 单选和多选现在是同一套：单选就是"只有一块的选择集"。
+    if (e.shiftKey) selSet.add(hit);
+    else if (!selSet.has(hit)) selSet = new Set([hit]);   // 点组内的一块 → 保住整组（好整组拖）
+    sel = hit;
     svg.setPointerCapture(e.pointerId);
-    // 拖住框选里的任意一块 = 整组一起挪（位置都记在按下时的快照上，拖回去能原样复原）
-    const multi = selSet.size > 1 && selSet.has(i);
+    // 拖住选中里的任意一块 = 整组一起挪（位置都记在按下时的快照上，拖回去能原样复原）
+    const multi = selSet.size > 1 && selSet.has(hit);
     drag = {
-      kind: 'edit', i, sx: p.x, sy: p.y, ox: st[i].x, oy: st[i].y,
+      kind: 'edit', i: hit, sx: p.x, sy: p.y, ox: st[hit].x, oy: st[hit].y,
       snap: snapshot(), moved: false, multi,
       base: multi ? boxSelList().map(k => {
         const b = pieceBox(st, k);
@@ -1522,8 +1585,8 @@ svg.addEventListener('pointermove', e => {
 
   /* ── 右键/中键/双指/背景拖动：平移视口 ── */
   if (drag.kind === 'pan') {
-    const r = svg.getBoundingClientRect();
-    const s = Math.min(r.width / viewW(), r.height / viewH());
+    // 拖动只改"滚到第几格"；放大后棋盘超出舞台，滚动量由 applyView 落到 scrollLeft/Top
+    const s = scaleNow();
     view.x = drag.vx - (e.clientX - drag.sx) / s;
     view.y = drag.vy - (e.clientY - drag.sy) / s;
     if (Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 3) drag.moved = true;
@@ -1824,7 +1887,7 @@ document.addEventListener('keydown', e => {
       if (k === 'v') { e.preventDefault(); boxPaste(); return; }
       if (k === 'd') {
         e.preventDefault();
-        if (selSet.size) boxCopy(); else toast('先框选几块');
+        if (selSet.size) boxCopy(); else toast('先选中块');
         return;
       }
       return;
@@ -1985,7 +2048,7 @@ function addPiece(cx, cy, shapeKey) {
   gy = Math.max(0, Math.min(L.h - bb[1], gy));
   const cand = {
     id: uniqueId('u'), x: gx, y: gy, shape: shapeKey,
-    color: PALETTE[Math.floor(Math.random() * 9)],
+    color: newColor,                       // 沿用面板上的颜色（不再每块随机）
     name: sh.label || shapeKey
   };
   // 继承面板上选好的档位（普通 / 被动 / 锁定）
@@ -2027,13 +2090,14 @@ function addCustomPiece() {
   const cand = {
     id: uniqueId('c'), x: 0, y: 0, shape: 'custom',
     cells: cells, rot: (sec || segC) ? 'pivot' : false,
-    color: PALETTE[Math.floor(Math.random() * 9)],
+    color: newColor,                       // 沿用面板上的颜色（不再每块随机）
     name: '自绘' + (raw.pieces.filter(p => p.shape === 'custom').length + 1)
   };
   if (sec) cand.pivot = [sec.center[0], sec.center[1]];
   else if (segC) { cand.pivot = [segC[0], segC[1]]; cand.spin = true; }   // spin: 非扇形但可绕自身格心转
   /* 放哪儿：跟着"画的地方"走
-   *   - 画布展开成棋盘大小（一格对一格）→ 直接落在画布在棋盘上的那个原点
+   *   - 画布展开成棋盘大小（一格对一格）→ 落在**你画的那几格**在棋盘上的原位置
+   *     （之前只按画布原点算，画在右上角也会掉到画布左上角，跟"画的地方"对不上）
    *   - 否则落在棋盘上最后点过的那一格（居中），实在放不下再从左上找空地 */
   const used = new Set();                       // 只在外面建一次：棋盘放到 1000×1000 时内层重建会卡死
   for (let i = 0; i < L.pieces.length; i++) for (const q of K.pieceCells(L, st, i)) used.add(q[0] + ',' + q[1]);
@@ -2041,7 +2105,10 @@ function addCustomPiece() {
     norm.every(q => !used.has((c + q.c) + ',' + (r + q.r)));
   let want = null;
   if (paintBig) {
-    want = [Math.floor((L.w - paintW) / 2), Math.floor((L.h - paintH) / 2)];
+    // 画布贴在棋盘中间：原点 + 画到的格子在画布内的偏移
+    const ox = Math.floor((L.w - paintW) / 2), oy = Math.floor((L.h - paintH) / 2);
+    const minC = Math.min(...list.map(q => q.c | 0)), minR = Math.min(...list.map(q => q.r | 0));
+    want = [ox + minC, oy + minR];
   } else if (lastBoardCell) {
     want = [lastBoardCell[0] - Math.floor((bb[0] - 1) / 2), lastBoardCell[1] - Math.floor((bb[1] - 1) / 2)];
   }
@@ -2313,6 +2380,31 @@ function doSolve() {
   if (!raw.goals.length) { toast('先设置至少一个目标'); return; }
   if (!playable()) return;
   startJob('solve');
+}
+
+/* ══════════ 汉诺塔专用求解 ══════════
+ * 单格 BFS 在嵌套盘上组合爆炸（200 万节点 / 153 秒仍无解）。
+ * tools/solve-hanoi.js 把「整盘搬动」当宏动作，2^N-1 次递归搬动，
+ * 每条都展开成引擎里可回放的单格走法并存进关卡 solution；这里直接载入并校验，秒出。
+ * 整盘搬动层面最优，不保证单格最短 —— 界面必须这么写。 */
+function isHanoiLevel() { return !!(raw && raw.solver === 'hanoi'); }
+function runHanoiSolve() {
+  if (!raw.goals.length) { toast('这关还没有目标'); return; }
+  if (!playable()) return;
+  const src = fileSolution && fileSolution.moves && fileSolution.moves.length ? fileSolution.moves : null;
+  if (!src) { toast('关卡文件里没有汉诺塔解法'); return; }
+  let s = K.initialState(window.resolveShapes(raw));
+  for (const m of src) s = K.apply(s, m);
+  if (!K.isGoal(L, s, raw.goals)) { toast('预存解对不上当前局面'); return; }
+  const handsMv = K.mergeMoves(src);
+  solution = { moves: src, hands: handsMv, states: 243 };
+  document.getElementById('svSteps').textContent = handsMv.length + ' 手';
+  document.getElementById('svStates').textContent = '31 次整盘搬动';
+  document.getElementById('svMsg').textContent = '解 ' + handsMv.length + ' 手（' + src.length +
+    ' 单位步）· 整盘搬动最优，不保证单格最短';
+  document.getElementById('hanoiMsg').textContent =
+    '已载入关卡文件里的递归最优解：' + handsMv.length + ' 手（' + src.length + ' 步）。点「播放」看回放。';
+  renderSteps(); updateUI();
 }
 
 /* ══════════ 织布机专用求解 ══════════
@@ -2827,8 +2919,11 @@ function updateUI() {
   const loomcard = document.getElementById('loomCard');
   const loom = isLoomLevel();
   if (loomcard) loomcard.style.display = loom ? 'block' : 'none';
+  const hanoicard = document.getElementById('hanoiCard');
+  const hanoi = isHanoiLevel();
+  if (hanoicard) hanoicard.style.display = hanoi ? 'block' : 'none';
   const genBtn = document.getElementById('btnSolve');
-  if (genBtn) genBtn.style.display = (is15 || loom) ? 'none' : '';
+  if (genBtn) genBtn.style.display = (is15 || loom || hanoi) ? 'none' : '';
 
   document.getElementById('stGoals').textContent = raw.goals.length;
   const done = raw.goals.length && checkWin();
@@ -2890,7 +2985,7 @@ function renderPieceList() {
   host.innerHTML = '';
   raw.pieces.forEach((p, i) => {
     const row = document.createElement('div');
-    row.className = 'prow' + (sel === i ? ' on' : '');
+    row.className = 'prow' + (selSet.has(i) ? ' on' : '');
     row.innerHTML = '<span class="sw" style="background:' + p.color + '"></span>' +
       '<span class="nm">' + (p.name || p.id) + (p.lock ? ' 🔒' : (p.onceOnly ? ' ▣' : (p.chainOnly ? ' 🔗' : ''))) + '</span>' +
       '<span class="lk" data-lk="' + i + '" title="锁定/解锁">' + (p.lock ? '🔒' : '·') + '</span>' +
@@ -2927,9 +3022,11 @@ function cycleKind() {
   const p = sel != null ? raw.pieces[sel] : null;
   const next = KIND_LIST[(KIND_LIST.indexOf(pieceKind(p)) + 1) % KIND_LIST.length];
   newKind = next;
-  if (p) setPieceKind(sel, next);
-  else { updateUI(); toast('新块属性：' + KIND_TIP[next]); }
-  if (p) toast(KIND_TIP[next] + '（之后放的新块也是这一档）');
+  if (!p) { updateUI(); toast('新块属性：' + KIND_TIP[next]); return; }
+  // 选了几块就整组切一档（单选就是那一块）
+  if (boxSelList().length > 1) { boxKind(next); return; }
+  setPieceKind(sel, next);
+  toast(KIND_TIP[next] + '（之后放的新块也是这一档）');
 }
 /** 按钮上的字：选中了就显示这块的档位，没选中就是「新块 · 档位」 */
 function drawKindBtn() {
@@ -3163,9 +3260,9 @@ function syncSelBox() {
   if (cnt) cnt.textContent = String(n);
   const info = document.getElementById('selBoxInfo');
   if (info) {
-    info.textContent = n
-      ? '已框住 ' + n + ' 块：' + boxSelList().slice(0, 6).map(i => raw.pieces[i].name || raw.pieces[i].id).join('、') +
-        (n > 6 ? ' …' : '')
+    info.textContent = n > 1
+      ? '已选 ' + n + ' 块：' + boxSelList().slice(0, 6).map(i => raw.pieces[i].name || raw.pieces[i].id).join('、') +
+        (n > 6 ? ' …' : '') + '（颜色/档位/删除都对整组生效）'
       : '在空白处按住拖动 → 框住要一起处理的块（按住 Shift 追加）';
   }
 }
@@ -3174,8 +3271,10 @@ function afterBatch() {
   roundStart = st.map(s => ({ ...s }));
   syncViewBox(); render(); updateUI();
 }
+/* 删除 = 删掉当前选中的全部（单选就是一块）：面板上只有一个删除按钮 */
+function deleteSelection() { boxDelete(); }
 function boxDelete() {
-  if (!selSet.size) { toast('先框选几块'); return; }
+  if (!selSet.size) { toast('先选中块（点棋盘上的块，或空白处拖出框选）'); return; }
   pushHist();
   const ids = new Set(boxSelList().map(i => raw.pieces[i].id));
   raw.pieces = raw.pieces.filter((p, i) => !selSet.has(i));
@@ -3186,7 +3285,7 @@ function boxDelete() {
   toast('删掉 ' + ids.size + ' 块（引用它们的目标也一起删了）');
 }
 function boxCopy() {
-  if (!selSet.size) { toast('先框选几块'); return; }
+  if (!selSet.size) { toast('先选中块'); return; }
   pushHist();
   const made = [];
   for (const i of boxSelList()) {
@@ -3206,7 +3305,7 @@ function boxCopy() {
   toast('复制了 ' + made.length + ' 块（往右下挪了一格）');
 }
 function boxKind(kind) {
-  if (!selSet.size) { toast('先框选几块'); return; }
+  if (!selSet.size) { toast('先选中块'); return; }
   pushHist();
   for (const i of boxSelList()) {
     const p = raw.pieces[i];
@@ -3248,7 +3347,7 @@ const piecesTurnable = (list) => [...list].filter(i => L.pieces[i] && L.pieces[i
 /** 整组旋转（每块绕自己的转轴），不能转的跳过 */
 function boxTurn(d) {
   const list = boxSelList();
-  if (!list.length) { toast('先框选几块'); return; }
+  if (!list.length) { toast('先选中块'); return; }
   const turnable = piecesTurnable(list);
   if (!turnable.length) { toast('框住的块都不可旋转'); return; }
   pushHist();
@@ -3262,7 +3361,7 @@ function boxTurn(d) {
 /** 同一档位再按一次 = 退回普通（框选的批量切换） */
 function boxToggleKind(kind) {
   const list = boxSelList();
-  if (!list.length) { toast('先框选几块'); return; }
+  if (!list.length) { toast('先选中块'); return; }
   const all = list.every(i => pieceKind(raw.pieces[i]) === kind);
   boxKind(all ? 'normal' : kind);
 }
@@ -3278,7 +3377,7 @@ function boxSelectAll() {
 /** 复制到剪贴板（不落到盘上）：记住相对位置，粘贴时整组一起放 */
 function boxCopyClip() {
   const list = boxSelList();
-  if (!list.length) { toast('先框选几块'); return; }
+  if (!list.length) { toast('先选中块'); return; }
   const items = list.map(i => JSON.parse(JSON.stringify(raw.pieces[i])));
   pieceClip = {
     minX: Math.min.apply(null, items.map(p => p.x)),
@@ -3764,6 +3863,7 @@ document.getElementById('btnDiff').onclick = runDiff;
 document.getElementById('jobStop').onclick = () => stopJob(false);
 document.getElementById('btnFast').onclick = () => runP15('fast');
 document.getElementById('btnLoomFast').onclick = () => runLoomSolve();
+document.getElementById('btnHanoiFast').onclick = () => runHanoiSolve();
 document.getElementById('btnOpt').onclick = () => runP15('opt');
 document.getElementById('btnLayer').onclick = () => runP15('layer');
 document.getElementById('btnLibBlank').onclick = () => {
@@ -3816,9 +3916,15 @@ document.getElementById('inName').oninput = e => {
   render(); renderPieceList(); updateUI();
 };
 document.getElementById('inColor').oninput = e => {
-  if (sel == null) return;
-  raw.pieces[sel].color = e.target.value;
-  if (L.pieces[sel]) L.pieces[sel].color = e.target.value;
+  const col = e.target.value;
+  newColor = col;                       // 以后放的新块也用这个色，不再每块随机
+  const list = selSet.size ? boxSelList() : (sel != null ? [sel] : []);
+  if (!list.length) { updateUI(); return; }
+  pushHist();
+  for (const i of list) {
+    raw.pieces[i].color = col;
+    if (L.pieces[i]) L.pieces[i].color = col;   // 渲染读的是 L，两边都得改
+  }
   render(); renderPieceList(); updateUI();
 };
 /* 关卡名 / 备注（都是关卡本来就有的字段，这里只是给它一个入口） */
@@ -3872,7 +3978,7 @@ document.getElementById('inLvNote').oninput = e => {
   raw.note = e.target.value;
   touchLibEntry({ note: raw.note });
 };
-document.getElementById('btnKind').onclick = () => cycleKind();document.getElementById('btnDel').onclick = () => { if (sel != null) { pushHist(); delPiece(sel); } };
+document.getElementById('btnKind').onclick = () => cycleKind();
 document.getElementById('btnSetGoalOne').onclick = () => {
   if (sel == null || !raw.pieces[sel]) { toast('先选中一个块'); return; }
   pushHist();
@@ -3965,7 +4071,7 @@ document.getElementById('btnLoad').onclick = () => {
 document.getElementById('btnNewCustom').onclick = addCustomPiece;
 document.getElementById('btnPaintBig').onclick = togglePaintBig;
 document.getElementById('btnBoxCopy').onclick = boxCopy;
-document.getElementById('btnBoxDel').onclick = boxDelete;
+document.getElementById('btnBoxDel').onclick = () => deleteSelection();
 document.getElementById('btnBoxAll').onclick = () => boxSelectAll();
 document.getElementById('btnBoxClear').onclick = () => { selSet.clear(); boxSel = null; render(); updateUI(); };
 document.getElementById('btnBoxNormal').onclick = () => boxKind('normal');
@@ -4074,10 +4180,10 @@ function placePaintFloat() {
   const host = document.getElementById('paint');
   if (!host || !paintBig || !L) return;
   const r = svg.getBoundingClientRect();
-  const s = Math.min(r.width / viewW(), r.height / viewH());
-  // 棋盘格 (0,0) 在屏幕上的位置（含缩放与平移），画布跟着走才不会错位
-  const x0 = r.left + (r.width - s * viewW()) / 2 - view.x * s;
-  const y0 = r.top + (r.height - s * viewH()) / 2 - view.y * s;
+  const s = r.width / L.w;
+  // 棋盘格 (0,0) 在屏幕上的位置（元素宽高比就是棋盘宽高比，origin 就是元素左上角）
+  const x0 = r.left;
+  const y0 = r.top;
   host.style.position = 'fixed';
   host.style.left = (x0 + s * Math.floor((L.w - paintW) / 2)) + 'px';
   host.style.top = (y0 + s * Math.floor((L.h - paintH) / 2)) + 'px';
@@ -4112,7 +4218,10 @@ function togglePaintBig() {
     renderPaint();
   }
 }
-window.addEventListener('resize', () => { if (paintBig) placePaintFloat(); });
+window.addEventListener('resize', () => {
+  if (paintBig) placePaintFloat();
+  if (L) applyView();          // 窗口变了，整块棋盘按新舞台重新铺一次
+});
 function paintAt(i) {
   if (paintCells[i] === brush) return;
   paintCells[i] = brush;
