@@ -69,8 +69,9 @@ const ok = (c, m, x) => {
   await boxSelect();
   ok(await ev('selSet.size') === 3, '框住 3 块', await ev('selSet.size'));
   ok(await ev('boxBatch()') === true, '进入整组模式', await ev('boxBatch()'));
-  ok(/整组/.test(await ev(`document.getElementById('selBoxInfo').textContent`) + await ev(`document.querySelector('#selBoxCard .hint:last-child').textContent`)),
-    '面板上写了「整组」的用法');
+  // 说明文字搬到卡片的悬停标题里了（面板上只留必要信息）
+  ok(/整组/.test(await ev(`document.getElementById('selBoxCard').title`)),
+    '卡片悬停里写了整组/快捷键的用法');
 
   console.log('\n[1] WASD / 方向键整组移动');
   {

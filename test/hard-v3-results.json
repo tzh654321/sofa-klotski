@@ -25,7 +25,7 @@
       "proxy": true,
       "maxPlateau": 15
     },
-    "ms": 3351
+    "ms": 3285
   },
   {
     "name": "深度求索",
@@ -53,7 +53,7 @@
       "proxy": true,
       "maxPlateau": 11
     },
-    "ms": 8153
+    "ms": 10000
   },
   {
     "name": "万里征途",
@@ -81,6 +81,6 @@
       "proxy": true,
       "maxPlateau": 105
     },
-    "ms": 9913
+    "ms": 14982
   }
 ]

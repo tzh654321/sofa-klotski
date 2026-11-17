@@ -58,7 +58,12 @@
             padding:0 5px;font:11px/1.6 ui-monospace,Consolas,monospace;color:#d6cff0}
   .pal{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
   .pal button{border:1px solid var(--line);background:#241c3c;border-radius:8px;padding:5px 0;
-              cursor:pointer;display:flex;align-items:center;justify-content:center;height:40px}
+              cursor:pointer;display:flex;align-items:center;justify-content:center;height:40px;
+              position:relative}
+  .pal button .kb{position:absolute;left:4px;top:1px;font-size:9px;line-height:1;color:var(--dim);
+                  font-style:normal;font-weight:600}
+  /* 默认只露前两行（10 个），其余收在「更多形状」后面 */
+  .pal.collapsed button[data-more="1"]{display:none}
   .pal button.on{border-color:var(--acc);background:#33235a;box-shadow:0 0 0 2px rgba(168,85,247,.3)}
   .pal svg{display:block;margin:1px auto}
   textarea{width:100%;height:80px;resize:vertical;background:#100c1c;color:#cfc7e8;border:1px solid var(--line);
@@ -295,7 +300,8 @@
 
       <!-- 选中 = 一块或多块，同一个面板：单选就是"只有一块的框选"，不再分两套 UI -->
       <h3>选中 <span class="badge" id="selCount">0</span></h3>
-      <div class="card" id="selBoxCard">
+      <div class="card" id="selBoxCard"
+           title="重叠处再点一下 = 选下一层 · 拖住任一选中块 = 整组平移 · Q/E 旋转 · WASD 或方向键移动 · Delete 删除 · Ctrl+A 全选 · Ctrl+C/V 复制粘贴 · L/P/O/N 改档位 · Esc 取消 · Ctrl+Z 撤销">
         <div class="grid2">
           <label class="k">名称<input type="text" id="inName" placeholder="如 曹操"></label>
           <label class="k">颜色<input type="color" id="inColor" style="width:100%"
@@ -307,51 +313,36 @@
           <button class="b" id="btnBoxDel">删除</button>
         </div>
         <div class="row kindrow" style="margin-top:6px">
-          <span class="k">一起设为</span>
-          <button class="b" id="btnBoxNormal" title="快捷键 N">普通</button>
-          <button class="b" id="btnBoxPassive" title="快捷键 P">🔗 被动</button>
-          <button class="b" id="btnBoxOnce" title="快捷键 O">▣ 一次</button>
-          <button class="b" id="btnBoxLock" title="快捷键 L">🔒 锁定</button>
+          <button class="b" id="btnBoxNormal" title="设为普通（快捷键 N）">普通</button>
+          <button class="b" id="btnBoxPassive" title="设为被动：只能被推着让位（快捷键 P）">🔗 被动</button>
+          <button class="b" id="btnBoxOnce" title="设为一次被动：只被直接推一格（快捷键 O）">▣ 一次</button>
+          <button class="b" id="btnBoxLock" title="设为锁定（快捷键 L）">🔒 锁定</button>
         </div>
         <div class="row" style="margin-top:6px">
           <button class="b" id="btnBoxCopy" title="复制一份（Ctrl+D）；Ctrl+C 复制到剪贴板、Ctrl+V 粘到最后点过的那格">复制</button>
           <button class="b" id="btnBoxAll" title="全选（Ctrl+A）">全选</button>
           <button class="b" id="btnBoxClear">取消选择</button>
         </div>
-        <div class="hint" id="selInfo" style="margin-top:6px">未选中（点棋盘上的块，或在空白处拖出框选）</div>
-        <div class="hint" id="selBoxInfo" style="margin-top:4px">
-          在空白处按住拖动 → 框住要一起处理的块（按住 <kbd>Shift</kbd> 追加）
-        </div>
-        <div class="hint" style="margin-top:4px">
-          重叠处<b style="color:#cfc7e8">再点一下 = 选下一层</b> · 拖住选中里任意一块 = <b style="color:#cfc7e8">整组一起挪</b>（拖回原处可复原）<br>
-          <kbd>Q</kbd>/<kbd>E</kbd> 旋转 · <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 或方向键 移动 ·
-          <kbd>Delete</kbd> 删除 · <kbd>Ctrl</kbd>+<kbd>A</kbd> 全选 · <kbd>Ctrl</kbd>+<kbd>C</kbd>/<kbd>V</kbd> 复制粘贴<br>
-          <kbd>L</kbd>/<kbd>P</kbd>/<kbd>O</kbd>/<kbd>N</kbd> 改档位 · <kbd>Esc</kbd> 取消 · <kbd>Ctrl</kbd>+<kbd>Z</kbd> 撤销
-        </div>
+        <div class="hint" id="selInfo" style="margin-top:6px">未选中</div>
+        <div class="hint" id="selBoxInfo" style="margin-top:4px">空白处拖动框选</div>
       </div>
 
       <h3>从形状库添加</h3>
       <div class="card">
-        <div class="pal" id="pal"></div>
-        <div class="hint" style="margin-top:2px">
-          <kbd>1</kbd>1×1 · <kbd>2</kbd>横1×2 · <kbd>3</kbd>竖1×2 · <kbd>4</kbd>2×2（再按一次取消）· <kbd>Esc</kbd> 取消
-        </div>
+        <div class="pal collapsed" id="pal" title="点形状 → 再点棋盘放下；同一个再点一次 = 取消"></div>
+        <button class="b" id="btnPalMore" style="margin-top:6px;width:100%">更多形状 ▾</button>
       </div>
 
       <h3>自绘滑块</h3>
       <div class="card">
         <div class="brush" id="brush"></div>
-        <div class="paint" id="paint"></div>
+        <div class="paint" id="paint" title="同一格再点一下 = 转 90°"></div>
         <div class="row" style="margin-top:7px">
           <button class="b acc" id="btnNewCustom">创建滑块</button>
           <button class="b" id="btnClearPaint">清空画布</button>
-          <button class="b" id="btnPaintBig" title="展开成和棋盘一样大的画布，一格对一格">⤢ 展开</button>
+          <button class="b" id="btnPaintBig" title="展开成和棋盘一样大的画布，一格对一格（滚轮缩放 / 中键拖动平移）">⤢ 展开</button>
         </div>
         <div class="hint" id="paintInfo" style="margin-top:6px">画布为空</div>
-        <div class="hint" style="margin-top:4px">
-          组件：实心方 / 1/4 圆 / 弓形 / 内切圆。选中后<strong>再点自己 = 转 90°</strong>；
-          弓形贴在方块的相邻两边就拼出斜半圆。
-        </div>
       </div>
 
       <h3>目标 <span class="badge" id="goalCount">0</span></h3>
@@ -472,8 +463,22 @@ const BRUSHES = [
   { slot: 'disc', label: '内切圆 r=1/2（占一格）' },
   { slot: 'erase', label: '擦除' }
 ];
+/* 形状库：前两行（10 个）是常用形状，左上角标 1~9、0 当快捷键，其余收在「更多形状」里 */
+const PAL_KEYS = ['1x1', '2x1', '1x2', '2x2', 'sofa', 'semi', 'diagSemi', '1x3', 'L3', 'threeQuarter'];
+const PAL_KEY_LABEL = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const PAL_MORE = ['L4', 'T4', 'quarter', 'disc'];
 const PAINT_N = 5;          // 收起时的默认画布 5×5
-const PAINT_MAX = 24;       // 展开时单边最多 24 格（再大一格就几像素，画不了）
+const PAINT_CELLS_MAX = 40000;   // 不限单边格数；只有 1000×1000 这种巨型棋盘才按比例缩，免得页面画死
+/** 展开时的画布尺寸：默认 = 棋盘原尺寸 */
+function paintSizeForBoard() {
+  let w = Math.max(2, L.w | 0), h = Math.max(2, L.h | 0);
+  if (w * h > PAINT_CELLS_MAX) {
+    const k = Math.sqrt(PAINT_CELLS_MAX / (w * h));
+    w = Math.max(2, Math.floor(w * k));
+    h = Math.max(2, Math.floor(h * k));
+  }
+  return [w, h];
+}
 
 /* ══════════ 状态 ══════════ */
 let raw = null, L = null, st = null;
@@ -505,6 +510,7 @@ let newColor = PALETTE[3];
 let paintW = PAINT_N, paintH = PAINT_N;          // 画布当前是几×几（展开时 = 棋盘）
 let paintBig = false;                            // 是不是展开在棋盘上
 let paintCells = new Array(paintW * paintH).fill(-1), painting = false;
+let paintEdit = null;        // 正在改形状的那块自绘块的 id（null = 画新块）
 let brush = 0, brushSlot = 'solid', brushQ = 1, brushSeg = 3;   // brushQ: 1..4；brushSeg: 0..3
 /** 笔刷槽位 → 真正写进格子的值 */
 function brushValue(slot) {
@@ -1291,7 +1297,7 @@ function toCell(e) { return cellAt(e.clientX, e.clientY); }
 let pickCache = { key: '', g: null };
 /** 当前局面的占格表（鼠标移动会高频调用，别每次都重建 100 万格） */
 function gridNow() {
-  const key = L.pieces.length + '|' + st.map(s2 => s2.x + ',' + s2.y + ',' + s2.ori).join(';');
+  const key = L.w + 'x' + L.h + '|' + L.pieces.length + '|' + st.map(s2 => s2.x + ',' + s2.y + ',' + s2.ori).join(';');
   if (pickCache.key !== key) pickCache = { key, g: K.grid(L, st) };
   return pickCache.g;
 }
@@ -1892,12 +1898,10 @@ document.addEventListener('keydown', e => {
       }
       return;
     }
-    // 1/2/3/4 直接取块（1=1×1 / 2=横1×2 / 3=竖1×2 / 4=2×2）。
-    // 数字键和旋转(Q/E)、移动(WASD)不冲突，所以随时都生效（选中着块也能换要放的形状）。
-    if (k === '1' || k === '2' || k === '3' || k === '4') {
-      e.preventDefault();
-      choosePalette({ '1': '1x1', '2': '2x1', '3': '1x2', '4': '2x2' }[k]);
-      return;
+    // 数字键 1~9、0 = 形状库前两行的第 1~10 个（和旋转 Q/E、移动 WASD 不冲突，随时生效）
+    if (/^[0-9]$/.test(k)) {
+      const kn = PAL_KEY_LABEL.indexOf(k);
+      if (kn >= 0 && SH[PAL_KEYS[kn]]) { e.preventDefault(); choosePalette(PAL_KEYS[kn]); return; }
     }
     const batch = boxBatch();
     if (k === 'q' || k === 'e') {
@@ -2071,6 +2075,30 @@ function addPiece(cx, cy, shapeKey) {
   if (bad) toast('已放下' + kindTxt + '（当前有 ' + bad + ' 处重叠，编辑时允许）');
   else if (kindTxt) toast('已放下' + kindTxt);
 }
+/** 把画布内容写回正在编辑的那块（保留 id / 名字 / 颜色 / 档位） */
+function saveEditedShape(idx, list, norm, cells, sec, segC) {
+  const p = raw.pieces[idx];
+  const ox = Math.floor((L.w - paintW) / 2), oy = Math.floor((L.h - paintH) / 2);
+  const minC = Math.min(...list.map(q => q.c | 0)), minR = Math.min(...list.map(q => q.r | 0));
+  pushHist();
+  p.shape = 'custom';
+  p.cells = cells;
+  p.x = Math.max(0, Math.min(L.w - 1, ox + minC));
+  p.y = Math.max(0, Math.min(L.h - 1, oy + minR));
+  // 朝向/转轴要用新形状重算：先清干净，再按检测结果写回
+  delete p.pivot; delete p.spin; delete p.art;
+  p.rot = (sec || segC) ? 'pivot' : false;
+  if (sec) p.pivot = [sec.center[0], sec.center[1]];
+  else if (segC) { p.pivot = [segC[0], segC[1]]; p.spin = true; }
+  L = parseRaw(raw);
+  const i2 = L.pieces.findIndex(x => x.id === p.id);
+  if (i2 >= 0 && st[i2]) st[i2] = { x: p.x, y: p.y, ori: 0 };
+  roundStart = st.map(q => ({ ...q }));
+  sel = i2 >= 0 ? i2 : null;
+  selSet = i2 >= 0 ? new Set([i2]) : new Set();
+  render(); updateUI();
+  toast('形状已保存（' + cells.length + ' 格）');
+}
 function addCustomPiece() {
   const list = paintedDesc();
   if (!list.length) { toast('画布是空的：至少画一格'); return; }
@@ -2087,6 +2115,13 @@ function addCustomPiece() {
   // 能转的两类：纯扇形（绕圆心）、含弓形且弓形共用同一圆心的「斜半圆」（绕方块中心）
   const sec = K.sectorDesc(norm);
   const segC = K.segCenterOf(norm);
+  // 正在编辑某块自绘块 → 覆盖它的形状，而不是再加一块新的
+  if (paintEdit) {
+    const idx = raw.pieces.findIndex(p => p.id === paintEdit);
+    if (idx < 0) { paintEdit = null; syncPaintBtn(); toast('要改的那块已经没了'); return; }
+    saveEditedShape(idx, list, norm, cells, sec, segC);
+    return;
+  }
   const cand = {
     id: uniqueId('c'), x: 0, y: 0, shape: 'custom',
     cells: cells, rot: (sec || segC) ? 'pivot' : false,
@@ -2966,8 +3001,9 @@ function updateUI() {
     document.getElementById('selInfo').textContent = '未选中（点棋盘上的块）';
   }
   drawKindBtn();
+  syncPaintBtn();
   if (paintBig && L) {
-    const w = Math.max(2, Math.min(L.w, PAINT_MAX)), h = Math.max(2, Math.min(L.h, PAINT_MAX));
+    const [w, h] = paintSizeForBoard();
     if (w !== paintW || h !== paintH) { setPaintSize(w, h); renderPaint(); }
     else placePaintFloat();
   }
@@ -3262,8 +3298,8 @@ function syncSelBox() {
   if (info) {
     info.textContent = n > 1
       ? '已选 ' + n + ' 块：' + boxSelList().slice(0, 6).map(i => raw.pieces[i].name || raw.pieces[i].id).join('、') +
-        (n > 6 ? ' …' : '') + '（颜色/档位/删除都对整组生效）'
-      : '在空白处按住拖动 → 框住要一起处理的块（按住 Shift 追加）';
+        (n > 6 ? ' …' : '')
+      : '空白处拖动框选';
   }
 }
 function afterBatch() {
@@ -4191,37 +4227,97 @@ function placePaintFloat() {
   host.style.height = (s * paintH) + 'px';
 }
 let paintHome = null;         // 收起时放回侧栏的位置
+/* 命中的块是不是"自绘"：决定「展开」按钮要不要变成「编辑」 */
+function selCustomIdx() {
+  const i = (sel != null && raw.pieces[sel]) ? sel : null;
+  if (i == null) return null;
+  return raw.pieces[i].shape === 'custom' ? i : null;
+}
+/** 按钮上的字：没展开时看选中了什么；展开时一律「收起」 */
+function syncPaintBtn() {
+  const btn = document.getElementById('btnPaintBig');
+  if (!btn) return;
+  btn.textContent = paintBig ? '收起' : (selCustomIdx() != null ? '✎ 编辑形状' : '⤢ 展开');
+  btn.classList.toggle('acc', paintBig);
+  const nb = document.getElementById('btnNewCustom');
+  if (nb) nb.textContent = paintEdit ? '保存形状' : '创建滑块';
+}
+/** 把某块自绘块摊到画布上（画布 = 棋盘原尺寸，一格对一格） */
+function loadShapeToPaint(i) {
+  const p = raw.pieces[i];
+  const cells = p.cells || (SH[p.shape] && SH[p.shape].cells) || [];
+  const [w, h] = paintSizeForBoard();
+  setPaintSize(w, h);
+  paintCells.fill(-1);
+  for (const q of cells) {
+    const qc = q.c != null ? q.c : q[0];
+    const qr = q.r != null ? q.r : q[1];
+    const c = (p.x | 0) + (qc | 0), r = (p.y | 0) + (qr | 0);
+    if (c < 0 || r < 0 || c >= paintW || r >= paintH) continue;
+    let v = 0;
+    if (q.arc) {
+      v = 1;
+      for (const k of Object.keys(ARC_CORNER)) {
+        if (ARC_CORNER[k][0] === q.arc[0] && ARC_CORNER[k][1] === q.arc[1]) v = +k;
+      }
+    } else if (q.seg != null) v = 5 + (q.seg | 0);
+    else if (q.disc) v = 9;
+    paintCells[r * paintW + c] = v;
+  }
+  renderPaint();
+  updatePaintInfo();
+}
 function togglePaintBig() {
   const host = document.getElementById('paint');
-  const btn = document.getElementById('btnPaintBig');
   if (!paintBig) {
     paintHome = host.parentNode;
-    const w = Math.max(2, Math.min(L.w, PAINT_MAX));
-    const h = Math.max(2, Math.min(L.h, PAINT_MAX));
+    const [w, h] = paintSizeForBoard();
+    const editIdx = selCustomIdx();
     setPaintSize(w, h);
+    if (editIdx != null) {
+      paintEdit = raw.pieces[editIdx].id;      // 编辑现有滑块：画布按它现在的形状铺好
+      loadShapeToPaint(editIdx);
+      toast('正在改「' + (raw.pieces[editIdx].name || raw.pieces[editIdx].id) + '」的形状：改完点「保存形状」');
+    } else {
+      paintEdit = null;
+      paintCells.fill(-1);
+      renderPaint();
+      if (w !== L.w || h !== L.h) toast('棋盘太大，画布只展开到 ' + w + '×' + h);
+      else toast('画布已展开到棋盘大小 ' + w + '×' + h + '：一格对一格，直接照着棋盘画');
+    }
     document.body.appendChild(host);
     host.classList.add('float');
     paintBig = true;
-    btn.textContent = '收起';
-    btn.classList.add('acc');
-    renderPaint();
-    if (w !== L.w || h !== L.h) toast('棋盘太大，画布只展开到 ' + w + '×' + h + '（一格 = 棋盘一格）');
-    else toast('画布已展开到棋盘大小 ' + w + '×' + h + '：一格对一格，直接照着棋盘画');
+    syncPaintBtn();
+    placePaintFloat();
   } else {
     host.classList.remove('float');
     host.style.position = host.style.left = host.style.top = host.style.width = host.style.height = '';
     paintBig = false;
+    paintEdit = null;
     if (paintHome) paintHome.insertBefore(host, paintHome.querySelector('.row'));
-    btn.textContent = '⤢ 展开';
-    btn.classList.remove('acc');
     setPaintSize(PAINT_N, PAINT_N);
     renderPaint();
+    syncPaintBtn();
   }
 }
 window.addEventListener('resize', () => {
   if (paintBig) placePaintFloat();
   if (L) applyView();          // 窗口变了，整块棋盘按新舞台重新铺一次
 });
+/** 同一格再点一下 = 把那一格里的图形转 90°（1/4 圆、弓形才有方向） */
+function turnPaintCell(i) {
+  const v = paintCells[i];
+  let nv = v;
+  if (v >= 1 && v <= 4) nv = ARC_NEXT[v];
+  else if (v >= 5 && v <= 8) nv = 5 + ((v - 5 + 1) % 4);
+  else return false;
+  paintCells[i] = nv;
+  const host = document.getElementById('paint');
+  if (host.children[i]) host.children[i].innerHTML = paintCellSvg(nv);
+  updatePaintInfo();
+  return true;
+}
 function paintAt(i) {
   if (paintCells[i] === brush) return;
   paintCells[i] = brush;
@@ -4285,11 +4381,39 @@ function paintAt(i) {
   paintHost.addEventListener('pointerdown', e => {
     const b = e.target.closest('button');
     if (!b) return;
+    const i = +b.dataset.i;
+    // 同一格再点一下 = 转 90°（原来只有笔刷按钮能转，画完想调朝向得擦了重画）
+    if (paintCells[i] === brush) { turnPaintCell(i); return; }
     painting = true;
     lastPaintCell = null;
-    paintLine(+b.dataset.i);
+    paintLine(i);
     paintHost.setPointerCapture(e.pointerId);
   });
+
+  /* 画布展开盖在棋盘上时，缩放/平移交给棋盘视口：滚轮缩放、中键(或右键)拖动平移 */
+  let paintPan = null;
+  paintHost.addEventListener('wheel', e => {
+    if (!paintBig) return;
+    e.preventDefault();
+    zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.12 : 1 / 1.12);
+    placePaintFloat();
+  }, { passive: false });
+  paintHost.addEventListener('pointerdown', e => {
+    if (!paintBig || (e.button !== 1 && e.button !== 2)) return;
+    e.preventDefault(); e.stopPropagation();
+    paintPan = { sx: e.clientX, sy: e.clientY, vx: view.x, vy: view.y };
+    paintHost.setPointerCapture(e.pointerId);
+  }, true);
+  paintHost.addEventListener('pointermove', e => {
+    if (!paintPan) return;
+    const k = scaleNow();
+    view.x = paintPan.vx - (e.clientX - paintPan.sx) / k;
+    view.y = paintPan.vy - (e.clientY - paintPan.sy) / k;
+    applyView();
+    placePaintFloat();
+  }, true);
+  ['pointerup', 'pointercancel'].forEach(t => paintHost.addEventListener(t, () => { paintPan = null; }, true));
+  paintHost.addEventListener('contextmenu', e => { if (paintBig) e.preventDefault(); });
   paintHost.addEventListener('pointermove', e => {
     if (!painting) return;
     const t = document.elementFromPoint(e.clientX, e.clientY);
@@ -4304,9 +4428,9 @@ renderPaint();
 (function buildPalette() {
   const host = document.getElementById('pal');
   const CV = 36, PAD = 2, S = (CV - PAD * 2) / 3;
-  // 固定顺序：基础四形状 → 沙发(4)/半圆(5) → 其它形状，老脚本按下标点也不会错位
-  const ORDER = ['2x2', '2x1', '1x2', '1x1', 'sofa', 'semi', 'diagSemi', '1x3', 'L3', 'L4', 'T4',
-    'quarter', 'threeQuarter', 'disc'];
+  // 固定顺序：前十个（两行）= 常用形状，左上角标 1~9、0 当快捷键；其余收在「更多形状」里。
+  // 1×1 与 2×2 互换、大 L(L4) 与月亮(3/4 圆) 互换，都是按使用频率排的。
+  const ORDER = PAL_KEYS.concat(PAL_MORE);
   ORDER.filter(k => SH[k]).forEach(k => {
     const sh = SH[k];
     const seq = sh.cells.map(q => Array.isArray(q) ? q : [q.c, q.r]);
@@ -4331,19 +4455,35 @@ renderPaint();
     }
     const b = document.createElement('button');
     b.dataset.k = k;
-    b.title = sh.label;
+    b.title = sh.label + (PAL_KEYS.indexOf(k) >= 0
+      ? '（快捷键 ' + PAL_KEY_LABEL[PAL_KEYS.indexOf(k)] + '）' : '');
+    if (PAL_KEYS.indexOf(k) < 0) b.dataset.more = '1';
+    const kb = PAL_KEYS.indexOf(k);
     b.innerHTML = '<svg width="' + CV + '" height="' + CV + '" viewBox="0 0 ' + CV + ' ' + CV + '">'
       + '<g transform="translate(' + tx + ' ' + ty + ') scale(' + S + ')">' + inner + '</g></svg>';
+    if (kb >= 0) b.insertAdjacentHTML('afterbegin', '<i class="kb">' + PAL_KEY_LABEL[kb] + '</i>');
     b.onclick = () => choosePalette(k);
     host.appendChild(b);
   });
 })();
 
-/** 挑一个形状（再挑一次同一个 = 取消）。键盘 Q/W/A/S 和调色板按钮共用 */
+document.getElementById('btnPalMore').onclick = () => {
+  const pal = document.getElementById('pal');
+  const folded = pal.classList.toggle('collapsed');
+  document.getElementById('btnPalMore').textContent = folded ? '更多形状 ▾' : '收起 ▴';
+};
+/** 挑一个形状（再挑一次同一个 = 取消）。数字键 1~9/0 和调色板按钮共用 */
 function paintPalOn() {
   [...document.querySelectorAll('#pal button')].forEach(c => c.classList.toggle('on', c.dataset.k === palShape));
 }
 function choosePalette(k) {
+  if (PAL_MORE.indexOf(k) >= 0) {
+    const pal = document.getElementById('pal');
+    if (pal.classList.contains('collapsed')) {
+      pal.classList.remove('collapsed');
+      document.getElementById('btnPalMore').textContent = '收起 ▴';
+    }
+  }
   const same = palShape === k;
   palShape = same ? null : k;
   paintPalOn();
