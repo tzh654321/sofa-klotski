@@ -26,12 +26,23 @@ const ok = (c, m, x) => {
       if(!e) throw new Error('找不到关卡'); loadLibEntry(lib.indexOf(e));})()`);
     await sleep(700);
   };
+  // 按关卡 JSON 里声明的 solverJs 找关（不写死名字/编号）：取解法最长的一关。
+  // 「播放/进度条」需要一个带大解法的关，它叫什么名字都无所谓。
+  const loadBySolverJs = async (solverJs) => {
+    await ev(`(function(){
+      const cand=lib.filter(x=>x.level && x.level.solverJs===${JSON.stringify(solverJs)} &&
+        x.solution && x.solution.moves && x.solution.moves.length);
+      if(!cand.length) throw new Error('没有声明该 solverJs 且带解法的关卡');
+      cand.sort((a,b)=>b.solution.moves.length-a.solution.moves.length);
+      loadLibEntry(lib.indexOf(cand[0]));})()`);
+    await sleep(900);
+  };
   const pose = () => ev('JSON.stringify(st.map(s=>[s.x,s.y,s.ori]))');
   const html = () => ev("document.getElementById('gPieces').innerHTML");
 
   console.log('[1] 播到一半点复位：状态和画面都要真的回到开局');
   {
-    await loadByName('汉诺塔 · 塞块 29');
+    await loadBySolverJs('tools/solve-hanoi.js');
     // 开局画面留一份基准
     const startPose = await pose();
     const startHtml = await html();
@@ -105,7 +116,7 @@ const ok = (c, m, x) => {
 
   console.log('\n[4] 大解法走进度条（几万手不建 DOM）');
   {
-    await loadByName('汉诺塔 · 塞块 41（构造验证）');
+    await loadBySolverJs('tools/solve-hanoi.js');
     await ev(`document.getElementById('btnPlay').click()`);      // 参考解法
     await sleep(500);
     ok(await ev('solution.hands.length') > 1200, '这份解法手数 > 1200', await ev('solution.hands.length'));

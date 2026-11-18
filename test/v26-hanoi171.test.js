@@ -9,19 +9,36 @@ const path = require('path');
 const K = require('../sofa-klotski.js');
 const SH = require('../shapes.js');
 const { launch, sleep } = require('./cdp.js');
+const { solverJsOf, loadSolver, findLevelBySolver, ROOT } = require('../tools/load-solver.js');
 
 let pass = 0, fail = 0;
 const ok = (c, m, x) => {
   c ? (pass++, console.log('  ok  ' + m))
     : (fail++, console.log('  FAIL  ' + m + (x !== undefined ? ' -> ' + JSON.stringify(x) : '')));
 };
-const FILE = path.join(__dirname, '..', 'levels', '合移位', '12_汉诺塔·塞块171.json');
+
+// 按「关卡 JSON 里声明的 solverJs」找关卡，不写死文件名/编号/关卡名：
+// 合移位里两关都指向 solve-hanoi.js，用「178 块 / 171 无名块」这一结构特征挑出塞块关。
+const WANT_JS = 'tools/solve-hanoi.js';
+const hits = findLevelBySolver('合移位', WANT_JS) || [];
+const hit = hits.find(h => {
+  const ps = (h.rec.level || h.rec).pieces || [];
+  return ps.length === 178 && ps.filter(p => !p.name).length === 171;
+});
+ok(!!hit, '按 solverJs 属性找到塞块关（不依赖文件名/编号/name）', hits.map(h => h.file));
 
 console.log('[1] 文件层：块 / 目标 / 解法');
-const rec = JSON.parse(fs.readFileSync(FILE, 'utf8'));
-ok(rec.name === '汉诺塔 · 塞块 171', '关卡名', rec.name);
+const rec = hit.rec;
+const NAME = rec.name;                       // 期望值从文件自身读，改名不影响断言
+ok(typeof NAME === 'string' && NAME.length > 0, '关卡名非空（从文件读取）', NAME);
 ok(rec.level.w === 29 && rec.level.h === 14, '29×14 棋盘', [rec.level.w, rec.level.h]);
 ok(rec.level.solver === 'hanoi', '声明 hanoi 专用求解（通用 BFS 会爆炸）', rec.level.solver);
+ok(solverJsOf(rec.level) === WANT_JS, 'solverJs 指向求解器 js', solverJsOf(rec.level));
+{
+  let loaded = null, err = null;
+  try { loaded = loadSolver(rec.level); } catch (e) { err = e.message; }
+  ok(loaded && typeof loaded.solve === 'function', '按 solverJs 动态载入求解器成功', err || (loaded && loaded.js));
+}
 
 const pieces = rec.level.pieces;
 const unnamed = pieces.filter(p => !p.name).length;
@@ -113,12 +130,12 @@ console.log('\n[3] 关卡包与磁盘一致');
   delete require.cache[require.resolve('../levelpacks.js')];
   require('../levelpacks.js');
   const pack = global.window.LEVELPACKS.find(p => p.set === '合移位');
-  const e = pack && pack.levels.find(l => l.name === '汉诺塔 · 塞块 171');
-  ok(!!e, '关卡包里有这一关');
+  const e = pack && pack.levels.find(l => l.name === NAME);
+  ok(!!e, '关卡包里有这一关（按关卡名找，名字从文件读）');
   ok(e && e.meta && e.meta.score === rec.meta.score, '关卡包里的分数同步', e && e.meta && e.meta.score);
   ok(e && e.solution && e.solution.moves.length === rec.solution.moves.length,
     '关卡包里带着完整解法（播放器要用）', e && e.solution && e.solution.moves.length);
-  ok(e && e.file === '合移位/12_汉诺塔·塞块171.json', 'file 字段', e && e.file);
+  ok(e && e.file === hit.file.replace(/^levels\//, ''), 'file 字段与磁盘找出的路径一致', e && e.file);
 }
 
 (async () => {
@@ -127,7 +144,7 @@ console.log('\n[3] 关卡包与磁盘一致');
   await sleep(900);
 
   console.log('\n[4] 页面层：载入 / 不画块名 / 参考解 / 进度条');
-  await ev(`(function(){const e=lib.find(x=>x.name==='汉诺塔 · 塞块 171');
+  await ev(`(function(){const e=lib.find(x=>x.name===${JSON.stringify(NAME)});
     if(!e) throw new Error('找不到关卡'); loadLibEntry(lib.indexOf(e));})()`);
   await sleep(1200);
   ok(await ev('raw.pieces.length') === 178, '页面里 178 个块', await ev('raw.pieces.length'));

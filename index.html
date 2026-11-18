@@ -2502,7 +2502,14 @@ function doSolve() {
  * tools/solve-hanoi.js 把「整盘搬动」当宏动作，2^N-1 次递归搬动，
  * 每条都展开成引擎里可回放的单格走法并存进关卡 solution；这里直接载入并校验，秒出。
  * 整盘搬动层面最优，不保证单格最短 —— 界面必须这么写。 */
-function isHanoiLevel() { return !!(raw && raw.solver === 'hanoi'); }
+/* 优先认关卡 JSON 里显式声明的 solverJs（指向求解器 js），改名/改语义别名都不受影响；
+   旧关没写 solverJs 时回退到 solver==='hanoi'。 */
+function isHanoiLevel() {
+  if (!raw) return false;
+  if (typeof raw.solverJs === 'string' && raw.solverJs)
+    return /(^|\/)solve-hanoi\.js$/i.test(raw.solverJs);
+  return raw.solver === 'hanoi';
+}
 function runHanoiSolve() {
   if (!raw.goals.length) { toast('这关还没有目标'); return; }
   if (!playable()) return;
