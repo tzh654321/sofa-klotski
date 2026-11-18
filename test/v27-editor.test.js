@@ -74,6 +74,16 @@ const ROOT = 'D:/code/hrd/sofa-klotski';
   ok(rot.ok && rot.v === 2, '同格再点 = 1/4 圆转 90°', rot);
   const seg = JSON.parse(await ev(`JSON.stringify((()=>{ paintCells[${cellIdx}]=5; const a=turnPaintCell(${cellIdx}); return {ok:a, v:paintCells[${cellIdx}]}; })())`));
   ok(seg.ok && seg.v === 6, '同格再点 = 弓形转 90°', seg);
+  // 连点四次要能走完四个方向（之前 4→3 之后就不再等于笔刷，只在两个方向来回跳）
+  await ev(`(function(){ paintCells[${cellIdx}] = -1; brushSlot='quarter'; brush=brushValue('quarter'); renderPaint(); })()`);
+  const cyc = [];
+  for (let k = 0; k < 5; k++) {
+    await ev(`(function(){ const el=document.getElementById('paint').children[${cellIdx}];
+      el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,button:0,pointerId:1})); })()`);
+    await sleep(60);
+    cyc.push(await ev(`paintCells[${cellIdx}]`));
+  }
+  ok(new Set(cyc.slice(0, 4)).size === 4 && cyc[4] === cyc[0], '同一格连点能转到 4 个方向（第 5 下回到起点）', cyc);
 
   console.log('\n[3] 画布展开时滚轮缩放 / 中键平移');
   const mid = JSON.parse(await ev(`(()=>{const r=svg.getBoundingClientRect();return JSON.stringify({x:r.left+r.width/2,y:r.top+r.height/2});})()`));
@@ -127,6 +137,36 @@ const ROOT = 'D:/code/hrd/sofa-klotski';
   await click(1.5, 1.5);
   const picked2 = JSON.parse(await ev(`JSON.stringify({sel, name: raw.pieces[sel] && raw.pieces[sel].name})`));
   ok(picked2.name === '甲', '点 (1,1) 选中的还是「甲」', picked2);
+
+  console.log('\n[6] Q/E 旋转任意数量、任意形状');
+  {
+    const sig = async () => JSON.parse(await ev(`JSON.stringify(raw.pieces.map(p=>({
+      id:p.id, x:p.x, y:p.y, cells:(p.cells||[]).map(q=>[q.c,q.r]) })))`));
+    await ev(`(function(){ loadLevel({name:'转',w:10,h:10,pieces:[
+        {id:'a',x:1,y:1,shape:'custom',color:'#f00',name:'单朝向',
+         cells:[{c:0,r:0},{c:0,r:1},{c:1,r:1}]},
+        {id:'b',x:5,y:1,shape:'2x1',color:'#0f0',name:'横条'}],goals:[]});
+      document.querySelector('#tabs [data-mode="edit"]').click(); })()`);
+    await sleep(420);
+    const before = await sig();
+    await ev(`sel = 0; selSet = new Set([0]); updateUI(); void 0`);
+    await ev(`document.dispatchEvent(new KeyboardEvent('keydown',{key:'q',bubbles:true})), void 0`);
+    await sleep(240);
+    const q1 = await sig();
+    ok(JSON.stringify(q1[0].cells) === JSON.stringify([[0, 1], [1, 1], [1, 0]]),
+      '单朝向的自绘块按 Q 逆时针转了 90°', q1[0].cells);
+    for (let k = 0; k < 3; k++) { await ev(`document.dispatchEvent(new KeyboardEvent('keydown',{key:'q',bubbles:true})), void 0`); await sleep(150); }
+    ok(JSON.stringify((await sig())[0].cells) === JSON.stringify(before[0].cells), '转 4 次回到最初');
+    // 多选：L 形 + 横条一起转
+    await ev(`selSet = new Set([0,1]); sel = 1; updateUI(); void 0`);
+    const b4 = await sig();
+    await ev(`document.dispatchEvent(new KeyboardEvent('keydown',{key:'e',bubbles:true})), void 0`);
+    await sleep(300);
+    const a4 = await sig();
+    ok(JSON.stringify(a4[0].cells) !== JSON.stringify(b4[0].cells) &&
+       JSON.stringify(a4[1].cells) !== JSON.stringify(b4[1].cells),
+      '多选时两块都转了（自绘 + 库形状）', [a4[0].cells, b4[0].cells]);
+  }
 
   b.close();
   console.log('\n' + (fail ? 'FAILED  ' + fail + ' failed, ' + pass + ' passed' : 'ALL PASS  ' + pass + ' passed, 0 failed'));

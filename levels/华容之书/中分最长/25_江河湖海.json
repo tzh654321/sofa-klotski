@@ -17,36 +17,124 @@
     "x": 1,
     "y": 0,
     "ori": 2,
-    "shape": "diagSemi",
+    "shape": "custom",
     "color": "#3898c2",
-    "name": "江"
+    "name": "江",
+    "cells": [
+     {
+      "c": 0,
+      "r": 0,
+      "seg": 3
+     },
+     {
+      "c": 0,
+      "r": 1,
+      "disc": true
+     },
+     {
+      "c": 1,
+      "r": 1,
+      "seg": 0
+     }
+    ],
+    "rot": "pivot",
+    "pivot": [
+     0.5,
+     1.5
+    ]
    },
    {
     "id": "C2",
     "x": 0,
     "y": 0,
     "ori": 0,
-    "shape": "diagSemi",
+    "shape": "custom",
     "color": "#46a5ce",
-    "name": "河"
+    "name": "河",
+    "cells": [
+     {
+      "c": 0,
+      "r": 0,
+      "seg": 3
+     },
+     {
+      "c": 0,
+      "r": 1,
+      "disc": true
+     },
+     {
+      "c": 1,
+      "r": 1,
+      "seg": 0
+     }
+    ],
+    "rot": "pivot",
+    "pivot": [
+     0.5,
+     1.5
+    ]
    },
    {
     "id": "C3",
     "x": 2,
     "y": 1,
     "ori": 3,
-    "shape": "diagSemi",
+    "shape": "custom",
     "color": "#1f83ad",
-    "name": "湖"
+    "name": "湖",
+    "cells": [
+     {
+      "c": 0,
+      "r": 0,
+      "seg": 3
+     },
+     {
+      "c": 0,
+      "r": 1,
+      "disc": true
+     },
+     {
+      "c": 1,
+      "r": 1,
+      "seg": 0
+     }
+    ],
+    "rot": "pivot",
+    "pivot": [
+     0.5,
+     1.5
+    ]
    },
    {
     "id": "C4",
     "x": 2,
     "y": 3,
     "ori": 3,
-    "shape": "diagSemi",
+    "shape": "custom",
     "color": "#0d6d96",
-    "name": "海"
+    "name": "海",
+    "cells": [
+     {
+      "c": 0,
+      "r": 0,
+      "seg": 3
+     },
+     {
+      "c": 0,
+      "r": 1,
+      "disc": true
+     },
+     {
+      "c": 1,
+      "r": 1,
+      "seg": 0
+     }
+    ],
+    "rot": "pivot",
+    "pivot": [
+     0.5,
+     1.5
+    ]
    },
    {
     "id": "pawn1",

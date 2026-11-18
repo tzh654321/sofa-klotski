@@ -1,0 +1,5 @@
+const fs=require('fs'),path=require('path'),K=require('../sofa-klotski.js'),SH=require('../shapes.js');
+const files=['迷宫/01_密林穿行.json','迷宫/02_一心二用.json','推箱子/01_仓库番1.json','推箱子/06_仓库番6.json','合移位/11_汉诺塔·塞块29.json'];const rows=[];
+for(const f of files){const e=JSON.parse(fs.readFileSync(path.join(__dirname,'../levels',f))),raw=SH.resolve(e.level),l=K.parse(raw),s=K.initialState(raw);let est=e.solution?.moves?K.estimatePath(l,s,raw.goals,e.solution.moves):null;let r;if(est)r={depth:-1,estimate:est,truncated:true};else r=K.analyze(l,s,raw.goals,{maxNodes:30000,estimateNodes:50000});const d=K.difficulty(r);const row={file:f,name:e.name,old:e.meta?.score,score:d?.score,hands:est?.hands||r.hands,cognition:est?.cognition||r.cognition,parts:d?.parts};rows.push(row);console.log(JSON.stringify(row));}
+const assert=require('assert/strict');assert(rows[0].score>rows[0].old);assert(rows[3].score>rows[2].score);assert(rows[4].score<rows[4].old);
+fs.writeFileSync(path.join(__dirname,'genre-score-results.json'),JSON.stringify(rows,null,2));

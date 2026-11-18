@@ -37,7 +37,7 @@ const ROOT = 'D:/code/hrd/sofa-klotski';
   console.log('  标题：' + JSON.stringify(heads));
   ok(!heads.some(t => /^框选/.test(t)), '没有单独的「框选」板块');
   ok(heads.filter(t => /^选中/.test(t)).length === 1, '只有一个「选中」板块');
-  const miss = JSON.parse(await ev(`JSON.stringify(['inName','inColor','btnKind','btnSetGoalOne','btnBoxDel','btnBoxNormal','btnBoxCopy','btnBoxAll','btnBoxClear','selInfo','selBoxInfo','selCount'].filter(id=>!document.getElementById(id)))`));
+  const miss = JSON.parse(await ev(`JSON.stringify(['inName','inColor','btnKind','btnSetGoalOne','btnBoxDel','btnBoxCopy','btnBoxAll','btnBoxClear','selInfo','selBoxInfo','selCount'].filter(id=>!document.getElementById(id)))`));
   ok(miss.length === 0, '合并后按钮/输入框都还在', miss);
 
   console.log('\n[2] 单选就是"只有一块的选择集"');

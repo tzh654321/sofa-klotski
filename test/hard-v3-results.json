@@ -23,9 +23,17 @@
       "temptation": 8.754887502163468,
       "measured": false,
       "proxy": true,
-      "maxPlateau": 15
+      "maxPlateau": 15,
+      "junctions": 9.754887502163468,
+      "pushes": 0,
+      "pushChanges": 0,
+      "turns": 45,
+      "sequenceNovelty": 1,
+      "actionRuns": 47,
+      "navigation": false,
+      "boxPuzzle": false
     },
-    "ms": 3285
+    "ms": 5941
   },
   {
     "name": "深度求索",
@@ -51,19 +59,27 @@
       "temptation": 2.584962500721156,
       "measured": false,
       "proxy": true,
-      "maxPlateau": 11
+      "maxPlateau": 11,
+      "junctions": 6.584962500721156,
+      "pushes": 0,
+      "pushChanges": 0,
+      "turns": 24,
+      "sequenceNovelty": 1,
+      "actionRuns": 25,
+      "navigation": false,
+      "boxPuzzle": false
     },
-    "ms": 10000
+    "ms": 11874
   },
   {
     "name": "万里征途",
     "score": 86,
     "parts": {
       "depth": 32,
-      "planning": 31.8,
-      "endurance": 14.6,
-      "choice": 8,
-      "trap": 8,
+      "planning": 31.6,
+      "endurance": 14.3,
+      "choice": 7.9,
+      "trap": 7.9,
       "unique": 0,
       "space": 0
     },
@@ -79,8 +95,16 @@
       "temptation": 221.3789500201925,
       "measured": false,
       "proxy": true,
-      "maxPlateau": 105
+      "maxPlateau": 105,
+      "junctions": 285.3789500201924,
+      "pushes": 0,
+      "pushChanges": 0,
+      "turns": 1103,
+      "sequenceNovelty": 0.9817232375979112,
+      "actionRuns": 1152,
+      "navigation": false,
+      "boxPuzzle": false
     },
-    "ms": 14982
+    "ms": 14215
   }
 ]

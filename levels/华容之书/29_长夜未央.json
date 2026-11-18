@@ -26,18 +26,62 @@
     "x": 0,
     "y": 2,
     "ori": 0,
-    "shape": "diagSemi",
+    "shape": "custom",
     "color": "#5c00e6",
-    "name": "塔楼"
+    "name": "塔楼",
+    "cells": [
+     {
+      "c": 0,
+      "r": 0,
+      "seg": 3
+     },
+     {
+      "c": 0,
+      "r": 1,
+      "disc": true
+     },
+     {
+      "c": 1,
+      "r": 1,
+      "seg": 0
+     }
+    ],
+    "rot": "pivot",
+    "pivot": [
+     0.5,
+     1.5
+    ]
    },
    {
     "id": "C2",
     "x": 1,
     "y": 3,
     "ori": 3,
-    "shape": "diagSemi",
+    "shape": "custom",
     "color": "#5c00e6",
-    "name": "钟楼"
+    "name": "钟楼",
+    "cells": [
+     {
+      "c": 0,
+      "r": 0,
+      "seg": 3
+     },
+     {
+      "c": 0,
+      "r": 1,
+      "disc": true
+     },
+     {
+      "c": 1,
+      "r": 1,
+      "seg": 0
+     }
+    ],
+    "rot": "pivot",
+    "pivot": [
+     0.5,
+     1.5
+    ]
    },
    {
     "id": "hero",

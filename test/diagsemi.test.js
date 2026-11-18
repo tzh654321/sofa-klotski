@@ -68,10 +68,11 @@ const ok = (c, m, x) => { c ? (pass++, console.log('  ok  ' + m)) : (fail++, con
   console.log('\n[4] 调色板里有这个形状，且预览是并集');
   const pal = JSON.parse(await ev('JSON.stringify([...document.querySelectorAll("#pal button")].map(b=>b.dataset.k))'));
   console.log('     调色板 ' + pal.join(' '));
-  ok(pal.indexOf('diagSemi') >= 0, '调色板含 diagSemi', pal.indexOf('diagSemi'));
-  const palPath = await ev('(function(){var b=[...document.querySelectorAll("#pal button")].find(x=>x.dataset.k==="diagSemi");' +
+  // 调色板里放的是「小圆+两弓形」（arcTri）：斜半圆的弧会凸出相邻格，不再提供新做一个斜半圆
+  ok(pal.indexOf('arcTri') >= 0 && pal.indexOf('diagSemi') < 0, '调色板含 arcTri、不再有 diagSemi', pal);
+  const palPath = await ev('(function(){var b=[...document.querySelectorAll("#pal button")].find(x=>x.dataset.k==="arcTri");' +
     'var p=b&&b.querySelector("path");return p?p.getAttribute("d"):"";})()');
-  ok(/A0\.7071 0\.7071/.test(String(palPath)), '预览用的也是并集路径', String(palPath).slice(0, 40));
+  ok(/A0\.7071/.test(String(palPath)), '预览画的是弓形的弧', String(palPath).slice(0, 40));
 
   console.log('\n[5] 拖动：只能绕圆心转，不能自己乱转朝向');
   ok(await ev('L.pieces[0].rotPlay === true'), '试玩可转（扇形/沙发同一类）');

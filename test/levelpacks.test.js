@@ -125,6 +125,12 @@ let dup = [];
 all.forEach(l => { if (seen.has(l.name)) dup.push(l.name); seen.add(l.name); });
 ok(dup.length === 0, '关卡名字不重复', dup);
 
+console.log('\n[5.5] 关卡里不再用斜半圆');
+// 斜半圆是一整块 art：弧凸出到相邻格 0.207，占格表和真实几何对不上（引擎只按格子判碰撞）。
+// 统一换成「小圆 + 两弓形」（每个组件都整格装在格子里），见 tools/replace-diagsemi.js
+const semi = all.filter(l => (l.level.pieces || []).some(p => p.shape === 'diagSemi'));
+ok(semi.length === 0, '没有关卡再用斜半圆', semi.map(l => l.name));
+
 console.log('\n[6] levels.js 与关卡文件同步');
 const LV = require('../levels.js');
 const normLv = lv => JSON.stringify((lv.pieces || []).map(p => [p.id, p.x, p.y, p.ori, p.shape || '', p.cells || null, p.lock ? 1 : 0, p.name]));

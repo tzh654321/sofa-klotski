@@ -851,6 +851,16 @@
           for (const sp of opts) {
             const nc = sp.desc.map(c2 => [c2.c, c2.r]);
             const nx = state[i].x + sp.off[0], ny = state[i].y + sp.off[1];
+            /* 转身必须是「原地转身」：转轴在世界坐标里不能挪窝。
+             * 弧形组合（自绘的内切圆 + 弓形）的转轴常压在格的角上甚至格外，吸附之后
+             * 会算出一个带整格平移的结果 —— 那不是转身，是让块凭空挪一格（还能穿墙）。
+             * 沙发是例外：它的转轴定义就是缺口圆心，转身本来就带半格吸附平移。 */
+            if (!isSofa) {
+              const pvNew = b.pivot || sp.pivot;
+              if (!pvNew) continue;
+              if (Math.abs(nx + pvNew[0] - pivotWorld.x) > 1e-9 ||
+                  Math.abs(ny + pvNew[1] - pivotWorld.y) > 1e-9) continue;
+            }
             if (!fitsAt(level, g, i, nc, nx, ny)) continue;
             if (!openingInside(level, state, i, no, nx, ny)) continue;
             // 沙发/扇形都是离散块：只看落点与方向，不做连续扫掠（动画走插值公式）
@@ -914,20 +924,26 @@
   function makeKeyer(level, tagOf) {
     const groups = [];
     level.pieces.forEach((p, i) => {
-      const sig = p.oris.map(o => o.key).sort().join('|') + '#' + p.oris.length
+      const sig = p.oris.map(o => o.key).join('|') + '#' + p.oris.length
         + '@' + (tagOf ? (tagOf[i] || '') : '')
         + '^' + (p.oris[0].pivot ? p.oris[0].pivot.join(',') : '')
-        + (p.lock ? 'L' : '') + (p.onceOnly ? 'O' : '');   // 一次被动块不能和普通块当同形互换
+        + JSON.stringify([!!p.lock, !!p.onceOnly, !!p.chainOnly, p.rotPlay, p.rotMode,
+          p.open, p.flat, p.oris.map(o => o.pivot || null)]); // 只有动作规则和朝向编码相同才可互换
       let g = groups.find(z => z.sig === sig);
       if (!g) { g = { sig, idx: [] }; groups.push(g); }
       g.idx.push(i);
     });
+    // 借鉴专用求解器的姿态编号；每姿态固定两字，不用53位以上Number拼整盘。
+    // 键只用于判重，搜索路径仍保存真实棋子编号。
     return function (state) {
-      let s = '';
+      let s = 'P';
       for (const g of groups) {
-        const parts = g.idx.map(i => state[i].x + ',' + state[i].y + ',' + state[i].ori);
-        if (parts.length > 1) parts.sort();
-        s += parts.join('|') + ';';
+        const parts = g.idx.map(i => (state[i].ori*level.h+state[i].y)*level.w+state[i].x);
+        if (parts.some((v,j)=>!Number.isSafeInteger(v)||v<0||v>0xffffffff ||
+          state[g.idx[j]].x<0||state[g.idx[j]].x>=level.w||state[g.idx[j]].y<0||state[g.idx[j]].y>=level.h))
+          return 'F'+JSON.stringify(groups.map(z=>z.idx.map(i=>[state[i].x,state[i].y,state[i].ori].join(',')).sort()));
+        if(parts.length>1)parts.sort((a,b)=>a-b);
+        for(const v of parts)s+=String.fromCharCode(v & 65535,Math.floor(v/65536));
       }
       return s;
     };
@@ -1464,6 +1480,38 @@
    */
   const DEFLECT_CAP = 10;
 
+  /** 认知决策不等于鼠标松开次数：路口、推箱方向与重复套路分开统计。 */
+  function pathDecisions(level, states, path) {
+    const tokens = [], actors = new Set();
+    let junctions = 0, pushes = 0, pushChanges = 0, lastPush = '', previousDir = '', turns = 0;
+    for (let j=0;j<path.length;j++) {
+      const m=path[j], ids=m.chain || m.ids || [m.i];
+      actors.add(m.i);
+      const dir=m.t==='r'||m.t==='cr'?'r'+m.d:(m.dx || 0)+','+(m.dy || 0);
+      if (previousDir && dir!==previousDir) turns++;
+      previousDir=dir;
+      const pushed=ids.filter(i=>i!==m.i && (level.pieces[i].onceOnly || level.pieces[i].chainOnly));
+      if(pushed.length){pushes++;const k=pushed.join(',')+':'+dir;if(k!==lastPush)pushChanges++;lastPush=k;}
+      // 移动同一操作者时，扣除来路后仍有多个去向才是需判断的路口。
+      const alternatives=new Set();
+      for(const v of moves(level,states[j])) if(v.i===m.i){
+        const ns=apply(states[j],v);
+        if(j && ns.every((q,i)=>q.x===states[j-1][i].x&&q.y===states[j-1][i].y&&q.ori===states[j-1][i].ori))continue;
+        alternatives.add(v.t+':'+(v.dx||0)+','+(v.dy||0)+':'+(v.d||0));
+      }
+      if(alternatives.size>1)junctions+=Math.log2(alternatives.size);
+      // 同一块同方向长拖只形成一个操作符；重复序列按结构而不是状态位置去重。
+      const token=m.i+':'+dir+':'+pushed.join(',');
+      if(tokens[tokens.length-1]!==token)tokens.push(token);
+    }
+    const grams=new Set();
+    for(let i=0;i+3<tokens.length;i++)grams.add(tokens.slice(i,i+4).join('|'));
+    const novelty=tokens.length<40?1:Math.min(1,grams.size/Math.max(1,tokens.length-3));
+    const movers=level.pieces.filter(p=>!p.lock&&!p.onceOnly&&!p.chainOnly).length;
+    return {junctions,pushes,pushChanges,turns,sequenceNovelty:novelty,actionRuns:tokens.length,
+      navigation: movers<=2 && level.pieces.some(p=>p.lock), boxPuzzle:pushes>0};
+  }
+
   // 对可回放的候选解提取结构，不要求先证明最短。所有长度均为该候选路径的上界。
   function estimatePath(level, start, goal, path) {
     let state = start, last = -1, setup = 0, maxSetup = 0, retreats = 0, switches = 0;
@@ -1499,7 +1547,7 @@
     if (!isGoal(level,state,goal)) return null;
     return { steps:path.length, hands:handsOf(level,states,path).length, moves:path,
       cognition:{active:active.size,revisits:rebuilds,retreats,maxSetup,
-        switches,temptation,measured:false,proxy:true,maxPlateau}, optimal:false };
+        switches,temptation,measured:false,proxy:true,maxPlateau,...pathDecisions(level,states,path)}, optimal:false };
   }
 
   function* analyzeGen(level, rawState, goal, opts) {
@@ -1567,6 +1615,7 @@
       pathStates.unshift(rawState);
       hands = handsOf(level, pathStates, mv).length;
       movesOut = mv;
+      const decisions = pathDecisions(level,pathStates,mv);
       // 用路径中的调度与反直觉动作衡量认知负担，不把无关活动空间算成难度。
       const actors = mv.map(m => m.i);
       const runs = actors.filter((x, i) => i === 0 || x !== actors[i - 1]);
@@ -1587,7 +1636,7 @@
       }
       cognition = { active: active.size, switches: Math.max(0, runs.length-1),
         revisits: Math.max(0, runs.length-active.size), retreats, setup, maxSetup,
-        decisions: 0, temptation: 0, measured: false };
+        decisions: 0, temptation: 0, measured: false, ...decisions };
 
       /* ── 反向 BFS：目标状态 → 全图（枚举被截断就没有意义，跳过） ── */
       if (!truncated) {
@@ -1688,22 +1737,29 @@
   function difficulty(res) {
     if (!res || (res.depth < 0 && !res.estimate)) return null;
     const evidence = res.depth < 0 ? res.estimate : res;
-    const hands = evidence.hands == null ? evidence.steps || res.depth : evidence.hands;
+    const rawHands = evidence.hands == null ? evidence.steps || res.depth : evidence.hands;
     const c = evidence.cognition || {};
+    const novelty = c.sequenceNovelty == null ? 1 : Math.max(0.12,c.sequenceNovelty);
+    // 重复的操作套路折算为学习后的执行量；不按关卡名称硬编码汉诺塔。
+    const repetition = 0.25 + 0.75*Math.sqrt(novelty);
+    const hands = c.navigation || c.boxPuzzle
+      ? Math.max(rawHands, (c.junctions || 0)*0.6 + (c.pushChanges || 0)*2 + (c.pushes || 0)*0.25)
+      : rawHands*repetition;
     const sat = (x, scale) => 1 - Math.exp(-Math.max(0, x || 0) / scale);
     // 单一长拖动很容易；长度只反映操作负担，不能独立刷到极难。
     const gate = Math.min(1, hands / 10);
     const length = 40 * sat(hands, 40);
-    const planning = 22 * sat(c.revisits, 16) + 10 * sat(c.retreats, 4) +
-      8 * sat(Math.min(c.maxSetup || 0, (c.active || 0) * 3), 10);
-    const choice = c.measured ? 20 * sat(c.temptation, 22) : c.proxy ? 10 * sat(c.temptation, 22) : 0;
+    const planning = (22 * sat((c.revisits || 0)*novelty, 16) + 10 * sat((c.retreats || 0)*novelty, 4) +
+      8 * sat(Math.min(c.maxSetup || 0, (c.active || 0) * 3)*novelty, 10)) * repetition;
+    const routeChoice = c.navigation || c.boxPuzzle ? 20*sat((c.junctions || 0)+(c.pushChanges || 0)*2,30) : 0;
+    const choice = Math.max(routeChoice, (c.measured ? 20 * sat(c.temptation, 22) : c.proxy ? 10 * sat(c.temptation, 22) : 0)*repetition);
     // 长尾采用未饱和的原始负担：长解必须伴随反复调度才得分，单块长拖不刷分。
     // 对数增长后用有理函数渐近压缩，比指数饱和更能区分千手及以上关卡。
     const coordination = Math.min(1, Math.max(0, (c.active || 0)-1)/3);
     const load = Math.log1p(Math.max(0,hands-80)/80) *
       Math.log1p(Math.max(0,(c.revisits || 0)-24)/24) * coordination +
       0.35*Math.log1p(Math.max(0,(c.maxPlateau || c.maxSetup || 0)-16)/16)*coordination;
-    const endurance = 20 * load/(load+4);
+    const endurance = 20 * load/(load+4) * novelty;
     const scale = 0.8;
     const score = Math.min(99, Math.round(gate * (scale*(length + planning + choice) + endurance)));
     const grade = score >= 66 ? '极难' : score >= 54 ? '困难' : score >= 38 ? '中等' : score >= 22 ? '简单' : '太简单';

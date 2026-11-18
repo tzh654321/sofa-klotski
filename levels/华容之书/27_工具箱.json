@@ -17,9 +17,31 @@
     "x": 0,
     "y": 0,
     "ori": 0,
-    "shape": "diagSemi",
+    "shape": "custom",
     "color": "#5c00e6",
-    "name": "油壶"
+    "name": "油壶",
+    "cells": [
+     {
+      "c": 0,
+      "r": 0,
+      "seg": 3
+     },
+     {
+      "c": 0,
+      "r": 1,
+      "disc": true
+     },
+     {
+      "c": 1,
+      "r": 1,
+      "seg": 0
+     }
+    ],
+    "rot": "pivot",
+    "pivot": [
+     0.5,
+     1.5
+    ]
    },
    {
     "id": "semi1",

@@ -42,6 +42,13 @@
   button.b:active{transform:translateY(1px)}
   /* 「一起设为」那排四个按钮要挤在一行里，缩一缩内边距（默认 min-width:58px 会把它挤到第二行） */
   .kindrow button.b{min-width:0;padding:6px 4px;font-size:12px}
+  /* 倍速 / 进度滑块：细轨道 + 紫色圆钮（原生控件在暗色里几乎是白的） */
+  input.rng{-webkit-appearance:none;appearance:none;flex:1;min-width:64px;height:16px;background:transparent;cursor:pointer}
+  input.rng::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:#332a55}
+  input.rng::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;
+    background:#c084fc;border:1px solid #2a2148;margin-top:-4px;box-shadow:0 0 0 2px rgba(168,85,247,.18)}
+  input.rng::-moz-range-track{height:4px;border-radius:2px;background:#332a55}
+  input.rng::-moz-range-thumb{width:12px;height:12px;border:1px solid #2a2148;border-radius:50%;background:#c084fc}
   button.b.acc{background:var(--acc);border-color:var(--acc)}
   button.b:disabled{opacity:.4;cursor:not-allowed}
   .kv{display:flex;justify-content:space-between;font-size:12.5px;padding:1px 0}
@@ -204,6 +211,12 @@
           <button class="b acc" id="btnSolve">求解</button>
           <button class="b" id="btnPlay" title="开局时是「播放 / 参考解法 N 步」，动过之后就是「复位」">播放</button>
         </div>
+        <div class="row" id="playRow" style="margin-top:6px;align-items:center">
+          <button class="b" id="btnPause" style="flex:0 0 auto" title="暂停 / 继续播放（空格）">暂停</button>
+          <span class="k" style="flex:0 0 auto">倍速</span>
+          <input type="range" id="playSpeed" class="rng" min="0.25" max="16" step="0.25" value="1">
+          <span class="k" id="playSpeedVal" style="flex:0 0 44px;text-align:right">1×</span>
+        </div>
         <div class="hint" id="svMsg" style="margin-top:7px">先跑一次加权 A* 拿快速解当上界，再用 BFS 只展开比它短的分支 —— 既证明最短，又省掉大半状态。</div>
       </div>
 
@@ -233,7 +246,7 @@
         <div class="diffbar"><i id="dfBar" style="width:0%"></i></div>
         <div class="hint" id="dfMsg" style="margin-top:6px">
           难度（模型 v3）= 操作长度 32 + 调度结构 32（每次重建 / 撤退 / 最长铺垫的来回次数） + 选择干扰 16，
-          再乘一个长度门槛，并计入长程调度 20 分。状态空间与路径总数<b>不计分</b>（局面大只是「看不过来」，不等于「想不明白」）。
+          按路口与推箱决策修正连续拖动手数，重复套路折算为执行负担，再计入长程调度 20 分。状态空间与路径总数<b>不计分</b>（局面大只是「看不过来」，不等于「想不明白」）。
         </div>
       </div>
 
@@ -274,6 +287,13 @@
 
       <h3>解法步骤 <span class="badge" id="stepCount">0</span></h3>
       <div class="card" style="padding:5px"><div id="steps"></div></div>
+      <div class="card" id="seekCard" style="display:none">
+        <div class="row" style="align-items:center">
+          <span class="k" style="flex:0 0 auto">进度</span>
+          <input type="range" id="seekBar" class="rng" min="0" max="0" step="1" value="0">
+        </div>
+        <div class="hint" id="seekText" style="margin-top:6px">—</div>
+      </div>
     </div>
 
     <!-- 编辑 -->
@@ -311,12 +331,6 @@
           <button class="b" id="btnKind" title="点一下切换：普通 → 被动 → 一次被动 → 锁定。切换后的属性也会成为之后放的新块的属性">普通</button>
           <button class="b" id="btnSetGoalOne">设为目标</button>
           <button class="b" id="btnBoxDel">删除</button>
-        </div>
-        <div class="row kindrow" style="margin-top:6px">
-          <button class="b" id="btnBoxNormal" title="设为普通（快捷键 N）">普通</button>
-          <button class="b" id="btnBoxPassive" title="设为被动：只能被推着让位（快捷键 P）">🔗 被动</button>
-          <button class="b" id="btnBoxOnce" title="设为一次被动：只被直接推一格（快捷键 O）">▣ 一次</button>
-          <button class="b" id="btnBoxLock" title="设为锁定（快捷键 L）">🔒 锁定</button>
         </div>
         <div class="row" style="margin-top:6px">
           <button class="b" id="btnBoxCopy" title="复制一份（Ctrl+D）；Ctrl+C 复制到剪贴板、Ctrl+V 粘到最后点过的那格">复制</button>
@@ -464,7 +478,7 @@ const BRUSHES = [
   { slot: 'erase', label: '擦除' }
 ];
 /* 形状库：前两行（10 个）是常用形状，左上角标 1~9、0 当快捷键，其余收在「更多形状」里 */
-const PAL_KEYS = ['1x1', '2x1', '1x2', '2x2', 'sofa', 'semi', 'diagSemi', '1x3', 'L3', 'threeQuarter'];
+const PAL_KEYS = ['1x1', '2x1', '1x2', '2x2', 'sofa', 'semi', 'arcTri', '1x3', 'L3', 'threeQuarter'];
 const PAL_KEY_LABEL = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 const PAL_MORE = ['L4', 'T4', 'quarter', 'disc'];
 const PAINT_N = 5;          // 收起时的默认画布 5×5
@@ -1877,6 +1891,12 @@ document.addEventListener('keydown', e => {
   const k = e.key.toLowerCase();
   if ((e.ctrlKey || e.metaKey) && k === 'z') { e.preventDefault(); undo(); return; }
   if (k === 'y') { reset(); return; }
+  // 空格 = 暂停 / 继续（播放中也可以按，编辑态留给"框选取消"）
+  if (k === ' ' && mode !== 'edit') {
+    e.preventDefault();
+    if (solution) pausePlay();
+    return;
+  }
 
   if (mode === 'edit') {
     if (k === 'escape') {
@@ -1970,6 +1990,7 @@ function undo() {
   // 块数没变（多半是整组挪动/旋转）就保住框选，接着还能继续调；增删过就作废
   selSet = raw.pieces.length === n0 ? new Set([...selSet].filter(i => i < raw.pieces.length)) : new Set();
   boxSel = null;
+  anim = null;
   syncViewBox(); buildScene(); render(); updateUI();
 }
 /** 随机型关卡：文件里存的是基准态，每次开局/复位都从它随机走 shuffleSteps 步 */
@@ -1980,11 +2001,17 @@ function newRound() {
   return roundStart.map(s => ({ ...s }));
 }
 function reset() {
+  stopPlay();
+  anim = null;                       // 关键：不清的话缓动会把块继续画在旧位置
+  playAt = 0;
   st = raw.shuffle ? newRound() : K.initialState(raw);
   if (!raw.shuffle) roundStart = st.map(s => ({ ...s }));
   hands = 0; sel = null; history = []; solution = null;
   selSet.clear(); boxSel = null;
-  stopPlay(); render(); updateUI();
+  const bar = document.getElementById('seekBar');
+  if (bar) bar.value = '0';
+  renderSteps();                     // 复位同时把步骤列表 / 进度条收掉（否则残留上一份解）
+  render(); updateUI();
 }
 function syncRaw() {
   raw.pieces.forEach((p, i) => { p.x = st[i].x; p.y = st[i].y; p.ori = st[i].ori; });
@@ -2029,13 +2056,62 @@ function applyEditTurn(i, d) {
   st = K.apply(st, { t: 'r', i, d, x: nx, y: ny, ori: no });
   return true;
 }
+/** 只有一个朝向的块（自绘异形、1×1…）：直接把它自己的格子转 90°，编辑态想转什么都能转
+ *  d > 0 顺时针：(c,r) → (H-1-r, c)；d < 0 逆时针：(c,r) → (r, W-1-c)。
+ *  1/4 圆的圆心角、弓形的凸出方向、绕转轴 pivot 都跟着一起转。 */
+function rotateRawCells(i, d) {
+  const rp = raw.pieces[i];
+  if (!rp) return false;
+  const src = rp.cells || (SH[rp.shape] && SH[rp.shape].cells);
+  if (!src || !src.length) return false;
+  const list = src.map(q => Array.isArray(q) ? { c: q[0] | 0, r: q[1] | 0 }
+    : { ...q, c: q.c | 0, r: q.r | 0 });
+  const cs = list.map(q => q.c), rs = list.map(q => q.r);
+  const minC = Math.min(...cs), minR = Math.min(...rs);
+  const W = Math.max(...cs) - minC + 1, H = Math.max(...rs) - minR + 1;
+  const out = list.map(q => {
+    const c = q.c - minC, r = q.r - minR;
+    const o = d > 0 ? { c: H - 1 - r, r: c } : { c: r, r: W - 1 - c };
+    if (q.arc) {                       // 圆心角：顺时针 (x,y)→(1-y,x)，逆时针反过来
+      const ax = q.arc[0], ay = q.arc[1];
+      o.arc = d > 0 ? [1 - ay, ax] : [ay, 1 - ax];
+    }
+    if (q.seg != null) o.seg = d > 0 ? (q.seg + 1) % 4 : (q.seg + 3) % 4;
+    if (q.disc) o.disc = true;
+    return o;
+  });
+  const nw = H, nh = W;                // 转 90° 之后宽高互换
+  rp.shape = 'custom';
+  rp.cells = out;
+  rp.x = Math.max(0, Math.min(Math.max(0, L.w - nw), rp.x | 0));
+  rp.y = Math.max(0, Math.min(Math.max(0, L.h - nh), rp.y | 0));
+  if (rp.pivot) {
+    const [px, py] = rp.pivot;
+    rp.pivot = d > 0 ? [H - py, px] : [py, W - px];
+  }
+  return true;
+}
 /** 编辑态旋转：按该块自己的转轴转，越界就整体挪回来（编辑时不讲碰撞） */
 function editTurn(i, d) {
-  if (!L.pieces[i] || L.pieces[i].oris.length < 2) { toast('这块不可旋转'); return; }
+  const p = L.pieces[i];
+  if (!p) { toast('先选中一块'); return; }
   pushHist();
   const before = st;
-  applyEditTurn(i, d);
-  syncRaw(); playMoveAll(before, 180); updateUI();
+  if (p.oris.length > 1) {
+    applyEditTurn(i, d);
+    syncRaw();
+  } else {
+    if (!rotateRawCells(i, d)) { toast('这块没有可旋转的形状'); return; }
+    // 格子换了 → 引擎那边的 oris 要重建，朝向统一回 0
+    L = parseRaw(raw);
+    st = st.map((s2, k) => ({
+      x: k === i ? raw.pieces[i].x : s2.x,
+      y: k === i ? raw.pieces[i].y : s2.y,
+      ori: L.pieces[k] ? s2.ori % Math.max(1, L.pieces[k].oris.length) : 0
+    }));
+    st[i].ori = 0;
+  }
+  playMoveAll(before, 180); updateUI();
 }
 
 function addPiece(cx, cy, shapeKey) {
@@ -2236,7 +2312,11 @@ function overlapInfo() {
 }
 
 /* ══════════ 求解 ══════════ */
-function stopPlay() { if (playTimer) { clearInterval(playTimer); playTimer = null; } }
+function stopPlay() {
+  if (playTimer) { clearInterval(playTimer); playTimer = null; }
+  playPaused = false;
+  syncPlayUI();
+}
 const mergeHands = mv => K.mergeMoves(mv);
 
 function p15info() {
@@ -2524,11 +2604,31 @@ function moveLabel(mv) {
   }
   return nm(mv.i) + ' → ' + (segTxt || d + (mv.n > 1 ? ' ' + mv.n + ' 格' : ''));
 }
+/* ── 解法步骤列表 ──
+ * 大解法不逐条建 DOM：塞块 41/171 那种几万手，建 6 万个 div 会把页面卡死。
+ * 超过 STEPS_DOM_CAP 手就只给一条进度条（#seekCard），拖到任意一手。 */
+const STEPS_DOM_CAP = 1200;
 function renderSteps() {
   const host = document.getElementById('steps');
+  const seek = document.getElementById('seekCard');
+  const n = solution ? solution.hands.length : 0;
   host.innerHTML = '';
-  document.getElementById('stepCount').textContent = solution ? solution.hands.length : 0;
-  if (!solution) return;
+  document.getElementById('stepCount').textContent = n;
+  if (!solution) {
+    if (seek) seek.style.display = 'none';
+    syncPlayUI();
+    return;
+  }
+  const big = n > STEPS_DOM_CAP;
+  if (seek) {
+    seek.style.display = big ? 'block' : 'none';
+    const bar = document.getElementById('seekBar');
+    if (bar) { bar.max = String(n); bar.value = String(Math.min(n, hands | 0)); }
+    const txt = document.getElementById('seekText');
+    if (txt) txt.textContent = '共 ' + n + ' 手 / ' + solution.moves.length + ' 单步（太多了不逐条列出）：' +
+      '拖这条进度条直接跳到任意一手，下面的手数会跟着显示。';
+  }
+  if (big) { syncPlayUI(); return; }
   let si = 0;
   solution.hands.forEach((mv, k) => {
     si += mv.n || 1;
@@ -2536,48 +2636,134 @@ function renderSteps() {
     d.dataset.i = k; d.dataset.s = si;
     d.innerHTML = '<i>' + (k + 1) + '</i><span>' + moveLabel(mv) + '</span>';
     d.onclick = () => {
-      stopPlay();
+      stopPlay(); anim = null;
       st = solution.states[si].map(s => ({ ...s }));
       hands = k + 1; render(); updateUI(); markStep(k);
     };
     host.appendChild(d);
   });
+  syncPlayUI();
 }
 function markStep(k) {
+  if (!solution || solution.hands.length > STEPS_DOM_CAP) return;
   [...document.querySelectorAll('#steps div')].forEach(d => d.classList.toggle('cur', +d.dataset.i === k));
 }
-function playSolution() {
+
+/* ── 解法播放：暂停 / 继续 + 倍速 ────────────────────────────
+ *   playAt    : 播到第几个单步（跨 setInterval 保存，暂停后能接着放）
+ *   playPaused: 停下来的原因是"用户按了暂停"（区别于没在播）
+ *   倍速只改两件事：setInterval 的间隔、缓动时长（动画不能比间隔还长，否则会拖慢节奏）
+ */
+let playSpeed = 1, playPaused = false, playAt = 0;
+try { const v = parseFloat(localStorage.getItem('sofa-klotski.playspeed')); if (v > 0) playSpeed = v; } catch (e) { }
+const playInterval = () => Math.max(16, Math.round(190 / playSpeed));
+const speedText = v => (v % 1 ? v.toFixed(2) : String(v)) + '×';
+
+function setPlaySpeed(v) {
+  playSpeed = Math.min(16, Math.max(0.25, +v || 1));
+  try { localStorage.setItem('sofa-klotski.playspeed', String(playSpeed)); } catch (e) { }
+  syncPlayUI();
+  if (playTimer) schedulePlay();          // 播放中改速度：立刻按新节奏跑
+}
+/** 单步下标 → 已完成的「手」数（用 solution.hands 的 n 累加，二分） */
+function handsAtStep(sol, at) {
+  if (!sol._cum) {
+    const c = [0]; let acc = 0;
+    for (const mv of sol.hands) { acc += mv.n || 1; c.push(acc); }
+    sol._cum = c;
+  }
+  const c = sol._cum;
+  if (at >= c[c.length - 1]) return c.length - 1;
+  let lo = 0, hi = c.length - 1;
+  while (lo < hi) { const mid = (lo + hi) >> 1; if (c[mid] < at) lo = mid + 1; else hi = mid; }
+  return lo;
+}
+function syncPlayUI() {
+  const b = document.getElementById('btnPause');
+  const s = document.getElementById('playSpeed'), lb = document.getElementById('playSpeedVal');
+  if (s && +s.value !== playSpeed) s.value = String(playSpeed);
+  if (lb) lb.textContent = speedText(playSpeed);
+  if (!b) return;
+  const sol = !!(solution && solution.moves && solution.moves.length);
+  b.disabled = !sol;
+  b.textContent = playTimer ? '暂停' : (playPaused ? '继续' : '从头播');
+  b.classList.toggle('acc', !!playTimer);
+  b.title = !sol ? '还没有解法：先求解或载入参考解法'
+    : playTimer ? '暂停（空格）' : playPaused ? '继续（空格）' : '从头播放（空格）';
+}
+function schedulePlay() {
+  stopPlay();
+  playTimer = setInterval(playStepOnce, playInterval());
+  syncPlayUI();
+}
+/** 跳到第 k 手（0 = 开局）：进度条与步骤列表共用 */
+function jumpToHand(k) {
+  if (!solution) return;
+  const n = solution.hands.length;
+  k = Math.max(0, Math.min(n, Math.round(k) || 0));
+  let si = 0;
+  for (let i = 0; i < k; i++) si += solution.hands[i].n || 1;
+  anim = null;
+  st = solution.states[si].map(x => ({ ...x }));
+  playAt = si; hands = k;
+  render(); updateUI(); markStep(k - 1);
+  const bar = document.getElementById('seekBar');
+  if (bar) bar.value = String(k);
+  const txt = document.getElementById('seekText');
+  if (txt && n > STEPS_DOM_CAP) txt.textContent = '第 ' + k + ' / ' + n + ' 手（' + solution.moves.length + ' 单步）';
+}
+function playStepOnce() {
+  if (!solution) { stopPlay(); return; }
+  if (anim && performance.now() - anim.t0 < anim.dur) return;   // 上一段缓动还没走完
+  if (playAt >= solution.moves.length) { stopPlay(); playPaused = false; updateUI(); return; }
+  const si = playAt;
+  const mv0 = solution.moves[si];
+  // 同块同方向连着走好几格：合成一次缓动（每格都起步-刹车会顿）
+  let k = si + 1;
+  while (k < solution.moves.length) {
+    const a = solution.moves[k - 1], b = solution.moves[k];
+    if (b.i === mv0.i && b.t === a.t && b.dx === a.dx && b.dy === a.dy) k++;
+    else break;
+  }
+  const prev = st;
+  let cur = st;
+  for (let q = si; q < k; q++) cur = K.apply(cur, solution.moves[q]);
+  st = cur;
+  const rot = mv0.t === 'cr' || mv0.t === 'r' || mv0.t === 'ps';
+  const base = rot ? 300 : Math.min(560, 150 + 55 * (k - si - 1));
+  playMoveAll(prev, Math.max(16, Math.round(base / playSpeed)), mv0);
+  playAt = k;
+  hands = handsAtStep(solution, playAt);
+  markStep(hands - 1);
+  const n = solution.hands.length;
+  if (n > STEPS_DOM_CAP) {
+    const bar = document.getElementById('seekBar');
+    if (bar) bar.value = String(hands);
+    const txt = document.getElementById('seekText');
+    if (txt) txt.textContent = '第 ' + hands + ' / ' + n + ' 手（' + solution.moves.length + ' 单步）';
+  }
+  updateUI();
+}
+function playSolution(resume) {
   if (!playable()) return;
   if (!solution) { doSolve(); if (!solution) return; }
+  if (resume && playPaused) { playPaused = false; schedulePlay(); return; }
   stopPlay();
+  anim = null;
+  playPaused = false;
+  playAt = 0;
   st = solution.states[0].map(s => ({ ...s }));
-  hands = 0; render(); updateUI();
-  const handOf = [];
-  solution.hands.forEach((mv, idx) => { for (let n = 0; n < (mv.n || 1); n++) handOf.push(idx); });
-  let si = 0;
-  const stepOnce = () => {
-    if (anim && performance.now() - anim.t0 < anim.dur) return;
-    if (si >= solution.moves.length) { stopPlay(); updateUI(); return; }
-    const mv0 = solution.moves[si];
-    // 同块同方向连着走好几格：合成一次缓动（每格都起步-刹车会顿）
-    let k = si + 1;
-    while (k < solution.moves.length) {
-      const a = solution.moves[k - 1], b = solution.moves[k];
-      if (b.i === mv0.i && b.t === a.t && b.dx === a.dx && b.dy === a.dy) k++;
-      else break;
-    }
-    const prev = st;
-    let cur = st;
-    for (let q = si; q < k; q++) cur = K.apply(cur, solution.moves[q]);
-    st = cur;
-    const rot = mv0.t === 'cr' || mv0.t === 'r' || mv0.t === 'ps';
-    playMoveAll(prev, rot ? 300 : Math.min(560, 150 + 55 * (k - si - 1)), mv0);
-    si = k;
-    hands = handOf[si - 1] !== undefined ? handOf[si - 1] + 1 : si;
-    markStep(hands - 1);
-    updateUI();
-  };
-  playTimer = setInterval(stepOnce, 190);
+  hands = 0; render(); updateUI(); markStep(-1);
+  const bar = document.getElementById('seekBar');
+  if (bar) bar.value = '0';
+  schedulePlay();
+}
+/** 暂停 / 继续 / （没在播时）从头播 */
+function pausePlay() {
+  if (!solution) { toast('还没有解法'); return; }
+  if (playTimer) { stopPlay(); playPaused = true; syncPlayUI(); return; }
+  if (playPaused) { playPaused = false; schedulePlay(); return; }
+  playSolution(false);
 }
 
 /* ══════════ 后台任务（Worker + 进度条 + 终止） ══════════ */
@@ -2604,7 +2790,7 @@ function levelFingerprint(lv) {
 }
 
 /* 分析/求解结果缓存：同一个局面下次打开直接摆出来，不重跑 */
-const CACHE_KEY = 'sofa-klotski.cache.v5-score3-estimate';
+const CACHE_KEY = 'sofa-klotski.cache.v6-score3-decisions';
 let anaCache = {};
 function loadCache() {
   anaCache = {};
@@ -2832,6 +3018,15 @@ function paintLevelMeta(d, res) {
     sc.textContent = '不计分';
     document.getElementById('lvBar').style.width = '0%';
     document.getElementById('lvMeta').textContent = '这一关还没分析过，点「分析难度」现算（结果会存下来）。';
+    return;
+  }
+  // 「塞块」这类构造验证关的 meta 只有 verified/下界，没有分数 —— 别显示成 "undefined / 100 · undefined"
+  if (d.score == null) {
+    sc.textContent = '—';
+    document.getElementById('lvBar').style.width = '0%';
+    document.getElementById('lvMeta').textContent = '这一关没打分（' +
+      (d.capacityLowerBound != null ? '塞块下界 ' + d.capacityLowerBound + '，' : '') +
+      '构造验证用；要点「分析难度」也可以现算）';
     return;
   }
   sc.innerHTML = '<b>' + d.score + '</b> / 100 · ' + d.grade +
@@ -3384,14 +3579,29 @@ const piecesTurnable = (list) => [...list].filter(i => L.pieces[i] && L.pieces[i
 function boxTurn(d) {
   const list = boxSelList();
   if (!list.length) { toast('先选中块'); return; }
-  const turnable = piecesTurnable(list);
-  if (!turnable.length) { toast('框住的块都不可旋转'); return; }
   pushHist();
-  for (const i of turnable) applyEditTurn(i, d);
+  let n = 0, viaCells = false;
+  // ① 有多朝向的交给引擎（按各自转轴，沙发还能顺带半格平移）
+  for (const i of list) {
+    const p = L.pieces[i];
+    if (p && p.oris.length > 1 && applyEditTurn(i, d)) n++;
+  }
+  syncRaw();
+  // ② 只有一个朝向的，直接转它自己的格子（自绘异形、1×1 也算转成功）
+  for (const i of list) {
+    const p = L.pieces[i];
+    if (p && p.oris.length <= 1 && rotateRawCells(i, d)) { n++; viaCells = true; }
+  }
+  if (viaCells) {
+    L = parseRaw(raw);
+    st = st.map((s2, k) => ({
+      x: s2.x, y: s2.y,
+      ori: L.pieces[k] ? s2.ori % Math.max(1, L.pieces[k].oris.length) : 0
+    }));
+  }
   syncRaw(); render(); updateUI();
-  const skip = list.length - turnable.length;
-  toast((d > 0 ? '顺时针' : '逆时针') + '转了 ' + turnable.length + ' 块' +
-    (skip ? '（' + skip + ' 块不可转，跳过）' : ''));
+  toast((d > 0 ? '顺时针' : '逆时针') + '转了 ' + n + ' 块' +
+    (n < list.length ? '（' + (list.length - n) + ' 块没有形状可转）' : ''));
 }
 
 /** 同一档位再按一次 = 退回普通（框选的批量切换） */
@@ -3881,6 +4091,16 @@ function updateRunBtn() {
   b.title = '还没有解：点一下先求解，再播放';
   b.classList.add('acc');
 }
+document.getElementById('btnPause').onclick = pausePlay;
+document.getElementById('playSpeed').oninput = e => setPlaySpeed(+e.target.value);
+/* 拖进度条 = 跳过去并停在那儿（想接着播按「继续」），不然手一松就自己跑掉了 */
+document.getElementById('seekBar').oninput = e => {
+  stopPlay();
+  jumpToHand(+e.target.value);
+  playPaused = true;
+  syncPlayUI();
+};
+document.getElementById('seekBar').onchange = e => jumpToHand(+e.target.value);
 document.getElementById('btnPlay').onclick = () => {
   const act = document.getElementById('btnPlay').dataset.act;
   if (act === 'reset') { stopPlay(); reset(); toast('已复位'); return; }
@@ -4080,6 +4300,21 @@ document.getElementById('btnGoalAny').onclick = () => {
   toast('任一就位：这几块里只要有一块到位就算达成');
 };
 document.getElementById('btnClearGoals').onclick = () => { pushHist(); raw.goals = []; render(); updateUI(); };
+/** 紧凑版 JSON：一个块、一段 cells、一对 c/r 都留在同一行，只有很长的节点才折行。
+ *  以前用 JSON.stringify(v,null,1)，每个 {c,r} 都占四行，一块自绘块能拉出几十行。 */
+function jsonPretty(v, pad, inlineMax) {
+  pad = pad || '';
+  inlineMax = inlineMax || 220;
+  const one = JSON.stringify(v);
+  if (v === null || typeof v !== 'object' || one.length <= inlineMax) return one;
+  const next = pad + ' ';
+  if (Array.isArray(v)) {
+    return '[\n' + v.map(x => next + jsonPretty(x, next, inlineMax)).join(',\n') + '\n' + pad + ']';
+  }
+  const keys = Object.keys(v).filter(k => v[k] !== undefined);
+  return '{\n' + keys.map(k => next + JSON.stringify(k) + ': ' + jsonPretty(v[k], next, inlineMax)).join(',\n')
+    + '\n' + pad + '}';
+}
 document.getElementById('btnDump').onclick = () => {
   syncRaw();
   const out = { name: raw.name, w: raw.w, h: raw.h, goals: raw.goals, pieces: [] };
@@ -4097,7 +4332,7 @@ document.getElementById('btnDump').onclick = () => {
       if (p[k] !== undefined) o[k] = p[k];
     out.pieces.push(o);
   }
-  document.getElementById('jsonBox').value = JSON.stringify(out, null, 1);
+  document.getElementById('jsonBox').value = jsonPretty(out);
   document.getElementById('jsonBox').select();
 };
 document.getElementById('btnLoad').onclick = () => {
@@ -4110,10 +4345,6 @@ document.getElementById('btnBoxCopy').onclick = boxCopy;
 document.getElementById('btnBoxDel').onclick = () => deleteSelection();
 document.getElementById('btnBoxAll').onclick = () => boxSelectAll();
 document.getElementById('btnBoxClear').onclick = () => { selSet.clear(); boxSel = null; render(); updateUI(); };
-document.getElementById('btnBoxNormal').onclick = () => boxKind('normal');
-document.getElementById('btnBoxPassive').onclick = () => boxKind('passive');
-document.getElementById('btnBoxOnce').onclick = () => boxKind('once');
-document.getElementById('btnBoxLock').onclick = () => boxKind('lock');
 document.getElementById('lvSort').onchange = e => {
   lvSort = e.target.value || 'default';
   saveListPrefs();
@@ -4305,6 +4536,10 @@ window.addEventListener('resize', () => {
   if (paintBig) placePaintFloat();
   if (L) applyView();          // 窗口变了，整块棋盘按新舞台重新铺一次
 });
+/** 格内容的"种类"：同一类才能接着转（原来只有值完全相等才转，4→3 之后就不再等于笔刷，
+ *  于是下一击又画笔刷值 → 看起来只有两个方向在来回跳） */
+const paintKind = v => (v >= 1 && v <= 4) ? 'arc' : (v >= 5 && v <= 8) ? 'seg'
+  : v === 9 ? 'disc' : v === 0 ? 'solid' : 'none';
 /** 同一格再点一下 = 把那一格里的图形转 90°（1/4 圆、弓形才有方向） */
 function turnPaintCell(i) {
   const v = paintCells[i];
@@ -4382,8 +4617,13 @@ function paintAt(i) {
     const b = e.target.closest('button');
     if (!b) return;
     const i = +b.dataset.i;
-    // 同一格再点一下 = 转 90°（原来只有笔刷按钮能转，画完想调朝向得擦了重画）
-    if (paintCells[i] === brush) { turnPaintCell(i); return; }
+    // 同一格再点一下 = 转 90°：只要种类一样就接着转（1/4 圆、弓形各有 4 个方向）
+    const bk = paintKind(brush);
+    if (bk === 'arc' || bk === 'seg') {
+      if (paintKind(paintCells[i]) === bk) { turnPaintCell(i); return; }
+    } else if (paintCells[i] === brush) {
+      return;                          // 实心方 / 内切圆：重复点没变化
+    }
     painting = true;
     lastPaintCell = null;
     paintLine(i);
@@ -4446,9 +4686,10 @@ renderPaint();
       inner = '<path d="' + SOFA_PATH + '" fill="#c9b8f5" stroke="#2b2444" stroke-width="1"'
         + ' vector-effect="non-scaling-stroke" stroke-linejoin="round"/>';
     } else {
+      // seg / disc 也要带上，否则「弓形+内切圆」这种组合在调色板里会画成几个方块
       const art = K.artOf(sh.cells.map(q => Array.isArray(q)
         ? { c: q[0], r: q[1], arc: null }
-        : { c: q.c, r: q.r, arc: q.arc || null }));
+        : { c: q.c, r: q.r, arc: q.arc || null, seg: q.seg, disc: q.disc }));
       inner = '<path d="' + art.fill + '" fill="#c9b8f5"/>'
         + '<path d="' + art.stroke + '" fill="none" stroke="#2b2444" stroke-width="1"'
         + ' vector-effect="non-scaling-stroke" stroke-linecap="round"/>';

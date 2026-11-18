@@ -42,6 +42,13 @@
       label: '斜半圆', cells: [[0, 0], [0, 1], [1, 1]],
       rot: 'pivot', pivot: [0.5, 1.5], nodedup: true, art: 'diagSemi', spin: true
     },
+    /* 对角半圆的正确写法：一个内切圆 + 两条弓形，三个组件都整格装在格子里，
+     * 占格表就等于真实几何（斜半圆 diagSemi 的弧会凸出相邻格 0.207，只留给老数据解析用）。 */
+    'arcTri': {
+      label: '小圆+两弓形', nodedup: true,
+      cells: [{ c: 0, r: 0, seg: 3 }, { c: 0, r: 1, disc: true }, { c: 1, r: 1, seg: 0 }],
+      rot: 'pivot', pivot: [0.5, 1.5]
+    },
     'disc': { label: '整圆', cells: FULL_CIRCLE, rot: 'pivot', pair: 'disc', nodedup: true }
   };
 

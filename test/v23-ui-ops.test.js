@@ -142,8 +142,9 @@ const ok = (c, m, x) => {
     ok(sel.length === 2, '框住了左上两块（' + sel.length + '）', sel);
     ok(await ev('document.getElementById("selCount").textContent') === '2', '面板显示已选 2 块');
 
-    await ev(`document.getElementById('btnBoxLock').click()`); await sleep(250);
-    ok(await ev(`JSON.stringify([...selSet].map(i=>!!raw.pieces[i].lock))`) === '[true,true]', '批量设为锁定');
+    // 四档只留一个按钮：连点三次 普通→被动→一次→锁定，整组一起切
+    for (let k = 0; k < 3; k++) { await ev(`document.getElementById('btnKind').click()`); await sleep(140); }
+    ok(await ev(`JSON.stringify([...selSet].map(i=>!!raw.pieces[i].lock))`) === '[true,true]', '一个按钮把整组切到锁定');
 
     await ev(`document.getElementById('btnBoxCopy').click()`); await sleep(300);
     ok(await ev('raw.pieces.length') === 5, '复制后 5 块', await ev('raw.pieces.length'));

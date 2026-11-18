@@ -24,13 +24,13 @@
       "ok": true,
       "steps": 8,
       "expanded": 129,
-      "ms": 3
+      "ms": 4
     },
     "after": {
       "ok": true,
       "steps": 8,
       "expanded": 79,
-      "ms": 0
+      "ms": 1
     }
   },
   {
@@ -92,13 +92,13 @@
       "ok": true,
       "steps": 18,
       "expanded": 224903,
-      "ms": 963
+      "ms": 1186
     },
     "after": {
       "ok": true,
       "steps": 18,
       "expanded": 108774,
-      "ms": 257
+      "ms": 247
     }
   },
   {
@@ -124,14 +124,14 @@
     ],
     "before": {
       "ok": false,
-      "expanded": 785818,
-      "ms": 3002,
+      "expanded": 743628,
+      "ms": 3000,
       "lowerBound": 13
     },
     "after": {
       "ok": false,
-      "expanded": 2024170,
-      "ms": 3095,
+      "expanded": 1831845,
+      "ms": 3000,
       "lowerBound": 25
     }
   },
@@ -158,14 +158,14 @@
     ],
     "before": {
       "ok": false,
-      "expanded": 738203,
+      "expanded": 916995,
       "ms": 3000,
       "lowerBound": 14
     },
     "after": {
       "ok": false,
-      "expanded": 1545057,
-      "ms": 3001,
+      "expanded": 1944186,
+      "ms": 3000,
       "lowerBound": 26
     }
   },
@@ -192,15 +192,15 @@
     ],
     "before": {
       "ok": false,
-      "expanded": 669290,
+      "expanded": 813777,
       "ms": 3000,
       "lowerBound": 12
     },
     "after": {
       "ok": false,
-      "expanded": 1361833,
+      "expanded": 2057475,
       "ms": 3000,
-      "lowerBound": 23
+      "lowerBound": 24
     }
   }
 ]

@@ -1,0 +1,2 @@
+const fs=require('fs'),path=require('path'),assert=require('assert/strict'),K=require('../sofa-klotski.js');
+for(const n of [30,41]){const e=JSON.parse(fs.readFileSync(path.join(__dirname,'hanoi-capacity-'+n+'.json'))),L=K.parse(e.level);let s=K.initialState(e.level);for(let j=0;j<e.solution.moves.length;j++){const m=e.solution.moves[j];assert(K.moves(L,s).some(v=>v.t===m.t&&v.i===m.i&&v.dx===m.dx&&v.dy===m.dy),'第'+j+'步非法');s=K.apply(s,m);}assert(K.isGoal(L,s,e.level.goals));console.log(n+'块独立完整K.moves回放通过：'+e.solution.moves.length+'步');}
