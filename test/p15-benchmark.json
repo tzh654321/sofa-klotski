@@ -24,7 +24,7 @@
       "ok": true,
       "steps": 8,
       "expanded": 129,
-      "ms": 4
+      "ms": 5
     },
     "after": {
       "ok": true,
@@ -92,13 +92,13 @@
       "ok": true,
       "steps": 18,
       "expanded": 224903,
-      "ms": 1186
+      "ms": 1439
     },
     "after": {
       "ok": true,
       "steps": 18,
       "expanded": 108774,
-      "ms": 247
+      "ms": 300
     }
   },
   {
@@ -124,14 +124,14 @@
     ],
     "before": {
       "ok": false,
-      "expanded": 743628,
-      "ms": 3000,
+      "expanded": 703594,
+      "ms": 3001,
       "lowerBound": 13
     },
     "after": {
       "ok": false,
-      "expanded": 1831845,
-      "ms": 3000,
+      "expanded": 1858375,
+      "ms": 3001,
       "lowerBound": 25
     }
   },
@@ -158,14 +158,14 @@
     ],
     "before": {
       "ok": false,
-      "expanded": 916995,
+      "expanded": 764417,
       "ms": 3000,
       "lowerBound": 14
     },
     "after": {
       "ok": false,
-      "expanded": 1944186,
-      "ms": 3000,
+      "expanded": 1761714,
+      "ms": 3001,
       "lowerBound": 26
     }
   },
@@ -192,14 +192,14 @@
     ],
     "before": {
       "ok": false,
-      "expanded": 813777,
+      "expanded": 825244,
       "ms": 3000,
       "lowerBound": 12
     },
     "after": {
       "ok": false,
-      "expanded": 2057475,
-      "ms": 3000,
+      "expanded": 1915452,
+      "ms": 3001,
       "lowerBound": 24
     }
   }

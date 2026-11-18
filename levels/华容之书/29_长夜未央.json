@@ -180,7 +180,7 @@
   "parts": {
    "depth": 32,
    "planning": 27.6,
-   "endurance": 9.7,
+   "endurance": 9.6,
    "choice": 16,
    "trap": 16,
    "unique": 0,
@@ -197,7 +197,7 @@
    "maxSetup": 89,
    "temptation": 414.77
   },
-  "ms": 1028
+  "ms": 1086
  },
  "solution": {
   "solver": "bfs-optimal",

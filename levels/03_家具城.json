@@ -155,18 +155,39 @@
  "meta": {
   "score": 75,
   "grade": "极难",
-  "scoringVersion": 3,
   "depth": 109,
   "hands": 96,
   "states": 8932,
   "paths": 3840,
+  "waste": 4.11,
+  "same": 1.12,
   "estimated": false,
-  "truncated": false,
-  "stopped": false,
-  "estimate": null
+  "scoringVersion": 3,
+  "estimate": null,
+  "parts": {
+   "depth": 29.1,
+   "planning": 28.9,
+   "endurance": 1.1,
+   "choice": 16,
+   "trap": 16,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": false,
+  "confidence": "结构估计",
+  "cognition": {
+   "active": 11,
+   "switches": 96,
+   "revisits": 86,
+   "retreats": 9,
+   "maxSetup": 11,
+   "temptation": 174.63
+  },
+  "ms": 503
  },
  "solution": {
-  "solver": "quick-A*",
+  "solver": "bfs-optimal",
   "optimal": true,
   "steps": 109,
   "hands": 96,
@@ -178,36 +199,25 @@
     "dy": 0
    },
    {
-    "i": 9,
-    "t": "p",
-    "dx": 0,
-    "dy": -1,
-    "chain": [
-     9,
-     10
-    ]
-   },
-   {
-    "i": 10,
+    "i": 5,
     "t": "p",
     "dx": -1,
     "dy": 0,
     "chain": [
-     10,
      5,
      4
     ]
    },
    {
-    "i": 9,
+    "i": 1,
     "t": "m",
     "dx": 0,
     "dy": -1
    },
    {
-    "i": 1,
+    "i": 9,
     "t": "m",
-    "dx": 1,
+    "dx": -1,
     "dy": 0
    },
    {
@@ -217,26 +227,32 @@
     "dy": 1
    },
    {
+    "i": 5,
+    "t": "p",
+    "dx": 1,
+    "dy": 0,
+    "chain": [
+     5,
+     1
+    ]
+   },
+   {
     "i": 9,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 10,
     "t": "m",
     "dx": -1,
     "dy": 0
    },
    {
-    "i": 9,
-    "t": "p",
-    "dx": 0,
-    "dy": 1,
-    "chain": [
-     9,
-     10
-    ]
-   },
-   {
-    "i": 5,
+    "i": 1,
     "t": "m",
-    "dx": 1,
-    "dy": 0
+    "dx": 0,
+    "dy": 1
    },
    {
     "i": 5,
@@ -297,10 +313,14 @@
     ]
    },
    {
-    "i": 8,
-    "t": "m",
+    "i": 4,
+    "t": "p",
     "dx": 0,
-    "dy": 1
+    "dy": 1,
+    "chain": [
+     4,
+     8
+    ]
    },
    {
     "i": 8,
@@ -320,9 +340,13 @@
    },
    {
     "i": 10,
-    "t": "m",
+    "t": "p",
     "dx": 0,
-    "dy": -1
+    "dy": -1,
+    "chain": [
+     10,
+     4
+    ]
    },
    {
     "i": 9,
@@ -611,16 +635,26 @@
     ]
    },
    {
-    "i": 10,
-    "t": "m",
-    "dx": 1,
-    "dy": 0
+    "i": 1,
+    "t": "p",
+    "dx": -1,
+    "dy": 0,
+    "chain": [
+     1,
+     5,
+     9
+    ]
    },
    {
-    "i": 5,
-    "t": "m",
-    "dx": -1,
-    "dy": 0
+    "i": 10,
+    "t": "p",
+    "dx": 1,
+    "dy": 0,
+    "chain": [
+     10,
+     9,
+     1
+    ]
    },
    {
     "i": 9,
@@ -740,6 +774,12 @@
     "dy": 0
    },
    {
+    "i": 1,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
     "i": 10,
     "t": "p",
     "dx": 0,
@@ -749,12 +789,6 @@
      9,
      6
     ]
-   },
-   {
-    "i": 1,
-    "t": "m",
-    "dx": 0,
-    "dy": -1
    },
    {
     "i": 9,

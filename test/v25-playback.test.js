@@ -120,7 +120,12 @@ const ok = (c, m, x) => {
     await sleep(200);
     ok(await ev('hands') === 1000, '跳到第 1000 手', await ev('hands'));
     const si = await ev(`(function(){let n=0;for(let i=0;i<1000;i++)n+=solution.hands[i].n||1;return n;})()`);
-    const same = await ev(`JSON.stringify(st)===JSON.stringify(solution.states[${si}])`);
+    // 大解法（>4000 单步）页面不预存状态序列，按需回放：比对"从头回放到 si"的结果
+    const same = await ev(`(function(){
+      let s = K.initialState(raw);
+      for (let i = 0; i < ${si}; i++) s = K.apply(s, solution.moves[i]);
+      return JSON.stringify(s)===JSON.stringify(st);
+    })()`);
     ok(same === true, '局面等于解法里第 1000 手对应的状态', { si });
     ok(/1000/.test(await ev(`document.getElementById('seekText').textContent`)), '进度文案跟着变',
       await ev(`document.getElementById('seekText').textContent`));
@@ -130,7 +135,7 @@ const ok = (c, m, x) => {
       document.getElementById('seekBar').dispatchEvent(new Event('input',{bubbles:true}))`);
     await sleep(150);
     ok(await ev('hands') === 0, '拖回 0 手');
-    ok(await ev('JSON.stringify(st)===JSON.stringify(solution.states[0])') === true, '回到开局状态');
+    ok(await ev('JSON.stringify(st)===JSON.stringify(K.initialState(raw))') === true, '回到开局状态');
   }
 
   console.log('\n[5] 没有 JS 异常');

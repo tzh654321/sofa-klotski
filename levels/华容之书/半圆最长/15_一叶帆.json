@@ -133,11 +133,11 @@
   "scoringVersion": 3,
   "estimate": null,
   "parts": {
-   "depth": 29.7,
-   "planning": 28.9,
-   "endurance": 1.7,
-   "choice": 16,
-   "trap": 16,
+   "depth": 29.6,
+   "planning": 28.6,
+   "endurance": 1.6,
+   "choice": 15.9,
+   "trap": 15.9,
    "unique": 0,
    "space": 0
   },
@@ -152,7 +152,7 @@
    "maxSetup": 16,
    "temptation": 168.46
   },
-  "ms": 7362
+  "ms": 6876
  },
  "solution": {
   "solver": "bfs-optimal",

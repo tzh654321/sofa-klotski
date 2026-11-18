@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const K = require('../../sofa-klotski.js');
 const { resolve } = require('../../shapes.js');
-const FILE = path.join(__dirname, '..', '..', 'levels', '迷宫', '12_密林穿行.json');
+const FILE = path.join(__dirname, '..', '..', 'levels', '迷宫', '01_密林穿行.json');
 
 let pass = 0, fail = 0;
 const ok = (c, m, x) => {

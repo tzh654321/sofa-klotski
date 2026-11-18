@@ -178,8 +178,8 @@
   "estimate": null,
   "parts": {
    "depth": 31.3,
-   "planning": 29.3,
-   "endurance": 5.7,
+   "planning": 29.2,
+   "endurance": 5.6,
    "choice": 16,
    "trap": 16,
    "unique": 0,
@@ -196,7 +196,7 @@
    "maxSetup": 55,
    "temptation": 273.12
   },
-  "ms": 932
+  "ms": 812
  },
  "solution": {
   "solver": "bfs-optimal",

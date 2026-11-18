@@ -179,8 +179,8 @@
   ]
  },
  "meta": {
-  "score": 1,
-  "grade": "太简单",
+  "score": 32,
+  "grade": "简单",
   "depth": 33,
   "hands": 1,
   "states": 3799,
@@ -191,11 +191,11 @@
   "scoringVersion": 3,
   "estimate": null,
   "parts": {
-   "depth": 0.1,
+   "depth": 19.7,
    "planning": 0,
    "endurance": 0,
-   "choice": 1.1,
-   "trap": 1.1,
+   "choice": 12.5,
+   "trap": 12.5,
    "unique": 0,
    "space": 0
   },
@@ -210,7 +210,7 @@
    "maxSetup": 0,
    "temptation": 23.51
   },
-  "ms": 155
+  "ms": 144
  },
  "solution": {
   "solver": "bfs-optimal",

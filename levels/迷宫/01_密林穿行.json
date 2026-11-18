@@ -1405,7 +1405,7 @@
   "note": "19×19 密林迷宫；墙分古树／灌木／荆棘三档，求生者从西北角穿到东南出口。评分按「手」计：全程一次连续拖动 = 1 手，难度分偏低是评分口径，不代表关卡简单。"
  },
  "meta": {
-  "score": 1,
+  "score": 18,
   "grade": "太简单",
   "depth": 78,
   "hands": 1,
@@ -1417,11 +1417,11 @@
   "scoringVersion": 3,
   "estimate": null,
   "parts": {
-   "depth": 0.1,
+   "depth": 9.5,
    "planning": 0,
    "endurance": 0,
-   "choice": 0.7,
-   "trap": 0.7,
+   "choice": 8.7,
+   "trap": 8.7,
    "unique": 0,
    "space": 0
   },
@@ -1436,7 +1436,7 @@
    "maxSetup": 0,
    "temptation": 13.58
   },
-  "ms": 42
+  "ms": 36
  },
  "solution": {
   "solver": "bfs-optimal",

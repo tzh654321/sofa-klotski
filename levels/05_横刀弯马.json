@@ -123,18 +123,39 @@
  "meta": {
   "score": 67,
   "grade": "极难",
-  "scoringVersion": 3,
   "depth": 66,
   "hands": 58,
   "states": 26470,
   "paths": 80,
+  "waste": 4,
+  "same": 1.09,
   "estimated": false,
-  "truncated": false,
-  "stopped": false,
-  "estimate": null
+  "scoringVersion": 3,
+  "estimate": null,
+  "parts": {
+   "depth": 24.5,
+   "planning": 25.7,
+   "endurance": 0.6,
+   "choice": 15.9,
+   "trap": 15.9,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": false,
+  "confidence": "结构估计",
+  "cognition": {
+   "active": 9,
+   "switches": 57,
+   "revisits": 49,
+   "retreats": 2,
+   "maxSetup": 23,
+   "temptation": 106.82
+  },
+  "ms": 1177
  },
  "solution": {
-  "solver": "quick-A*",
+  "solver": "bfs-optimal",
   "optimal": true,
   "steps": 66,
   "hands": 58,
@@ -391,6 +412,16 @@
     ]
    },
    {
+    "i": 4,
+    "t": "p",
+    "dx": 0,
+    "dy": -1,
+    "chain": [
+     4,
+     2
+    ]
+   },
+   {
     "i": 6,
     "t": "p",
     "dx": -1,
@@ -405,16 +436,6 @@
     "t": "m",
     "dx": 0,
     "dy": -1
-   },
-   {
-    "i": 4,
-    "t": "p",
-    "dx": 0,
-    "dy": -1,
-    "chain": [
-     4,
-     2
-    ]
    },
    {
     "i": 8,

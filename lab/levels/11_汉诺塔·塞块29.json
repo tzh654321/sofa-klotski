@@ -841,8 +841,8 @@
   "note": "在「汉诺塔」（合移位-05）开局的空位里塞满 29 个 1×1 普通块，目标不变：把火环整块搬进右厅。29 是已验证可行摆法，并非上限（允许普通块自由移动与连锁推动时，现已证明最大值为 171，具有完整解法和匹配全局上界）：中厅顶部那个「火环形状的空腔」占 17 格，永远碰不到；剩下 12 格放在右厅顶上三行的四角，要等火环最后进右厅时一起往下撤。参考解法把让路动作全编排好了。"
  },
  "meta": {
-  "score": 85,
-  "grade": "极难",
+  "score": 63,
+  "grade": "困难",
   "depth": null,
   "hands": 660,
   "states": 0,
@@ -850,38 +850,52 @@
   "waste": 0,
   "same": 0,
   "estimated": true,
-  "version": 3,
   "scoringVersion": 3,
-  "unsolved": true,
-  "confidence": "参考解结构估算，未证明最短，分数不是上下界",
-  "parts": {
-   "depth": 32,
-   "planning": 31.1,
-   "endurance": 13.4,
-   "choice": 8,
-   "trap": 8,
-   "unique": 0,
-   "space": 0
-  },
   "estimate": {
    "steps": 1030,
    "hands": 660,
    "cognition": {
     "active": 17,
-    "switches": 660,
     "revisits": 643,
     "retreats": 9,
     "maxSetup": 365,
-    "temptation": 961.32,
+    "switches": 660,
+    "temptation": 961.3188252149096,
     "measured": false,
     "proxy": true,
-    "maxPlateau": 432
+    "maxPlateau": 432,
+    "junctions": 1319.4466376608182,
+    "pushes": 0,
+    "pushChanges": 0,
+    "turns": 233,
+    "sequenceNovelty": 0.4043795620437956,
+    "actionRuns": 688,
+    "navigation": false,
+    "boxPuzzle": false
    },
-   "optimal": false,
-   "source": "validated-candidate"
+   "optimal": false
   },
-  "cognition": null,
-  "ms": 404
+  "parts": {
+   "depth": 32,
+   "planning": 20.3,
+   "endurance": 5.2,
+   "choice": 5.8,
+   "trap": 5.8,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": true,
+  "confidence": "参考解结构估算，未证明最短，分数不是上下界",
+  "cognition": {
+   "active": 17,
+   "switches": 660,
+   "revisits": 643,
+   "retreats": 9,
+   "maxSetup": 365,
+   "temptation": 961.32
+  },
+  "ms": 430
  },
  "solution": {
   "solver": "constructed-flow",

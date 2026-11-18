@@ -125,7 +125,7 @@
   ]
  },
  "meta": {
-  "score": 87,
+  "score": 86,
   "grade": "极难",
   "depth": 262,
   "hands": 233,
@@ -138,10 +138,10 @@
   "estimate": null,
   "parts": {
    "depth": 31.9,
-   "planning": 30.7,
-   "endurance": 8,
-   "choice": 16,
-   "trap": 16,
+   "planning": 30.5,
+   "endurance": 7.9,
+   "choice": 15.9,
+   "trap": 15.9,
    "unique": 0,
    "space": 0
   },
@@ -156,7 +156,7 @@
    "maxSetup": 45,
    "temptation": 371.44
   },
-  "ms": 1866
+  "ms": 1624
  },
  "solution": {
   "solver": "bfs-optimal",

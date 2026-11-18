@@ -163,18 +163,39 @@
  "meta": {
   "score": 65,
   "grade": "困难",
-  "scoringVersion": 3,
   "depth": 61,
   "hands": 58,
   "states": 21528,
   "paths": 1419264,
+  "waste": 4.33,
+  "same": 1.43,
   "estimated": false,
-  "truncated": false,
-  "stopped": false,
-  "estimate": null
+  "scoringVersion": 3,
+  "estimate": null,
+  "parts": {
+   "depth": 24.4,
+   "planning": 24.8,
+   "endurance": 0,
+   "choice": 15.6,
+   "trap": 15.6,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": false,
+  "confidence": "结构估计",
+  "cognition": {
+   "active": 10,
+   "switches": 60,
+   "revisits": 51,
+   "retreats": 5,
+   "maxSetup": 5,
+   "temptation": 85.37
+  },
+  "ms": 835
  },
  "solution": {
-  "solver": "quick-A*",
+  "solver": "bfs-optimal",
   "optimal": true,
   "steps": 61,
   "hands": 58,
@@ -259,16 +280,16 @@
     ]
    },
    {
-    "i": 9,
-    "t": "m",
-    "dx": 0,
-    "dy": 1
-   },
-   {
     "i": 7,
     "t": "m",
     "dx": 0,
     "dy": -1
+   },
+   {
+    "i": 9,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
    },
    {
     "i": 6,
@@ -440,6 +461,12 @@
     ]
    },
    {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
     "i": 6,
     "t": "p",
     "dx": -1,
@@ -466,12 +493,6 @@
     "dy": 0
    },
    {
-    "i": 0,
-    "t": "m",
-    "dx": 0,
-    "dy": -1
-   },
-   {
     "i": 9,
     "t": "m",
     "dx": -1,
@@ -489,24 +510,13 @@
     ]
    },
    {
-    "i": 7,
-    "t": "p",
-    "dx": 1,
-    "dy": 0,
-    "chain": [
-     7,
-     6,
-     5
-    ]
-   },
-   {
-    "i": 7,
+    "i": 5,
     "t": "m",
-    "dx": 0,
-    "dy": 1
+    "dx": 1,
+    "dy": 0
    },
    {
-    "i": 0,
+    "i": 1,
     "t": "m",
     "dx": 0,
     "dy": -1
@@ -514,11 +524,17 @@
    {
     "i": 6,
     "t": "m",
-    "dx": -1,
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 7,
+    "t": "m",
+    "dx": 1,
     "dy": 0
    },
    {
-    "i": 1,
+    "i": 0,
     "t": "m",
     "dx": 0,
     "dy": -1
@@ -570,7 +586,7 @@
     "dy": 0
    },
    {
-    "i": 6,
+    "i": 7,
     "t": "m",
     "dx": -1,
     "dy": 0
@@ -583,7 +599,7 @@
     "chain": [
      8,
      2,
-     7,
+     6,
      4
     ]
    },
@@ -621,13 +637,13 @@
     "dy": 1
    },
    {
-    "i": 6,
+    "i": 7,
     "t": "p",
     "dx": 1,
     "dy": 0,
     "chain": [
-     6,
      7,
+     6,
      5
     ]
    },
@@ -642,7 +658,7 @@
     ]
    },
    {
-    "i": 7,
+    "i": 6,
     "t": "m",
     "dx": 1,
     "dy": 0

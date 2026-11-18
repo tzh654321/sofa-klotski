@@ -123,15 +123,36 @@
  "meta": {
   "score": 53,
   "grade": "中等",
-  "scoringVersion": 3,
   "depth": 36,
   "hands": 33,
   "states": 359,
   "paths": 43776,
+  "waste": 3.89,
+  "same": 1.25,
   "estimated": false,
-  "truncated": false,
-  "stopped": false,
-  "estimate": null
+  "scoringVersion": 3,
+  "estimate": null,
+  "parts": {
+   "depth": 18,
+   "planning": 20,
+   "endurance": 1.2,
+   "choice": 14,
+   "trap": 14,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": false,
+  "confidence": "结构估计",
+  "cognition": {
+   "active": 8,
+   "switches": 33,
+   "revisits": 26,
+   "retreats": 0,
+   "maxSetup": 33,
+   "temptation": 45.68
+  },
+  "ms": 13
  },
  "solution": {
   "solver": "bfs-optimal",

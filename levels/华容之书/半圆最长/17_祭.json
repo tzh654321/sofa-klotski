@@ -153,7 +153,15 @@
     "temptation": 8.754887502163468,
     "measured": false,
     "proxy": true,
-    "maxPlateau": 15
+    "maxPlateau": 15,
+    "junctions": 9.754887502163468,
+    "pushes": 0,
+    "pushChanges": 0,
+    "turns": 45,
+    "sequenceNovelty": 1,
+    "actionRuns": 47,
+    "navigation": false,
+    "boxPuzzle": false
    },
    "optimal": false,
    "source": "validated-candidate"
@@ -171,7 +179,7 @@
   "unsolved": true,
   "confidence": "参考解结构估算，未证明最短，分数不是上下界",
   "cognition": null,
-  "ms": 62314
+  "ms": 46501
  },
  "solution": {
   "solver": "budget-estimate",

@@ -1513,6 +1513,20 @@
   }
 
   // 对可回放的候选解提取结构，不要求先证明最短。所有长度均为该候选路径的上界。
+  /* 单看这一步本身合不合法（m/p 两种最常见）。返回 true / false / null（其它类型交给通用比对）。
+   * 为什么需要：estimatePath 原来对每一步都要求"在 moves() 枚举出的后继里能找到同样的局面"，
+   * 一步要 enumerate 全部走法 + 算局面指纹；178 块 / 1.2 万步的关直接跑不动，
+   * 而且推链步（t:'p'）的局面根本不是任何单块走法能到的，会被判成不合法。 */
+  function moveLegalFast(level, state, mv) {
+    if (mv.t !== 'm' && mv.t !== 'p') return null;
+    const ch = chainShift(level, state, grid(level, state), mv.i, mv.dx, mv.dy);
+    if (!ch) return false;
+    if (mv.t === 'm') return ch.length === 1;
+    const a = [...ch].sort((x, y) => x - y);
+    const b = [...(mv.chain || [])].sort((x, y) => x - y);
+    return a.length === b.length && a.every((v, i) => v === b[i]);
+  }
+
   function estimatePath(level, start, goal, path) {
     let state = start, last = -1, setup = 0, maxSetup = 0, retreats = 0, switches = 0;
     let plateau = 0, maxPlateau = 0, rebuilds = 0, previousH = heuristic(level, state, goal);
@@ -1522,7 +1536,9 @@
     for (let j = 0; j < path.length; j++) {
       const mv = path[j], legal = moves(level, state);
       const wanted = keyOf(apply(state, mv));
-      if (!legal.some(m => keyOf(apply(state, m)) === wanted)) return null;
+      const fast = moveLegalFast(level, state, mv);
+      if (fast === false) return null;
+      if (fast === null && !legal.some(m => keyOf(apply(state, m)) === wanted)) return null;
       const next = apply(state, mv), h = heuristic(level, next, goal);
       const newHand = mv.i !== last || !['m','p'].includes(mv.t);
       if (newHand) {

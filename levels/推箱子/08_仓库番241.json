@@ -188,11 +188,11 @@
   ]
  },
  "meta": {
-  "score": 0,
-  "grade": "太简单",
+  "score": 45,
+  "grade": "中等",
   "depth": null,
   "hands": 1,
-  "states": 600002,
+  "states": 1200002,
   "paths": 0,
   "waste": 0,
   "same": 0,
@@ -210,17 +210,25 @@
     "temptation": 1,
     "measured": false,
     "proxy": true,
-    "maxPlateau": 1
+    "maxPlateau": 1,
+    "junctions": 85.11428751370197,
+    "pushes": 27,
+    "pushChanges": 19,
+    "turns": 64,
+    "sequenceNovelty": 0.9682539682539683,
+    "actionRuns": 66,
+    "navigation": true,
+    "boxPuzzle": true
    },
    "optimal": false,
    "source": "validated-candidate"
   },
   "parts": {
-   "depth": 0.1,
-   "planning": 0.1,
+   "depth": 29.1,
+   "planning": 0.6,
    "endurance": 0,
-   "choice": 0,
-   "trap": 0,
+   "choice": 15.7,
+   "trap": 15.7,
    "unique": 0,
    "space": 0
   },
@@ -228,7 +236,7 @@
   "unsolved": true,
   "confidence": "参考解结构估算，未证明最短，分数不是上下界",
   "cognition": null,
-  "ms": 6242
+  "ms": 17463
  },
  "solution": {
   "solver": "budget-estimate",

@@ -120,62 +120,43 @@
  "meta": {
   "score": 35,
   "grade": "简单",
-  "scoringVersion": 3,
   "depth": 21,
   "hands": 17,
   "states": 64061,
   "paths": 348,
+  "waste": 5.48,
+  "same": 1.48,
   "estimated": false,
-  "truncated": false,
-  "stopped": false,
-  "estimate": null
+  "scoringVersion": 3,
+  "estimate": null,
+  "parts": {
+   "depth": 11.1,
+   "planning": 11.1,
+   "endurance": 0,
+   "choice": 12.7,
+   "trap": 12.7,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": false,
+  "confidence": "结构估计",
+  "cognition": {
+   "active": 8,
+   "switches": 16,
+   "revisits": 9,
+   "retreats": 0,
+   "maxSetup": 8,
+   "temptation": 34.69
+  },
+  "ms": 2091
  },
  "solution": {
-  "solver": "quick-A*",
+  "solver": "bfs-optimal",
   "optimal": true,
   "steps": 21,
   "hands": 17,
   "moves": [
-   {
-    "i": 3,
-    "t": "m",
-    "dx": 0,
-    "dy": 1
-   },
-   {
-    "i": 7,
-    "t": "p",
-    "dx": -1,
-    "dy": 0,
-    "chain": [
-     7,
-     3
-    ]
-   },
-   {
-    "i": 7,
-    "t": "m",
-    "dx": 0,
-    "dy": 1
-   },
-   {
-    "i": 8,
-    "t": "m",
-    "dx": 1,
-    "dy": 0
-   },
-   {
-    "i": 8,
-    "t": "m",
-    "dx": 1,
-    "dy": 0
-   },
-   {
-    "i": 7,
-    "t": "m",
-    "dx": 0,
-    "dy": -1
-   },
    {
     "i": 2,
     "t": "m",
@@ -205,12 +186,6 @@
     "dy": 1
    },
    {
-    "i": 3,
-    "t": "m",
-    "dx": 0,
-    "dy": -1
-   },
-   {
     "i": 6,
     "t": "p",
     "dx": -1,
@@ -218,6 +193,17 @@
     "chain": [
      6,
      2
+    ]
+   },
+   {
+    "i": 7,
+    "t": "p",
+    "dx": -1,
+    "dy": 0,
+    "chain": [
+     7,
+     3,
+     8
     ]
    },
    {
@@ -241,6 +227,51 @@
     "t": "m",
     "dx": 1,
     "dy": 0
+   },
+   {
+    "i": 3,
+    "t": "p",
+    "dx": 0,
+    "dy": 1,
+    "chain": [
+     3,
+     2
+    ]
+   },
+   {
+    "i": 7,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 8,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 8,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 8,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 2,
+    "t": "p",
+    "dx": 0,
+    "dy": -1,
+    "chain": [
+     2,
+     3,
+     7
+    ]
    },
    {
     "i": 0,

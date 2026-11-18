@@ -2512,7 +2512,7 @@ function runHanoiSolve() {
   for (const m of src) s = K.apply(s, m);
   if (!K.isGoal(L, s, raw.goals)) { toast('预存解对不上当前局面'); return; }
   const handsMv = K.mergeMoves(src);
-  solution = { moves: src, hands: handsMv, states: 243 };
+  solution = { moves: src, hands: handsMv, states: null };   // 状态按需回放（见 stateAt）
   document.getElementById('svSteps').textContent = handsMv.length + ' 手';
   document.getElementById('svStates').textContent = '31 次整盘搬动';
   document.getElementById('svMsg').textContent = '解 ' + handsMv.length + ' 手（' + src.length +
@@ -2637,7 +2637,7 @@ function renderSteps() {
     d.innerHTML = '<i>' + (k + 1) + '</i><span>' + moveLabel(mv) + '</span>';
     d.onclick = () => {
       stopPlay(); anim = null;
-      st = solution.states[si].map(s => ({ ...s }));
+      st = stateAt(si);
       hands = k + 1; render(); updateUI(); markStep(k);
     };
     host.appendChild(d);
@@ -2704,7 +2704,7 @@ function jumpToHand(k) {
   let si = 0;
   for (let i = 0; i < k; i++) si += solution.hands[i].n || 1;
   anim = null;
-  st = solution.states[si].map(x => ({ ...x }));
+  st = stateAt(si);
   playAt = si; hands = k;
   render(); updateUI(); markStep(k - 1);
   const bar = document.getElementById('seekBar');
@@ -2752,7 +2752,7 @@ function playSolution(resume) {
   anim = null;
   playPaused = false;
   playAt = 0;
-  st = solution.states[0].map(s => ({ ...s }));
+  st = stateAt(0);
   hands = 0; render(); updateUI(); markStep(-1);
   const bar = document.getElementById('seekBar');
   if (bar) bar.value = '0';
@@ -2895,8 +2895,8 @@ function startJob(cmd) {
   jobSet(cmd === 'analyze' ? '分析中…' : '求解中…', 3, '准备…');
   // 分析、缓存与参考解统一绑定初始局面，避免混入用户中途走动后的结果。
   const initial = K.initialState(raw), cached = cacheGet();
-  const initialSolution = solution && solution.states &&
-    JSON.stringify(solution.states[0]) === JSON.stringify(initial) ? solution : null;
+  const initialSolution = solution && solution.moves &&
+    JSON.stringify(stateAt(0)) === JSON.stringify(initial) ? solution : null;
   const candidate = initialSolution || (cached && cached.solved) || fileSolution;
   const gen = cmd === 'analyze'
     ? K.analyzeGen(L, initial, raw.goals, { maxNodes: JOB_MEM_CAP, candidateMoves: candidate && candidate.moves })
@@ -3111,17 +3111,30 @@ function applyCached() {
 
 function restoreSolution(sv, note) {
   const moves = sv.moves.map(m => ({ ...m }));
-  const states = sv.states && sv.states.length ? sv.states.map(s => s.map(x => ({ ...x })))
-    : replayStates(K.initialState(raw), moves);
-  solution = { moves, hands: K.handsOf(L, states, moves), states };
+  /* 大解法（> 4000 单步）不预存状态序列：171 塞块是 1.2 万步 × 172 块，
+   * 全存下来是两百多万个对象。播放/拖动进度条都走 stateAt() 按需回放。 */
+  const big = moves.length > 4000;
+  const states = big ? null
+    : (sv.states && sv.states.length ? sv.states.map(s => s.map(x => ({ ...x })))
+      : replayStates(K.initialState(raw), moves));
+  solution = { moves, hands: states ? K.handsOf(L, states, moves) : K.mergeMoves(moves), states };
   document.getElementById('svSteps').textContent = solution.hands.length + ' 手';
-  document.getElementById('svStates').textContent = (sv.visited || states.length - 1).toLocaleString();
+  document.getElementById('svStates').textContent = (sv.visited || (states ? states.length - 1 : moves.length)).toLocaleString();
   document.getElementById('svMsg').textContent = '（' + (note || '缓存的解') + '）' +
     (sv.optimal ? '最短解 ' : '解 ') + solution.hands.length + ' 手（' + moves.length + ' 单位步' +
     (sv.viaQuick ? '，快速解' : '') + '）。';
   document.getElementById('btnSolve').textContent = '重新求解';
   renderSteps();
 }
+/* 第 si 个单步之后的局面。大解法（上万步 × 一百多块）不预存全部状态 ——
+ * 那是几百万个对象，光加载就卡死；这里按需从开局回放（1 万步也就几十毫秒）。 */
+function stateAt(si) {
+  if (solution.states && solution.states.length > si) return solution.states[si].map(s => ({ ...s }));
+  let cur = K.initialState(raw);
+  for (let i = 0; i < si; i++) cur = K.apply(cur, solution.moves[i]);
+  return cur.map(s => ({ ...s }));
+}
+
 /** 只有走法没有状态序列时，自己回放一遍 */
 function replayStates(st0, moves) {
   const out = [st0.map(s => ({ ...s }))];

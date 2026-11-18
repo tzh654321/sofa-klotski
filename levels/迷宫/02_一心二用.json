@@ -802,7 +802,7 @@
   "note": "23×11 双端联动：一根扁担两头一起走货场迷宫"
  },
  "meta": {
-  "score": 0,
+  "score": 1,
   "grade": "太简单",
   "depth": 44,
   "hands": 1,
@@ -814,11 +814,11 @@
   "scoringVersion": 3,
   "estimate": null,
   "parts": {
-   "depth": 0.1,
+   "depth": 0.4,
    "planning": 0,
    "endurance": 0,
-   "choice": 0.3,
-   "trap": 0.3,
+   "choice": 0.6,
+   "trap": 0.6,
    "unique": 0,
    "space": 0
   },
@@ -833,7 +833,7 @@
    "maxSetup": 0,
    "temptation": 4
   },
-  "ms": 14
+  "ms": 28
  },
  "solution": {
   "solver": "bfs-optimal",

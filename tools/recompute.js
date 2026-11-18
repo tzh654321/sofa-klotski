@@ -50,7 +50,15 @@ function listFiles() {
     const abs = path.join(ROOT, name);
     if (!fs.statSync(abs).isDirectory()) continue;
     if (ONLY_SET && name !== ONLY_SET) continue;
-    for (const f of fs.readdirSync(abs)) one(abs, f);
+    // 关卡集里可以再套子文件夹（华容之书/沙发最长 …），递归扫
+    const walkDir = d => {
+      for (const f of fs.readdirSync(d)) {
+        const q = path.join(d, f);
+        if (fs.statSync(q).isDirectory()) walkDir(q);
+        else one(d, f);
+      }
+    };
+    walkDir(abs);
   }
   return out.sort();
 }

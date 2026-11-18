@@ -6,7 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const { launch, sleep } = require('../cdp.js');
-const FILE = path.join(__dirname, '..', '..', 'levels', '迷宫', '12_密林穿行.json');
+const FILE = path.join(__dirname, '..', '..', 'levels', '迷宫', '01_密林穿行.json');
 
 (async () => {
   const rec = JSON.parse(fs.readFileSync(FILE, 'utf8'));

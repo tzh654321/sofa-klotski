@@ -131,15 +131,36 @@
  "meta": {
   "score": 75,
   "grade": "极难",
-  "scoringVersion": 3,
   "depth": 114,
   "hands": 100,
   "states": 81340,
   "paths": 1788272640,
+  "waste": 4.74,
+  "same": 1.25,
   "estimated": false,
-  "truncated": false,
-  "stopped": false,
-  "estimate": null
+  "scoringVersion": 3,
+  "estimate": null,
+  "parts": {
+   "depth": 29.4,
+   "planning": 28.2,
+   "endurance": 1.4,
+   "choice": 16,
+   "trap": 16,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": false,
+  "confidence": "结构估计",
+  "cognition": {
+   "active": 10,
+   "switches": 100,
+   "revisits": 91,
+   "retreats": 7,
+   "maxSetup": 10,
+   "temptation": 185.34
+  },
+  "ms": 2865
  },
  "solution": {
   "solver": "bfs-optimal",

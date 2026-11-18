@@ -152,7 +152,7 @@
    "maxSetup": 33,
    "temptation": 200.42
   },
-  "ms": 1366
+  "ms": 1245
  },
  "solution": {
   "solver": "bfs-optimal",
