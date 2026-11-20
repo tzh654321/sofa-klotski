@@ -33,7 +33,7 @@
       "navigation": false,
       "boxPuzzle": false
     },
-    "ms": 5926
+    "ms": 7495
   },
   {
     "name": "深度求索",
@@ -69,7 +69,7 @@
       "navigation": false,
       "boxPuzzle": false
     },
-    "ms": 12637
+    "ms": 15984
   },
   {
     "name": "万里征途",
@@ -105,6 +105,6 @@
       "navigation": false,
       "boxPuzzle": false
     },
-    "ms": 16139
+    "ms": 15700
   }
 ]

@@ -52,7 +52,12 @@ const ok = (c, m, x) => { c ? (pass++, console.log('  ok  ' + m)) : (fail++, con
     await sleep(160);
     const r = (await check())[0];
     ok(r.inside, tag + ' → 落在实体内', r);
-    const txt = JSON.parse(await ev('JSON.stringify([...document.querySelectorAll("#board text[data-part=label]")].map(t=>({x:+t.getAttribute("x"),y:+t.getAttribute("y"),fs:+t.getAttribute("font-size")})))'));
+    /* 文字现在包在 <g transform="translate(x y)"> 里（补间只改组 transform，文字本身坐标恒为 0，
+     * 否则每帧重新塑形掉帧），所以锚点 = 组 translate + 文字自身 x/y。 */
+    const txt = JSON.parse(await ev(`JSON.stringify([...document.querySelectorAll("#board text[data-part=label]")].map(t=>{
+      const g = t.parentNode, m = /translate\\(\\s*([-\\d.eE+]+)[ ,]+([-\\d.eE+]+)/.exec((g && g.getAttribute && g.getAttribute('transform')) || '');
+      return { x: (m ? +m[1] : 0) + (+t.getAttribute("x") || 0), y: (m ? +m[2] : 0) + (+t.getAttribute("y") || 0), fs: +t.getAttribute("font-size") };
+    }))`));
     ok(txt.length === 1, tag + ' → 渲染出一个文字', txt.length);
     ok(Math.abs(txt[0].x - r.x) < 1e-6 && Math.abs(txt[0].y - r.y) < 1e-6, tag + ' → DOM 里的坐标就是锚点', txt[0]);
     // 文字的半宽不能超过实体可用空间

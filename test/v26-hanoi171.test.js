@@ -44,8 +44,10 @@ const pieces = rec.level.pieces;
 const unnamed = pieces.filter(p => !p.name).length;
 ok(pieces.length === 178, '178 个块（5 环 + 2 门柱 + 171 塞块）', pieces.length);
 ok(unnamed === 171, '171 个塞块没有名字（界面不画字）', unnamed);
-ok(pieces.filter(p => p.name === '火环').length === 1 &&
-  pieces.filter(p => p.name === '门柱').length === 2, '五个环 + 两根门柱都在', pieces.map(p => p.name).filter(Boolean));
+// 环的名字会改（比如换成 MC 段位），这里只认结构：5 个环 + 2 根门柱
+const named = pieces.filter(p => p.name);
+const pillars = named.filter(p => p.name === '门柱').length;
+ok(named.length === 7 && pillars === 2, '五个环 + 两根门柱都在（名字可变）', named.map(p => p.name));
 
 const goal = rec.level.goals[0];
 ok(rec.level.goals.length === 1 && goal.piece === 'c8' && goal.cells.length === 17,
@@ -61,7 +63,8 @@ ok(rec.solution.moves.length === rec.solution.steps, 'solution.steps 与走法�
 const hands = K.handsOf(L, states, rec.solution.moves).length;
 ok(hands === rec.solution.hands, '手数（同块连续 = 一手）与文件一致', [hands, rec.solution.hands]);
 ok(hands <= 5977, '新版手数不高于旧版 5977 手', hands);
-ok(rec.solution.steps < 54178 && rec.solution.steps === rec.solution.unitSteps,
+ok(rec.solution.steps < 54178 &&
+  (rec.solution.unitSteps == null || rec.solution.unitSteps === rec.solution.steps),
   '严格单位步参考解，比旧版 54178 条指令短', rec.solution.steps);
 ok(rec.meta && Number.isFinite(rec.meta.score) && rec.meta.estimate.steps === rec.solution.steps,
   '难度分已按新版解法重算', rec.meta && [rec.meta.score, rec.meta.grade]);

@@ -110,8 +110,8 @@ function createServer(opts) {
     if (!lv || typeof lv !== 'object' || !Array.isArray(lv.pieces))
       throw new HttpError(400, 'level 缺少 pieces');
     const w = Number(lv.w), h = Number(lv.h);
-    if (!Number.isInteger(w) || !Number.isInteger(h) || w < 2 || h < 2 || w > 30 || h > 30)
-      throw new HttpError(400, '棋盘尺寸不合法（2~30）');
+    if (!Number.isInteger(w) || !Number.isInteger(h) || w < 2 || h < 2 || w > 1000 || h > 1000)
+      throw new HttpError(400, '棋盘尺寸不合法（2~1000）');
     const ids = new Set();
     for (const p of lv.pieces) {
       if (!p || typeof p.id !== 'string' || !p.id) throw new HttpError(400, '有块缺少 id');
@@ -394,3 +394,5 @@ function main() {
 
 if (require.main === module) main();
 module.exports = { createServer, HttpError, parseArgv };
+
+[EXIT=0]

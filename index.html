@@ -30,7 +30,9 @@
   .stage::-webkit-scrollbar{width:0;height:0}
   /* margin:auto 在 flex 里既能居中，内容超出时又能正常滚到左/上边 */
   #board{margin:auto;flex:0 0 auto;display:block;touch-action:none;user-select:none;
-         filter:drop-shadow(0 18px 40px rgba(0,0,0,.55));cursor:default}
+         /* 阴影用 box-shadow：棋盘本身就是一整块矩形，视觉等价；但 filter 会让整块棋盘
+            成为 render surface，拖拽/补间每帧全量重建 SVG 时都要重新高斯模糊一次 */
+         box-shadow:0 18px 40px rgba(0,0,0,.55);cursor:default}
   aside{width:340px;flex:0 0 340px;border-left:1px solid var(--line);
         background:rgba(21,17,34,.72);padding:13px;overflow-y:auto}
   aside h3{margin:0 0 6px;font-size:11px;letter-spacing:.14em;color:var(--dim);font-weight:600}
@@ -622,6 +624,8 @@ const degOf = (stt, i) => (L.pieces[i].oris.length < 2 ? 0 : stt[i].ori * 90);
 
 function buildScene() {
   svg.innerHTML = '';
+  pieceNodes = [];
+  lastPieceState = [];
   const defs = el('defs', {});
   const pat = el('pattern', {
     id: 'lockHatch', width: 0.16, height: 0.16, patternUnits: 'userSpaceOnUse',
@@ -893,25 +897,23 @@ function pvWorldOf(i, o, box, e, t) {
   return { x: box.x - minC + pv[0], y: box.y - minR + pv[1] };
 }
 
-function render() {
-  let amap = null, t = 0;
-  if (anim) {
-    t = easeOut(Math.min(1, (performance.now() - anim.t0) / anim.dur));
-    amap = {};
-    for (const e of anim.list) amap[e.i] = e;
-  }
-  gPieces.innerHTML = '';
-  for (let i = 0; i < L.pieces.length; i++) {
+/** 一块的节点生成器：把节点挂到 host（真实 gPieces 或离屏 ghost），返回这组节点。
+ *  补间时先在离屏 ghost 里算出「这一帧应该长什么样」，再只把变化的属性写到存活节点上 ——
+ *  增删节点会让 Chromium 重绘整块 360 万像素的 SVG，只改属性则走合成器快路径。 */
+let pieceNodes = [];
+/* 离屏 ghost 惰性创建：这个脚本会被「无 DOM」的测试整段 evaluate 一遍，
+ * 顶层直接 document.createElementNS 会当场 ReferenceError。 */
+let pieceGhost = null;
+function ghostOf() {
+  if (!pieceGhost) pieceGhost = document.createElementNS(NS, 'g');
+  return pieceGhost;
+}
+
+function drawInto(host, i, box, deg, artDeg, e, t) {
+  const out = [];
+  const pushNode = n => { out.push(n); return host.appendChild(n); };
     const p = L.pieces[i];
     const o = p.oris[st[i].ori % p.oris.length];
-    let box = pieceBox(st, i), deg = degOf(st, i), artDeg = 0;
-    const e = amap && amap[i];
-    if (e) {
-      const pose = animationPose(e, t);
-      box = pose.box;
-      deg = pose.deg;
-      artDeg = pose.artDeg;
-    }
     const cs = pieceCells(st, i);
     const dx = box.x - st[i].x, dy = box.y - st[i].y;
     const point = (x, y) => {
@@ -922,17 +924,17 @@ function render() {
     };
     const art = artFor(p, o, box, deg, artDeg, pvWorldOf(i, o, box, e, t));
 
-    gPieces.appendChild(el('path', {
+    pushNode(el('path', {
       d: art.fill, fill: p.color, 'data-i': i, 'data-part': 'fill', transform: art.tf,
       'stroke-linejoin': 'round'
     }));
     if (art.stroke) {
-      gPieces.appendChild(el('path', {
+      pushNode(el('path', {
         d: art.stroke, fill: 'none', stroke: '#08060f', 'stroke-width': 0.024,
         'stroke-linecap': 'round', 'data-i': i, 'data-part': 'line', transform: art.tf
       }));
     } else if (art.stroke === null) {
-      gPieces.appendChild(el('path', {
+      pushNode(el('path', {
         d: art.fill, fill: 'none', stroke: '#08060f', 'stroke-width': 0.024,
         'stroke-linejoin': 'round', 'data-i': i, 'data-part': 'line', transform: art.tf
       }));
@@ -950,12 +952,12 @@ function render() {
       for (let k = 1; k < cents.length; k++) {
         d += `M${cents[k - 1][0]} ${cents[k - 1][1]}L${cents[k][0]} ${cents[k][1]}`;
       }
-      gPieces.appendChild(el('path', {
+      pushNode(el('path', {
         d, stroke: p.color, 'stroke-width': 0.075, 'stroke-linecap': 'round',
         opacity: 0.85, 'data-i': i, 'data-part': 'link'
       }));
       for (const c of cents) {
-        gPieces.appendChild(el('circle', {
+        pushNode(el('circle', {
           cx: c[0], cy: c[1], r: 0.055, fill: p.color, stroke: '#08060f',
           'stroke-width': 0.016, 'data-i': i, 'data-part': 'link'
         }));
@@ -964,16 +966,16 @@ function render() {
 
     // 一次被动块：木箱 X 撑 + 暖金双实线边框（实线＝只受一次直接推力，虚线链纹＝会继续传力）
     if (p.onceOnly && !p.lock) {
-      gPieces.appendChild(el('path', {
+      pushNode(el('path', {
         d: art.fill, fill: 'url(#onceHatch)', transform: art.tf, 'pointer-events': 'none',
         'data-i': i, 'data-part': 'once'
       }));
-      gPieces.appendChild(el('path', {
+      pushNode(el('path', {
         d: art.fill, fill: 'none', stroke: 'rgba(255,196,96,.95)', 'stroke-width': 0.055,
         'stroke-linejoin': 'round', transform: art.tf,
         'pointer-events': 'none', 'data-i': i, 'data-part': 'onceEdge'
       }));
-      gPieces.appendChild(el('path', {
+      pushNode(el('path', {
         d: art.fill, fill: 'none', stroke: 'rgba(60,36,10,.55)', 'stroke-width': 0.02,
         'stroke-linejoin': 'round', transform: art.tf,
         'pointer-events': 'none', 'data-i': i, 'data-part': 'onceInner'
@@ -982,11 +984,11 @@ function render() {
 
     // 被动块：铺一层链纹 + 一圈虚线内描边
     if (p.chainOnly && !p.lock) {
-      gPieces.appendChild(el('path', {
+      pushNode(el('path', {
         d: art.fill, fill: 'url(#chainHatch)', transform: art.tf, 'pointer-events': 'none',
         'data-i': i, 'data-part': 'chain'
       }));
-      gPieces.appendChild(el('path', {
+      pushNode(el('path', {
         d: art.fill, fill: 'none', stroke: 'rgba(150,225,255,.85)', 'stroke-width': 0.03,
         'stroke-dasharray': '0.1 0.08', 'stroke-linejoin': 'round', transform: art.tf,
         'pointer-events': 'none', 'data-i': i, 'data-part': 'chainline'
@@ -999,11 +1001,13 @@ function render() {
 
     // 锁定：斜线覆盖 + 小锁
     if (p.lock) {
-      gPieces.appendChild(el('path', {
+      pushNode(el('path', {
         d: art.fill, fill: 'url(#lockHatch)', transform: art.tf, 'pointer-events': 'none',
         'data-i': i, 'data-part': 'lock'
       }));
-      gPieces.appendChild(lockIcon(labelX, labelY + (p.name ? 0.17 : 0.05)));
+      // 小锁包成可平移的 <g>：补间只改它的 transform，图标内部坐标不动
+      pushNode(el('g', { transform: 'translate(' + labelX + ' ' + (labelY + (p.name ? 0.17 : 0.05)) + ')' }))
+        .appendChild(lockIcon(0, 0));
     }
 
     if (p.name) {
@@ -1014,17 +1018,118 @@ function render() {
       let fs = Math.min(base, 0.46 / Math.max(1, len / 2));
       fs = Math.min(fs, spot.half * 1.75, spot.half * 1.9 / (0.62 * len));
       fs = Math.max(0.085, fs);
+      // 文字放进 translate 组、自身坐标恒为 0：补间只改组 transform。
+      // 直接改 text 的 x/y 会让 SVG 文字每帧重新布局/塑形，实测要掉到 40fps。
+      const tg = pushNode(el('g', { transform: 'translate(' + labelX + ' ' + (labelY + (p.lock ? -0.15 : 0)) + ')' }));
       const tx = el('text', {
-        x: labelX, y: labelY + (p.lock ? -0.15 : 0),
+        x: 0, y: 0,
         'text-anchor': 'middle', 'dominant-baseline': 'central',
         fill: inkFor(p.color, !!p.hero),
         'font-size': fs, 'font-weight': p.hero ? 700 : 600, 'pointer-events': 'none',
         'data-i': i, 'data-part': 'label'
       });
       tx.textContent = p.name;
-      gPieces.appendChild(tx);
+      tg.appendChild(tx);
     }
+  return out;
+}
+
+/** 记下节点当前属性（避免下一帧把没变的属性也写一遍，写入也会触发失效） */
+function cacheAttrs(n) {
+  const m = {};
+  for (let i = 0; i < n.attributes.length; i++) {
+    const a = n.attributes[i];
+    m[a.name] = a.value;
   }
+  n.__a = m;
+  if (n.firstChild && n.firstChild.nodeType === 3) n.__text = n.textContent;
+}
+
+/** 把 temp 的属性对齐到 live 上；结构（节点数 / 标签名）不一致就返回 false，让调用方整块替换 */
+function patchNode(a, b) {
+  if (a.nodeType !== b.nodeType) return false;
+  if (a.nodeType === 3) { if (a.data !== b.data) a.data = b.data; return true; }
+  if (a.tagName !== b.tagName) return false;
+  const cache = a.__a || (a.__a = {});
+  const seen = {};
+  for (let j = 0; j < b.attributes.length; j++) {
+    const name = b.attributes[j].name, val = b.attributes[j].value;
+    seen[name] = 1;
+    if (cache[name] !== val) { a.setAttribute(name, val); cache[name] = val; }
+  }
+  for (const name in cache) {
+    if (!seen[name]) { a.removeAttribute(name); delete cache[name]; }
+  }
+  // 子节点数量变了就放弃增量（交给上层整块替换）
+  if (a.childNodes.length !== b.childNodes.length) return false;
+  for (let i = 0; i < a.childNodes.length; i++) {
+    if (!patchNode(a.childNodes[i], b.childNodes[i])) return false;
+  }
+  return true;
+}
+function patchPiece(live, temp) {
+  if (!live || live.length !== temp.length) return false;
+  for (let k = 0; k < temp.length; k++) {
+    if (!patchNode(live[k], temp[k])) return false;
+  }
+  return true;
+}
+
+/** 逐块把「这一帧该有的属性」补到存活节点上：
+ *  结构没变（节点数/标签一致）就只写变化的属性，变了才整块替换。
+ *  onlyDirty=true 时跳过「位置/朝向没变」的块 —— 拖动时只有 1~3 块会动，
+ *  把 36 块全算一遍（labelSpot / components 都是重活）自己就要 ~20ms。 */
+let lastPieceState = [];
+function renderPieces(onlyDirty) {
+  for (let i = 0; i < L.pieces.length; i++) {
+    const s = st[i];
+    if (onlyDirty && pieceNodes[i]) {
+      const prev = lastPieceState[i];
+      if (prev && prev.x === s.x && prev.y === s.y && prev.ori === s.ori) continue;
+    }
+    const temp = drawInto(ghostOf(), i, pieceBox(st, i), degOf(st, i), 0, null, 0);
+    const live = pieceNodes[i];
+    if (live && patchPiece(live, temp)) {
+      while (pieceGhost.firstChild) pieceGhost.removeChild(pieceGhost.firstChild);
+    } else {
+      if (live) for (const n of live) if (n.parentNode === gPieces) gPieces.removeChild(n);
+      pieceNodes[i] = temp;
+      for (const n of temp) {
+        gPieces.appendChild(n);
+        cacheAttrs(n);
+      }
+    }
+    lastPieceState[i] = { x: s.x, y: s.y, ori: s.ori };
+  }
+}
+
+function render() {
+  let t = 0;
+  if (anim) t = easeOut(Math.min(1, (performance.now() - anim.t0) / anim.dur));
+
+  /* 补间期间只重画「动的那几块」：
+   * 原来每帧 gPieces.innerHTML='' 重建 148 个节点，实测 WebView 里只有 38fps；
+   * 增量只替换移动中的块，静止块不动，帧率能翻倍。目标/选中框在补间中不变，
+   * anim 结束时 tick() 会做一次全量重画把它们补上。 */
+  if (anim) {
+    for (const e of anim.list) {
+      const pose = animationPose(e, t);
+      const live = pieceNodes[e.i];
+      const temp = drawInto(ghostOf(), e.i, pose.box, pose.deg, pose.artDeg, e, t);
+      if (live && patchPiece(live, temp)) {
+        while (pieceGhost.firstChild) pieceGhost.removeChild(pieceGhost.firstChild);
+      } else {
+        if (live) for (const n of live) if (n.parentNode === gPieces) gPieces.removeChild(n);
+        pieceNodes[e.i] = temp;
+        for (const n of temp) gPieces.appendChild(n);
+      }
+    }
+    return;
+  }
+
+  // 拖动目标框 / 框选：棋子没动，直接跳过（否则每帧要重算 36 个块）
+  const dk = drag && drag.kind;
+  if (dk !== 'box' && dk !== 'goal') renderPieces(dk === 'play' || dk === 'edit');
 
   gSel.innerHTML = '';
   if (sel != null && L.pieces[sel]) {
@@ -1062,6 +1167,9 @@ function render() {
       'stroke-dasharray': '0.18 0.12', 'pointer-events': 'none'
     }));
   }
+  // 拖块/编辑时只搬棋子，终点框的形状和位置都没变（只有 done 颜色可能变），
+  // 重建 24 个终点标签是纯浪费 —— 松手后那次全量 render 会补上。
+  if (drag && (drag.kind === 'play' || drag.kind === 'edit')) return;
   gGhost.innerHTML = '';
   gGoalTop.innerHTML = '';
   if (!showGoalBox) return;
@@ -1220,7 +1328,7 @@ function drawGoal(g, gk) {
 function tick() {
   if (!anim) return;
   render();
-  if ((performance.now() - anim.t0) / anim.dur >= 1) { anim = null; return; }
+  if ((performance.now() - anim.t0) / anim.dur >= 1) { anim = null; render(); return; }
   requestAnimationFrame(tick);
 }
 /** 对比前后状态，把变动过的块全部纳入补间（也覆盖推块、多块同时移动） */

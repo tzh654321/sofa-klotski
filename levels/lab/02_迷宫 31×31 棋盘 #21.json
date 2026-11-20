@@ -1,0 +1,3956 @@
+{
+ "set": "lab",
+ "id": "maze2-31x31-s21",
+ "name": "迷宫 31×31 棋盘 #21",
+ "origin": "回型迷宫 · maze-3 迭代",
+ "lvKey": "maze2-31x31-s21",
+ "note": "31×31 迷宫（棋盘底图 · maze-3 迭代生成 · seed 21）；最短 69 步，简单路径 1 条，迷宫口径难度 3349.3（死路 96 条，最深岔路 6 层）。评分按「手」计：全程一次连续拖动 = 1 手，仓库分偏低是评分口径，不代表关卡简单。",
+ "tip": "31×31 · 棋盘 · 难度 3349.3",
+ "source": "generated",
+ "level": {
+  "name": "迷宫 31×31 棋盘 #21",
+  "w": 31,
+  "h": 31,
+  "goals": [
+   {
+    "piece": "hero",
+    "cells": [
+     [
+      29,
+      28
+     ]
+    ],
+    "label": "终点"
+   }
+  ],
+  "pieces": [
+   {
+    "id": "hero",
+    "x": 1,
+    "y": 1,
+    "ori": 0,
+    "shape": "1x1",
+    "color": "#ffb03a",
+    "name": "行者",
+    "hero": true
+   },
+   {
+    "id": "w1",
+    "x": 0,
+    "y": 0,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      0,
+      5
+     ],
+     [
+      0,
+      6
+     ],
+     [
+      0,
+      7
+     ],
+     [
+      0,
+      8
+     ],
+     [
+      0,
+      9
+     ],
+     [
+      0,
+      10
+     ],
+     [
+      0,
+      11
+     ],
+     [
+      0,
+      12
+     ],
+     [
+      0,
+      13
+     ],
+     [
+      0,
+      14
+     ],
+     [
+      0,
+      15
+     ],
+     [
+      0,
+      16
+     ],
+     [
+      0,
+      17
+     ],
+     [
+      0,
+      18
+     ],
+     [
+      0,
+      19
+     ],
+     [
+      0,
+      20
+     ],
+     [
+      0,
+      21
+     ],
+     [
+      0,
+      22
+     ],
+     [
+      0,
+      23
+     ],
+     [
+      0,
+      24
+     ],
+     [
+      0,
+      25
+     ],
+     [
+      0,
+      26
+     ],
+     [
+      0,
+      27
+     ],
+     [
+      0,
+      28
+     ],
+     [
+      0,
+      29
+     ],
+     [
+      0,
+      30
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      1,
+      7
+     ],
+     [
+      1,
+      13
+     ],
+     [
+      1,
+      15
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      1,
+      20
+     ],
+     [
+      1,
+      23
+     ],
+     [
+      1,
+      26
+     ],
+     [
+      1,
+      30
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      2,
+      1
+     ],
+     [
+      2,
+      2
+     ],
+     [
+      2,
+      29
+     ],
+     [
+      2,
+      30
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      30
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      30
+     ],
+     [
+      5,
+      0
+     ],
+     [
+      5,
+      30
+     ],
+     [
+      6,
+      0
+     ],
+     [
+      6,
+      29
+     ],
+     [
+      6,
+      30
+     ],
+     [
+      7,
+      0
+     ],
+     [
+      7,
+      30
+     ],
+     [
+      8,
+      0
+     ],
+     [
+      8,
+      28
+     ],
+     [
+      8,
+      30
+     ],
+     [
+      9,
+      0
+     ],
+     [
+      9,
+      27
+     ],
+     [
+      9,
+      28
+     ],
+     [
+      9,
+      29
+     ],
+     [
+      9,
+      30
+     ],
+     [
+      10,
+      0
+     ],
+     [
+      10,
+      1
+     ],
+     [
+      10,
+      30
+     ],
+     [
+      11,
+      0
+     ],
+     [
+      11,
+      30
+     ],
+     [
+      12,
+      0
+     ],
+     [
+      12,
+      1
+     ],
+     [
+      12,
+      30
+     ],
+     [
+      13,
+      0
+     ],
+     [
+      13,
+      29
+     ],
+     [
+      13,
+      30
+     ],
+     [
+      14,
+      0
+     ],
+     [
+      14,
+      1
+     ],
+     [
+      14,
+      2
+     ],
+     [
+      14,
+      29
+     ],
+     [
+      14,
+      30
+     ],
+     [
+      15,
+      0
+     ],
+     [
+      15,
+      30
+     ],
+     [
+      16,
+      0
+     ],
+     [
+      16,
+      29
+     ],
+     [
+      16,
+      30
+     ],
+     [
+      17,
+      0
+     ],
+     [
+      17,
+      30
+     ],
+     [
+      18,
+      0
+     ],
+     [
+      18,
+      30
+     ],
+     [
+      19,
+      0
+     ],
+     [
+      19,
+      30
+     ],
+     [
+      20,
+      0
+     ],
+     [
+      20,
+      1
+     ],
+     [
+      20,
+      30
+     ],
+     [
+      21,
+      0
+     ],
+     [
+      21,
+      29
+     ],
+     [
+      21,
+      30
+     ],
+     [
+      22,
+      0
+     ],
+     [
+      22,
+      30
+     ],
+     [
+      23,
+      0
+     ],
+     [
+      23,
+      30
+     ],
+     [
+      24,
+      0
+     ],
+     [
+      24,
+      28
+     ],
+     [
+      24,
+      29
+     ],
+     [
+      24,
+      30
+     ],
+     [
+      25,
+      0
+     ],
+     [
+      25,
+      30
+     ],
+     [
+      26,
+      0
+     ],
+     [
+      26,
+      29
+     ],
+     [
+      26,
+      30
+     ],
+     [
+      27,
+      0
+     ],
+     [
+      27,
+      1
+     ],
+     [
+      27,
+      29
+     ],
+     [
+      27,
+      30
+     ],
+     [
+      28,
+      0
+     ],
+     [
+      28,
+      27
+     ],
+     [
+      28,
+      30
+     ],
+     [
+      29,
+      0
+     ],
+     [
+      29,
+      2
+     ],
+     [
+      29,
+      9
+     ],
+     [
+      29,
+      12
+     ],
+     [
+      29,
+      13
+     ],
+     [
+      29,
+      16
+     ],
+     [
+      29,
+      18
+     ],
+     [
+      29,
+      22
+     ],
+     [
+      29,
+      25
+     ],
+     [
+      29,
+      27
+     ],
+     [
+      29,
+      29
+     ],
+     [
+      29,
+      30
+     ],
+     [
+      30,
+      0
+     ],
+     [
+      30,
+      1
+     ],
+     [
+      30,
+      2
+     ],
+     [
+      30,
+      3
+     ],
+     [
+      30,
+      4
+     ],
+     [
+      30,
+      5
+     ],
+     [
+      30,
+      6
+     ],
+     [
+      30,
+      7
+     ],
+     [
+      30,
+      8
+     ],
+     [
+      30,
+      9
+     ],
+     [
+      30,
+      10
+     ],
+     [
+      30,
+      11
+     ],
+     [
+      30,
+      12
+     ],
+     [
+      30,
+      13
+     ],
+     [
+      30,
+      14
+     ],
+     [
+      30,
+      15
+     ],
+     [
+      30,
+      16
+     ],
+     [
+      30,
+      17
+     ],
+     [
+      30,
+      18
+     ],
+     [
+      30,
+      19
+     ],
+     [
+      30,
+      20
+     ],
+     [
+      30,
+      21
+     ],
+     [
+      30,
+      22
+     ],
+     [
+      30,
+      23
+     ],
+     [
+      30,
+      24
+     ],
+     [
+      30,
+      25
+     ],
+     [
+      30,
+      26
+     ],
+     [
+      30,
+      27
+     ],
+     [
+      30,
+      28
+     ],
+     [
+      30,
+      29
+     ],
+     [
+      30,
+      30
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w2",
+    "x": 3,
+    "y": 2,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w3",
+    "x": 6,
+    "y": 2,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      2
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w4",
+    "x": 8,
+    "y": 2,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w5",
+    "x": 19,
+    "y": 2,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w6",
+    "x": 24,
+    "y": 2,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w7",
+    "x": 9,
+    "y": 3,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w8",
+    "x": 15,
+    "y": 3,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w9",
+    "x": 17,
+    "y": 3,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w10",
+    "x": 20,
+    "y": 3,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w11",
+    "x": 27,
+    "y": 3,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      1,
+      2
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w12",
+    "x": 19,
+    "y": 4,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w13",
+    "x": 25,
+    "y": 4,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w14",
+    "x": 2,
+    "y": 5,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w15",
+    "x": 5,
+    "y": 5,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w16",
+    "x": 10,
+    "y": 5,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      2
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w17",
+    "x": 15,
+    "y": 5,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w18",
+    "x": 21,
+    "y": 5,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w19",
+    "x": 7,
+    "y": 6,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w20",
+    "x": 14,
+    "y": 6,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      1,
+      2
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w21",
+    "x": 20,
+    "y": 6,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      1
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w22",
+    "x": 3,
+    "y": 7,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w23",
+    "x": 9,
+    "y": 7,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w24",
+    "x": 18,
+    "y": 7,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w25",
+    "x": 25,
+    "y": 7,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w26",
+    "x": 4,
+    "y": 8,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w27",
+    "x": 8,
+    "y": 8,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w28",
+    "x": 17,
+    "y": 8,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w29",
+    "x": 24,
+    "y": 8,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w30",
+    "x": 26,
+    "y": 8,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w31",
+    "x": 2,
+    "y": 9,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w32",
+    "x": 5,
+    "y": 9,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w33",
+    "x": 7,
+    "y": 9,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w34",
+    "x": 9,
+    "y": 9,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w35",
+    "x": 13,
+    "y": 9,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w36",
+    "x": 19,
+    "y": 9,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w37",
+    "x": 27,
+    "y": 9,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w38",
+    "x": 2,
+    "y": 10,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w39",
+    "x": 11,
+    "y": 10,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w40",
+    "x": 16,
+    "y": 10,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w41",
+    "x": 18,
+    "y": 10,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w42",
+    "x": 21,
+    "y": 10,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w43",
+    "x": 26,
+    "y": 10,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w44",
+    "x": 28,
+    "y": 10,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w45",
+    "x": 6,
+    "y": 11,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w46",
+    "x": 15,
+    "y": 11,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w47",
+    "x": 17,
+    "y": 11,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w48",
+    "x": 20,
+    "y": 11,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w49",
+    "x": 4,
+    "y": 12,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      1
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ],
+     [
+      3,
+      3
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      5,
+      2
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w50",
+    "x": 23,
+    "y": 12,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w51",
+    "x": 27,
+    "y": 12,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w52",
+    "x": 3,
+    "y": 13,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w53",
+    "x": 11,
+    "y": 13,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w54",
+    "x": 15,
+    "y": 13,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w55",
+    "x": 20,
+    "y": 13,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w56",
+    "x": 23,
+    "y": 13,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w57",
+    "x": 16,
+    "y": 14,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w58",
+    "x": 18,
+    "y": 14,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w59",
+    "x": 26,
+    "y": 14,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w60",
+    "x": 4,
+    "y": 15,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w61",
+    "x": 8,
+    "y": 15,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      2,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w62",
+    "x": 12,
+    "y": 15,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w63",
+    "x": 14,
+    "y": 15,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w64",
+    "x": 21,
+    "y": 15,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w65",
+    "x": 28,
+    "y": 15,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w66",
+    "x": 2,
+    "y": 16,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w67",
+    "x": 6,
+    "y": 16,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w68",
+    "x": 20,
+    "y": 16,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w69",
+    "x": 22,
+    "y": 16,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w70",
+    "x": 24,
+    "y": 16,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w71",
+    "x": 26,
+    "y": 16,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w72",
+    "x": 13,
+    "y": 17,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w73",
+    "x": 15,
+    "y": 17,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w74",
+    "x": 17,
+    "y": 17,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w75",
+    "x": 25,
+    "y": 17,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w76",
+    "x": 27,
+    "y": 17,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w77",
+    "x": 3,
+    "y": 18,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w78",
+    "x": 6,
+    "y": 18,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w79",
+    "x": 10,
+    "y": 18,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w80",
+    "x": 14,
+    "y": 18,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w81",
+    "x": 16,
+    "y": 18,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w82",
+    "x": 18,
+    "y": 18,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w83",
+    "x": 22,
+    "y": 18,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w84",
+    "x": 24,
+    "y": 18,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w85",
+    "x": 5,
+    "y": 19,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w86",
+    "x": 21,
+    "y": 19,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w87",
+    "x": 23,
+    "y": 19,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w88",
+    "x": 25,
+    "y": 19,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w89",
+    "x": 27,
+    "y": 19,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w90",
+    "x": 6,
+    "y": 20,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w91",
+    "x": 8,
+    "y": 20,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w92",
+    "x": 10,
+    "y": 20,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w93",
+    "x": 15,
+    "y": 20,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w94",
+    "x": 17,
+    "y": 20,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w95",
+    "x": 26,
+    "y": 20,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w96",
+    "x": 5,
+    "y": 21,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w97",
+    "x": 7,
+    "y": 21,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w98",
+    "x": 11,
+    "y": 21,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w99",
+    "x": 13,
+    "y": 21,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w100",
+    "x": 19,
+    "y": 21,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w101",
+    "x": 24,
+    "y": 21,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w102",
+    "x": 28,
+    "y": 21,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w103",
+    "x": 2,
+    "y": 22,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w104",
+    "x": 9,
+    "y": 22,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w105",
+    "x": 16,
+    "y": 22,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w106",
+    "x": 12,
+    "y": 23,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w107",
+    "x": 14,
+    "y": 23,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w108",
+    "x": 17,
+    "y": 23,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w109",
+    "x": 19,
+    "y": 23,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w110",
+    "x": 23,
+    "y": 23,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w111",
+    "x": 26,
+    "y": 23,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w112",
+    "x": 16,
+    "y": 24,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w113",
+    "x": 22,
+    "y": 24,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w114",
+    "x": 25,
+    "y": 24,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w115",
+    "x": 2,
+    "y": 25,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w116",
+    "x": 5,
+    "y": 25,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w117",
+    "x": 8,
+    "y": 25,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w118",
+    "x": 13,
+    "y": 25,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      2,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w119",
+    "x": 17,
+    "y": 25,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w120",
+    "x": 20,
+    "y": 25,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w121",
+    "x": 24,
+    "y": 25,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w122",
+    "x": 26,
+    "y": 25,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w123",
+    "x": 3,
+    "y": 26,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w124",
+    "x": 6,
+    "y": 26,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w125",
+    "x": 11,
+    "y": 26,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w126",
+    "x": 19,
+    "y": 26,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w127",
+    "x": 22,
+    "y": 26,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w128",
+    "x": 5,
+    "y": 27,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w129",
+    "x": 13,
+    "y": 27,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w130",
+    "x": 15,
+    "y": 27,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      2,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w131",
+    "x": 20,
+    "y": 27,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w132",
+    "x": 11,
+    "y": 28,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w133",
+    "x": 18,
+    "y": 28,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   },
+   {
+    "id": "w134",
+    "x": 22,
+    "y": 28,
+    "ori": 0,
+    "shape": "custom",
+    "cells": [
+     [
+      0,
+      0
+     ]
+    ],
+    "rot": false,
+    "lock": true,
+    "color": "#3b4252",
+    "name": "回墙"
+   }
+  ],
+  "note": "31×31 迷宫（棋盘底图 · maze-3 迭代生成 · seed 21）；最短 69 步，简单路径 1 条，迷宫口径难度 3349.3（死路 96 条，最深岔路 6 层）。评分按「手」计：全程一次连续拖动 = 1 手，仓库分偏低是评分口径，不代表关卡简单。"
+ },
+ "meta": {
+  "score": 23,
+  "grade": "简单",
+  "depth": null,
+  "hands": 1,
+  "states": 0,
+  "paths": 0,
+  "waste": 0,
+  "same": 0,
+  "estimated": true,
+  "scoringVersion": 3,
+  "estimate": {
+   "steps": 69,
+   "hands": 1,
+   "cognition": {
+    "active": 1,
+    "revisits": 0,
+    "retreats": 0,
+    "maxSetup": 0,
+    "switches": 1,
+    "temptation": 0,
+    "measured": false,
+    "proxy": true,
+    "maxPlateau": 0,
+    "junctions": 32.50977500432693,
+    "pushes": 0,
+    "pushChanges": 0,
+    "turns": 31,
+    "sequenceNovelty": 1,
+    "actionRuns": 32,
+    "navigation": true,
+    "boxPuzzle": false
+   },
+   "optimal": false
+  },
+  "parts": {
+   "depth": 12.3,
+   "planning": 0,
+   "endurance": 0,
+   "choice": 10.6,
+   "trap": 10.6,
+   "unique": 0,
+   "space": 0
+  },
+  "version": 3,
+  "unsolved": true,
+  "confidence": "参考解结构估算，未证明最短，分数不是上下界",
+  "cognition": {
+   "active": 1,
+   "switches": 1,
+   "revisits": 0,
+   "retreats": 0,
+   "maxSetup": 0,
+   "temptation": 0
+  },
+  "ms": 5
+ },
+ "maze": {
+  "score": 3349.333,
+  "version": "maze-3",
+  "paths": 1,
+  "exact": true,
+  "depth": 69,
+  "openCells": 546,
+  "reachable": 546,
+  "unreachable": 0,
+  "seed": 21,
+  "iterations": 600,
+  "K0": 24,
+  "beam": 4,
+  "cand": 3,
+  "evaluated": 7166,
+  "reach": "hard",
+  "spurp": 0.55,
+  "loopP": 0.12,
+  "spurMax": 14,
+  "kicks": 5,
+  "deadEnds": 96,
+  "maxBranchLevel": 6,
+  "branchLevels": {
+   "1": 27,
+   "2": 7,
+   "3": 12,
+   "4": 11,
+   "5": 27,
+   "6": 12
+  },
+  "maxPaths": 2000,
+  "base": "checker",
+  "from": null,
+  "elapsedMs": 44069,
+  "maxLevel": 6,
+  "depthBonus": 0.25
+ },
+ "solution": {
+  "steps": 69,
+  "hands": 1,
+  "moves": [
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": -1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": -1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 0,
+    "dy": 1
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   },
+   {
+    "i": 0,
+    "t": "m",
+    "dx": 1,
+    "dy": 0
+   }
+  ]
+ }
+}
